@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/02/27 16:16:46 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/02 02:07:22 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,7 +42,8 @@ OBJ_DIR =	.objects
 # -- PROJECT FILES --
 
 FILES =		cpu_core \
-			cpu_utils \
+			cpu_instructions \
+			cpu_debug \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 
