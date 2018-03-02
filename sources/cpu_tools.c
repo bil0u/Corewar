@@ -1,34 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpu.h                                              :+:      :+:    :+:   */
+/*   cpu_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/02 16:50:51 by upopee           ###   ########.fr       */
+/*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
+/*   Updated: 2018/03/02 16:30:47 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPU_H
-# define CPU_H
+#include "libft.h"
+#include "cpu_types.h"
 
-/*
-** --------- CPU CORE ------------
-*/
+void	init_cpu(t_vcpu *cpu)
+{
+	ft_bzero(cpu, sizeof(*cpu));
+}
 
-/*
-** --------- CPU TOOLS ------------
-*/
-
-void	init_cpu(t_vcpu *cpu);
-void 	load_process(t_vcpu *cpu, uint8_t *process_regs, uint8_t *process_pc);
-
-/*
-**	-------- CPU _DEBUG  ---------
-*/
-
-void	print_memory(char *name, uint8_t *s, uint32_t len, uint8_t *pc);
-void	print_cpu(t_vcpu *cpu);
-
-#endif
+void 	load_process(t_vcpu *cpu, uint8_t *process_regs, uint8_t *process_pc)
+{
+	cpu->registers = process_regs;
+	cpu->pc = process_pc;
+}
