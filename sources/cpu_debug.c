@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 04:50:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 05:50:18 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	print_memory(char *name, uint8_t *mem, uint32_t len, uint64_t pc)
 
 	i = 0;
 	if (name)
-		ft_printf("{yellow}%s\t{cyan}%p{eoc}\t(%d bytes)\t", name, mem, len);
+		ft_printf("{yellow}%s {black}(%d bytes)\t", name, len);
 	while (i < len)
 	{
 		if (i == pc)

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 04:44:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 10:00:34 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@
 **	-------- TMP ---------
 */
 
-# define MEM_SIZE 32
-# define JUMP_OF(index, jump) (((index) + (jump)) % MEM_SIZE)
+# define MEM_SIZE	32
 
 /*
 **	-------- ALLOWED ARGS STRUCTURE AND MACROS ---------
@@ -30,29 +29,38 @@
 **	indirects	-> u16
 */
 
-# define MAX_ARGS		4
+# define MAX_ARGS	4
+# define ARGBC_SIZE	1
+# define NBR_TYPES	4
 
-# define T_REG			1
-# define T_DIR			2
-# define T_IND			4
-# define T_LAB			8
+# define T_REG		0b0001
+# define T_DIR		0b0010
+# define T_IND		0b0100
+# define T_LAB		0b1000
 
-# define ARG_REG		0x01
-# define ARG_DIR		0x02
-# define ARG_IND		0x03
+# define ARG_REG	0b01
+# define ARG_IND	0b11
+# define ARG_DIR	0b10
+# define ARG_REGSZ	1
+# define ARG_INDSZ	2
+# define ARG_DIRSZ	4
 
-typedef union	u_arg
+typedef uint8_t		t_argtypes;
+
+typedef union		u_arg
 {
-	uint8_t		reg_no;
-	uint16_t	ind;
-	uint32_t	dir;
-}				t_arg;
+	uint8_t			reg_no;
+	uint16_t		ind;
+	uint32_t		dir;
+}					t_arg;
 
 /*
 **	-------- OPERATIONS STRUCTURE AND MACROS ---------
 */
 
-typedef void	(*t_instr)(uint8_t *memory, uint8_t *registers,
+# define OPBC_SIZE	1
+
+typedef void		(*t_instr)(uint8_t *memory, uint8_t *registers,
 								uint8_t *carry, t_arg *args);
 
 typedef struct		s_op
@@ -61,15 +69,16 @@ typedef struct		s_op
 	uint8_t			op_number;
 	uint8_t			nb_args;
 	t_instr			funct_ptr;
+	t_argtypes		valid_types[NBR_TYPES];
 }					t_op;
 
 /*
 **	-------- VIRTUAL CPU STRUCTURE AND MACROS ---------
 */
 
-# define REG_NUMBER		16
-# define REG_SIZE		4
-# define REG_LEN		(REG_NUMBER * REG_SIZE)
+# define REG_NUMBER	16
+# define REG_SIZE	4
+# define REG_LEN	(REG_NUMBER * REG_SIZE)
 
 /*
 # define CPU_PC(cpu) ((cpu)->pc)
@@ -87,7 +96,7 @@ typedef struct		s_vcpu
 	t_arg			args_buff[MAX_ARGS];
 	t_op			*curr_instruction;
 	uint8_t			*registers;
-	uint8_t			*vm_memory;
+	uint8_t			*memory;
 	uint8_t			carry;
 }					t_vcpu;
 

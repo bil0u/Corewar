@@ -6,20 +6,12 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/02 16:19:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 05:43:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
-
-void	no_instr(uint8_t *memory, uint8_t *regs, uint8_t *carry, t_arg *args)
-{
-	(void)memory;
-	(void)regs;
-	(void)carry;
-	(void)args;
-}
 
 void	live_instr(uint8_t *memory, uint8_t *regs, uint8_t *carry, t_arg *args)
 {

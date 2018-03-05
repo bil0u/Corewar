@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 05:37:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 10:08:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,52 +15,60 @@
 #include "instructions.h"
 #include "cpu.h"
 
-static uint8_t	fetch_next_arg(uint8_t bmask, uint8_t *pc, t_arg *arg_buff)
+static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
+								uint8_t arg_no, uint8_t bitmask)
 {
+	t_arg		*buff;
 	uint8_t		arg_type;
-	uint8_t		bytes_read;
+	uint8_t		valid_types;
 
-	arg_type = (bmask & 0xC0) >> 6;
-	bytes_read = 0;
-	if (arg_type == ARG_REG)
+	buff = cpu->args_buff + arg_no;
+	valid_types = cpu->curr_instruction->valid_types[arg_no];
+	arg_type = (bitmask & 0xC0) >> 6;
+	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
 	{
-		arg_buff->reg_no = *pc;
-		bytes_read = sizeof(arg_buff->reg_no);
+		buff->reg_no = *(cpu->memory + *pc_tmp);
+		return (sizeof(buff->reg_no));
 	}
-	else if (arg_type == ARG_IND)
+	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
 	{
-		arg_buff->ind = SWAP_UINT16(*((uint16_t *)(pc)));
-		bytes_read = sizeof(arg_buff->ind);
+		secure_fetch(pc_tmp, cpu->memory, (uint8_t *)buff, sizeof(buff->ind));
+		return (sizeof(buff->ind));
 	}
-	else if (arg_type == ARG_DIR)
+	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
 	{
-		arg_buff->dir = SWAP_UINT32(*((uint32_t *)(pc)));
-		bytes_read = sizeof(arg_buff->dir);
+		secure_fetch(pc_tmp, cpu->memory, (uint8_t *)buff, sizeof(buff->dir));
+		return (sizeof(buff->dir));
 	}
-	return (bytes_read);
+	return (0);
 }
 
 
 static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 {
-	uint8_t		*arg_data;
+	uint64_t	pc_tmp;
 	uint8_t 	bitmask;
 	uint8_t		arg_no;
 	uint8_t		arg_sz;
 
-	bitmask = *((uint8_t *)(cpu->vm_memory + JUMP_OF(cpu->pc, *bytes_read)));
-	ft_printf("{blue}Read bitmask %#8.8b{eoc}\n", bitmask);
-	*bytes_read += 1;
+	bitmask = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, *bytes_read)));
+	*bytes_read += ARGBC_SIZE;
 	arg_no = 0;
+	pc_tmp = jump_to(cpu->pc, *bytes_read);
 	while (arg_no < cpu->curr_instruction->nb_args)
 	{
-		arg_data = cpu->vm_memory + JUMP_OF(cpu->pc, *bytes_read);
-		arg_sz = fetch_next_arg(bitmask, arg_data, cpu->args_buff + arg_no);
-		ft_printf("{blue}Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
+		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bitmask)) == 0)
+		{
+			cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
+			cpu->curr_instruction = &(g_op_set[0]);
+			return ;
+		}
+		ft_printf("{blue} - Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
 		*bytes_read += arg_sz;
 		bitmask <<= 2;
 		++arg_no;
 	}
+	cpu->pc = pc_tmp;
 }
 
 static void		fetch_instruction(t_vcpu *cpu)
@@ -68,43 +76,34 @@ static void		fetch_instruction(t_vcpu *cpu)
 	uint8_t		op_no;
 	uint8_t		bytes_read;
 
-	op_no = cpu->vm_memory[cpu->pc];
+	op_no = cpu->memory[cpu->pc];
 	cpu->curr_instruction = &(g_op_set[op_no]);
-	bytes_read = 1;
+	bytes_read = OPBC_SIZE;
 	if (op_no != 0)
-	{
-		ft_printf("{yellow}## Fetched instruction %#2.2x{eoc}\n", op_no);
-		cpu->curr_instruction = &(g_op_set[op_no]);
-		if (cpu->curr_instruction->nb_args > 0)
-		{
-			ft_printf("{blue} > Fetching args ...{eoc}\n");
-			fetch_arguments(cpu, &bytes_read);
-		}
-	}
-	cpu->pc = (cpu->pc + bytes_read) % MEM_SIZE;
-
-	if (cpu->curr_instruction->nb_args > 0)
-		ft_printf("{yellow}#### > %d args on %d byte(s){eoc}\n", cpu->curr_instruction->nb_args, bytes_read - 2);
+		ft_printf("{yellow}## Fetched instruction %#2.2x : {cyan}'%s'{eoc}\n", op_no, cpu->curr_instruction->name);
+	if (op_no != 0 && cpu->curr_instruction->nb_args > 0)
+		fetch_arguments(cpu, &bytes_read);
+	else
+		cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
 }
 
-void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles)
+void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t infinite)
 {
 	uint64_t	cycle_no;
 
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory("Memory   ", cpu->vm_memory, MEM_SIZE, cpu->pc);
+		print_memory(NULL, cpu->memory, MEM_SIZE, cpu->pc);
 		//print_memory("Registers", registers, REG_LEN, NULL);
 		fetch_instruction(cpu);
 		if (cpu->curr_instruction->op_number != 0)
 		{
-			ft_printf("{blue}Executing instruction #%d '%s'{eoc}\n", cpu->curr_instruction->op_number,
-																	cpu->curr_instruction->name);
-			cpu->curr_instruction->funct_ptr(cpu->vm_memory, cpu->registers,
+			cpu->curr_instruction->funct_ptr(cpu->memory, cpu->registers,
 											&cpu->carry, cpu->args_buff);
 		}
 		++cycle_no;
+		infinite ? --cycle_no : (void)0;
 	}
 }
 
@@ -128,7 +127,7 @@ int				main(void)
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
 
-	run_cpu(&cpu, 100);
+	run_cpu(&cpu, MEM_SIZE * 3, 1);
 
 	return (0);
 }
