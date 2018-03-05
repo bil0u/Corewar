@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/02 16:50:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 05:01:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include "instructions.h"
 #include "cpu.h"
 
-static uint8_t	fetch_next_arg(uint8_t bmask, void *pc, t_arg *arg_buff)
+static uint8_t	fetch_next_arg(uint8_t bmask, uint8_t *pc, t_arg *arg_buff)
 {
 	uint8_t		arg_type;
 	uint8_t		bytes_read;
@@ -24,17 +24,17 @@ static uint8_t	fetch_next_arg(uint8_t bmask, void *pc, t_arg *arg_buff)
 	bytes_read = 0;
 	if (arg_type == ARG_REG)
 	{
-		arg_buff->reg = pc;
+		arg_buff->reg_no = *pc;
 		bytes_read = 1;
 	}
 	else if (arg_type == ARG_IND)
 	{
-		arg_buff->ind = *((uint16_t *)(pc));
+		arg_buff->ind = SWAP_UINT16(*((uint16_t *)(pc)));
 		bytes_read = 2;
 	}
 	else if (arg_type == ARG_DIR)
 	{
-		arg_buff->dir = *((uint32_t *)(pc));
+		arg_buff->dir = SWAP_UINT32(*((uint32_t *)(pc)));
 		bytes_read = 4;
 	}
 	return (bytes_read);
@@ -43,23 +43,23 @@ static uint8_t	fetch_next_arg(uint8_t bmask, void *pc, t_arg *arg_buff)
 
 static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 {
-	t_arg		*arg_dst;
+	uint8_t		*arg_data;
 	uint8_t 	bitmask;
-	uint8_t		curr_arg;
-	uint8_t		arg_size;
+	uint8_t		arg_no;
+	uint8_t		arg_sz;
 
-	bitmask = *((uint8_t *)(cpu->pc + *bytes_read));
+	bitmask = *((uint8_t *)(cpu->vm_memory + JUMP_OF(cpu->pc, *bytes_read)));
 	ft_printf("{blue}Read bitmask %#8.8b{eoc}\n", bitmask);
 	*bytes_read += 1;
-	curr_arg = 0;
-	while (curr_arg < cpu->curr_instruction->nb_args)
+	arg_no = 0;
+	while (arg_no < cpu->curr_instruction->nb_args)
 	{
-		arg_dst = cpu->args_buff + curr_arg;
-		arg_size = fetch_next_arg(bitmask, cpu->pc + *bytes_read, arg_dst);
-		ft_printf("{blue}Fetched arg #%d [%d byte(s)]{eoc}\n", curr_arg + 1, arg_size);
-		*bytes_read += arg_size;
+		arg_data = cpu->vm_memory + JUMP_OF(cpu->pc, *bytes_read);
+		arg_sz = fetch_next_arg(bitmask, arg_data, cpu->args_buff + arg_no);
+		ft_printf("{blue}Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
+		*bytes_read += arg_sz;
 		bitmask <<= 2;
-		curr_arg++;
+		arg_no++;
 	}
 }
 
@@ -68,29 +68,37 @@ static void		fetch_instruction(t_vcpu *cpu)
 	uint8_t		op_no;
 	uint8_t		bytes_read;
 
-	ft_printf("{blue}Fetching next instruction ...{eoc}\n");
-
-	op_no = *((uint8_t *)cpu->pc);
+	op_no = cpu->vm_memory[cpu->pc];
 	cpu->curr_instruction = &(g_op_set[op_no]);
 	bytes_read = 1;
-	if (cpu->curr_instruction->nb_args > 0)
+	if (op_no != 0)
 	{
-		ft_printf("{blue} > Fetching args ...{eoc}\n");
-		fetch_arguments(cpu, &bytes_read);
+		ft_printf("{yellow}## Fetched instruction %#2.2x{eoc}\n", op_no);
+		cpu->curr_instruction = &(g_op_set[op_no]);
+		if (cpu->curr_instruction->nb_args > 0)
+		{
+			ft_printf("{blue} > Fetching args ...{eoc}\n");
+			fetch_arguments(cpu, &bytes_read);
+		}
 	}
-	cpu->pc += bytes_read % MEM_SIZE;
+	cpu->pc = (cpu->pc + bytes_read) % MEM_SIZE;
 
-	ft_printf("{yellow}## Fetched instruction %#2.2X [%d byte(s)]{eoc}\n", op_no, bytes_read);
 	if (cpu->curr_instruction->nb_args > 0)
 		ft_printf("{yellow}#### > %d args on %d byte(s){eoc}\n", cpu->curr_instruction->nb_args, bytes_read - 2);
 }
 
 static void		exec_next_instruction(t_vcpu *cpu)
 {
+	print_memory("Memory   ", cpu->vm_memory, MEM_SIZE, cpu->pc);
+	//print_memory("Registers", registers, REG_LEN, NULL);
 	fetch_instruction(cpu);
-//	ft_printf("{blue}Executing instruction #%d '%s'{eoc}\n",
-//		op_no, g_op_set[op_no].name);
-//	g_op_set[op_no].funct_ptr(cpu);
+	if (cpu->curr_instruction->op_number != 0)
+	{
+		ft_printf("{blue}Executing instruction #%d '%s'{eoc}\n", cpu->curr_instruction->op_number,
+																cpu->curr_instruction->name);
+		cpu->curr_instruction->funct_ptr(cpu->vm_memory, cpu->registers,
+										&cpu->carry, cpu->args_buff);
+	}
 }
 
 int				main(void)
@@ -109,17 +117,12 @@ int				main(void)
 	ram[4] = 0x00;
 	ram[5] = 0x01;
 
-	init_cpu(&cpu);
-	load_process(&cpu, registers, ram);
-
-	print_memory("Memory   ", ram, MEM_SIZE, cpu.pc);
-	print_memory("Registers", registers, REG_LEN, NULL);
-//	print_cpu(&cpu);
+	init_cpu(&cpu, ram);
+	load_process(&cpu, registers, 0);
 
 	exec_next_instruction(&cpu);
-
-	print_memory("Memory   ", ram, MEM_SIZE, cpu.pc);
-	print_memory("Registers", registers, REG_LEN, NULL);
+	exec_next_instruction(&cpu);
+	exec_next_instruction(&cpu);
 
 	return (0);
 }

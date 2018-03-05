@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/02 16:50:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 04:45:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@
 ** --------- CPU TOOLS ------------
 */
 
-void	init_cpu(t_vcpu *cpu);
-void 	load_process(t_vcpu *cpu, uint8_t *process_regs, uint8_t *process_pc);
+void	init_cpu(t_vcpu *cpu, uint8_t *memory);
+void 	load_process(t_vcpu *cpu, uint8_t *process_regs, uint64_t process_pc);
 
 /*
 **	-------- CPU _DEBUG  ---------
 */
 
-void	print_memory(char *name, uint8_t *s, uint32_t len, uint8_t *pc);
+void	print_memory(char *name, uint8_t *s, uint64_t len, uint64_t pc);
 void	print_cpu(t_vcpu *cpu);
 
 #endif
