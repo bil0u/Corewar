@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 05:01:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 05:37:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,17 @@ static uint8_t	fetch_next_arg(uint8_t bmask, uint8_t *pc, t_arg *arg_buff)
 	if (arg_type == ARG_REG)
 	{
 		arg_buff->reg_no = *pc;
-		bytes_read = 1;
+		bytes_read = sizeof(arg_buff->reg_no);
 	}
 	else if (arg_type == ARG_IND)
 	{
 		arg_buff->ind = SWAP_UINT16(*((uint16_t *)(pc)));
-		bytes_read = 2;
+		bytes_read = sizeof(arg_buff->ind);
 	}
 	else if (arg_type == ARG_DIR)
 	{
 		arg_buff->dir = SWAP_UINT32(*((uint32_t *)(pc)));
-		bytes_read = 4;
+		bytes_read = sizeof(arg_buff->dir);
 	}
 	return (bytes_read);
 }
@@ -59,7 +59,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 		ft_printf("{blue}Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
 		*bytes_read += arg_sz;
 		bitmask <<= 2;
-		arg_no++;
+		++arg_no;
 	}
 }
 
@@ -87,19 +87,27 @@ static void		fetch_instruction(t_vcpu *cpu)
 		ft_printf("{yellow}#### > %d args on %d byte(s){eoc}\n", cpu->curr_instruction->nb_args, bytes_read - 2);
 }
 
-static void		exec_next_instruction(t_vcpu *cpu)
+void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles)
 {
-	print_memory("Memory   ", cpu->vm_memory, MEM_SIZE, cpu->pc);
-	//print_memory("Registers", registers, REG_LEN, NULL);
-	fetch_instruction(cpu);
-	if (cpu->curr_instruction->op_number != 0)
+	uint64_t	cycle_no;
+
+	cycle_no = 1;
+	while (cycle_no <= nb_cycles)
 	{
-		ft_printf("{blue}Executing instruction #%d '%s'{eoc}\n", cpu->curr_instruction->op_number,
-																cpu->curr_instruction->name);
-		cpu->curr_instruction->funct_ptr(cpu->vm_memory, cpu->registers,
-										&cpu->carry, cpu->args_buff);
+		print_memory("Memory   ", cpu->vm_memory, MEM_SIZE, cpu->pc);
+		//print_memory("Registers", registers, REG_LEN, NULL);
+		fetch_instruction(cpu);
+		if (cpu->curr_instruction->op_number != 0)
+		{
+			ft_printf("{blue}Executing instruction #%d '%s'{eoc}\n", cpu->curr_instruction->op_number,
+																	cpu->curr_instruction->name);
+			cpu->curr_instruction->funct_ptr(cpu->vm_memory, cpu->registers,
+											&cpu->carry, cpu->args_buff);
+		}
+		++cycle_no;
 	}
 }
+
 
 int				main(void)
 {
@@ -120,9 +128,7 @@ int				main(void)
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
 
-	exec_next_instruction(&cpu);
-	exec_next_instruction(&cpu);
-	exec_next_instruction(&cpu);
+	run_cpu(&cpu, 100);
 
 	return (0);
 }
