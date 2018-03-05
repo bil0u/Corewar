@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 10:08:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 10:29:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 	{
 		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bitmask)) == 0)
 		{
+			ft_printf("{red} - Not executed, invalid arguments{eoc}\n");
 			cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
 			cpu->curr_instruction = &(g_op_set[0]);
 			return ;
@@ -71,7 +72,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 	cpu->pc = pc_tmp;
 }
 
-static void		fetch_instruction(t_vcpu *cpu)
+static uint8_t	fetch_instruction(t_vcpu *cpu)
 {
 	uint8_t		op_no;
 	uint8_t		bytes_read;
@@ -79,25 +80,27 @@ static void		fetch_instruction(t_vcpu *cpu)
 	op_no = cpu->memory[cpu->pc];
 	cpu->curr_instruction = &(g_op_set[op_no]);
 	bytes_read = OPBC_SIZE;
-	if (op_no != 0)
+	if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		ft_printf("{yellow}## Fetched instruction %#2.2x : {cyan}'%s'{eoc}\n", op_no, cpu->curr_instruction->name);
-	if (op_no != 0 && cpu->curr_instruction->nb_args > 0)
+	if (op_no && op_no < NB_INSTRUCTIONS && cpu->curr_instruction->nb_args > 0)
 		fetch_arguments(cpu, &bytes_read);
 	else
 		cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
+	return (cpu->curr_instruction->op_number);
 }
 
 void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t infinite)
 {
 	uint64_t	cycle_no;
+	uint8_t		op_no;
 
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
 		print_memory(NULL, cpu->memory, MEM_SIZE, cpu->pc);
 		//print_memory("Registers", registers, REG_LEN, NULL);
-		fetch_instruction(cpu);
-		if (cpu->curr_instruction->op_number != 0)
+		op_no = fetch_instruction(cpu);
+		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
 			cpu->curr_instruction->funct_ptr(cpu->memory, cpu->registers,
 											&cpu->carry, cpu->args_buff);
@@ -116,7 +119,15 @@ int				main(void)
 
 	ft_bzero(&ram, MEM_SIZE);
 	ft_bzero(&registers, REG_LEN);
+	init_cpu(&cpu, ram);
+	load_process(&cpu, registers, 0);
 
+/*
+	ram[1] = 0x01;
+	ram[MEM_SIZE - 4] = 0x01;
+	ram[MEM_SIZE - 3] = 0xC0;
+	cpu.pc = 5;
+*/
 	ram[0] = 0x01;
 	ram[1] = 0x80;
 	ram[2] = 0x00;
@@ -124,8 +135,12 @@ int				main(void)
 	ram[4] = 0x00;
 	ram[5] = 0x01;
 
-	init_cpu(&cpu, ram);
-	load_process(&cpu, registers, 0);
+	ram[20] = 0x01;
+	ram[21] = 0x80;
+	ram[22] = 0x00;
+	ram[23] = 0x00;
+	ram[24] = 0x00;
+	ram[25] = 0x02;
 
 	run_cpu(&cpu, MEM_SIZE * 3, 1);
 
