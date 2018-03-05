@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 10:09:27 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 12:17:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,11 @@ void 		load_process(t_vcpu *cpu, uint8_t *p_regs, uint64_t p_pc)
 	cpu->pc = p_pc;
 }
 
+/*
+** -- JUMP PC
+**    > Get the PC address of a jump_pos value
+*/
+
 uint64_t	jump_to(uint64_t pc, uint64_t jump_pos)
 {
 	uint64_t	cumul;
@@ -34,6 +39,12 @@ uint64_t	jump_to(uint64_t pc, uint64_t jump_pos)
 		cumul -= MEM_SIZE;
 	return (cumul);
 }
+
+/*
+** -- SECURE FECTH
+**    > Handle the circular memory difficulty automatically
+**    > BIG_ENDIAN >> LITTLE_ENDIAN
+*/
 
 void		secure_fetch(uint64_t *pc, uint8_t *memory, uint8_t *dst, size_t sz)
 {

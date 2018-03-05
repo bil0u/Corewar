@@ -6,14 +6,25 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 10:29:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/05 12:18:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <stdio.h>
 
 #include "libft.h"
 #include "cpu_types.h"
 #include "instructions.h"
 #include "cpu.h"
+
+/*
+** -- FETCH THE N_TH ARGUMENT
+**    > Securely fetch (circular buffer proof) the n_th argument, and return
+**      the number of bytes read;
+*/
 
 static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 								uint8_t arg_no, uint8_t bitmask)
@@ -43,6 +54,15 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 	return (0);
 }
 
+/*
+** -- FETCH THE ARGUMENTS
+**    > Fetch the arguments bimask on ARGBC_SIZE bytes
+**    > Decode each argument one by one and store them in the vcpu->args_buff
+**    > Moves the PC after reading them
+**
+**    >> Stop reading if there is an error in the instruction arg(s), and set
+**       the instruction to NULL
+*/
 
 static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 {
@@ -64,13 +84,22 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 			cpu->curr_instruction = &(g_op_set[0]);
 			return ;
 		}
-		ft_printf("{blue} - Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
+		ft_printf("f{blue} - Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
 		*bytes_read += arg_sz;
 		bitmask <<= 2;
 		++arg_no;
 	}
 	cpu->pc = pc_tmp;
 }
+
+/*
+** -- FETCH THE CURRENT INSTRUCTION
+** -- Steps of an instruction cycle :
+**    > Fetch the instruction on OPBC_SIZE bytes
+**    > Decode and check arguments if there is any & the opcode is known
+**    > Moves the PC to the next instruction
+**    > Execute the instruction if the opcode is known
+*/
 
 static uint8_t	fetch_instruction(t_vcpu *cpu)
 {
@@ -89,7 +118,11 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 	return (cpu->curr_instruction->op_number);
 }
 
-void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t infinite)
+/*
+** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IS THE FLAG IS GIVEN
+*/
+
+void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop, int fd)
 {
 	uint64_t	cycle_no;
 	uint8_t		op_no;
@@ -97,7 +130,7 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t infinite)
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(NULL, cpu->memory, MEM_SIZE, cpu->pc);
+		print_memory(NULL, cpu->memory, MEM_SIZE, cpu->pc, fd);
 		//print_memory("Registers", registers, REG_LEN, NULL);
 		op_no = fetch_instruction(cpu);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
@@ -106,22 +139,31 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t infinite)
 											&cpu->carry, cpu->args_buff);
 		}
 		++cycle_no;
-		infinite ? --cycle_no : (void)0;
+		loop ? --cycle_no : (void)0;
 	}
 }
 
 
-int				main(void)
+int				main(int argc, char **argv)
 {
 	uint8_t		ram[MEM_SIZE];
 	uint8_t		registers[REG_LEN];
 	t_vcpu		cpu;
+	int			fd;
 
 	ft_bzero(&ram, MEM_SIZE);
 	ft_bzero(&registers, REG_LEN);
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
+	if (argc == 2)
+	{
+		fd = open(argv[1], O_WRONLY|O_APPEND|O_CREAT);
+		fchmod(fd, S_IRWXU|S_IRWXG|S_IRWXO);
+	}
+	else
+		fd = STDOUT_FILENO;
 
+	ft_printf("FD %d\n", fd);
 /*
 	ram[1] = 0x01;
 	ram[MEM_SIZE - 4] = 0x01;
@@ -142,7 +184,7 @@ int				main(void)
 	ram[24] = 0x00;
 	ram[25] = 0x02;
 
-	run_cpu(&cpu, MEM_SIZE * 3, 1);
+	run_cpu(&cpu, MEM_SIZE * 3, 1, fd);
 
 	return (0);
 }
