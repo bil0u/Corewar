@@ -6,13 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 12:18:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/07 05:24:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <stdlib.h>
 #include <stdio.h>
 
 #include "libft.h"
@@ -143,8 +144,7 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop, int fd)
 	}
 }
 
-
-int				main(int argc, char **argv)
+int				main(void)
 {
 	uint8_t		ram[MEM_SIZE];
 	uint8_t		registers[REG_LEN];
@@ -155,28 +155,20 @@ int				main(int argc, char **argv)
 	ft_bzero(&registers, REG_LEN);
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
-	if (argc == 2)
-	{
-		fd = open(argv[1], O_WRONLY|O_APPEND|O_CREAT);
-		fchmod(fd, S_IRWXU|S_IRWXG|S_IRWXO);
-	}
-	else
-		fd = STDOUT_FILENO;
 
-	ft_printf("FD %d\n", fd);
 /*
 	ram[1] = 0x01;
 	ram[MEM_SIZE - 4] = 0x01;
 	ram[MEM_SIZE - 3] = 0xC0;
 	cpu.pc = 5;
 */
+
 	ram[0] = 0x01;
 	ram[1] = 0x80;
 	ram[2] = 0x00;
 	ram[3] = 0x00;
 	ram[4] = 0x00;
 	ram[5] = 0x01;
-
 	ram[20] = 0x01;
 	ram[21] = 0x80;
 	ram[22] = 0x00;
@@ -184,7 +176,7 @@ int				main(int argc, char **argv)
 	ram[24] = 0x00;
 	ram[25] = 0x02;
 
-	run_cpu(&cpu, MEM_SIZE * 3, 1, fd);
-
+	fd = 1;
+	run_cpu(&cpu, MEM_SIZE * 3, 0, fd);
 	return (0);
 }
