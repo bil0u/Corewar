@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/02 16:28:55 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/13 21:42:49 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ LDLIBS =	-lft
 LDFLAGS =	-Llibft
 
 LIBFT_DIR =	libft
-LIBFT_LIB =	$(LIBFT_DIR)/libft.a
+LIBFT_DEP =	$(LIBFT_DIR)/libft.a $(LIBFT_DIR)/log_server
 
 # -- PATHS NAMES --
 
@@ -62,14 +62,14 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 
 # -- RULES --
 
-all: $(LIBFT_LIB)
+all: $(LIBFT_DEP)
 	@$(MAKE) -j $(NAME)
 
 $(NAME): $(LIBFT_LIB) $(OBJ_DIR) $(OBJECTS)
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
 	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
 
-$(LIBFT_LIB):
+$(LIBFT_DEP):
 	@$(MAKE) lib
 
 $(OBJ_DIR):

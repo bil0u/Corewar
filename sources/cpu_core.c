@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/13 18:34:37 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/13 22:59:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -116,7 +116,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 }
 
 /*
-** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IS THE FLAG IS GIVEN
+** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IF THE FLAG IS SET
 */
 
 void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
@@ -140,12 +140,14 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 int		mem;
 
 int				main(void)
-{
-	uint8_t		ram[MEM_SIZE];
-	uint8_t		registers[REG_LEN];
-	t_vcpu		cpu;
-
+{/*
+	uint8_t	ram[MEM_SIZE];
 	ft_bzero(&ram, MEM_SIZE);
+	uint8_t	registers[REG_LEN];
+	ft_bzero(&registers, REG_LEN);
+	t_vcpu	cpu;
+	ft_bzero(&cpu, sizeof(cpu));
+
 	ram[0] = 0x01;
 	ram[1] = 0x80;
 	ram[2] = 0x00;
@@ -158,10 +160,13 @@ int				main(void)
 	ram[23] = 0x00;
 	ram[24] = 0x00;
 	ram[25] = 0x02;
-	ft_bzero(&registers, REG_LEN);
+
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
-
 	run_cpu(&cpu, 100, 1);
+*/
+
+	new_logwindow("test", 0);
+	log_this("test", "file does not exists\n", LF_WARN);
 	return (0);
 }
