@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/07 05:24:17 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/13 18:34:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,10 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 	{
 		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bitmask)) == 0)
 		{
-			ft_printf("{red} - Not executed, invalid arguments{eoc}\n");
 			cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
 			cpu->curr_instruction = &(g_op_set[0]);
 			return ;
 		}
-		ft_printf("f{blue} - Fetched arg #%d [%d byte(s)]{eoc}\n", arg_no + 1, arg_sz);
 		*bytes_read += arg_sz;
 		bitmask <<= 2;
 		++arg_no;
@@ -110,8 +108,6 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 	op_no = cpu->memory[cpu->pc];
 	cpu->curr_instruction = &(g_op_set[op_no]);
 	bytes_read = OPBC_SIZE;
-	if (op_no != 0 && op_no < NB_INSTRUCTIONS)
-		ft_printf("{yellow}## Fetched instruction %#2.2x : {cyan}'%s'{eoc}\n", op_no, cpu->curr_instruction->name);
 	if (op_no && op_no < NB_INSTRUCTIONS && cpu->curr_instruction->nb_args > 0)
 		fetch_arguments(cpu, &bytes_read);
 	else
@@ -123,7 +119,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 ** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IS THE FLAG IS GIVEN
 */
 
-void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop, int fd)
+void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 {
 	uint64_t	cycle_no;
 	uint8_t		op_no;
@@ -131,38 +127,25 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop, int fd)
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(NULL, cpu->memory, MEM_SIZE, cpu->pc, fd);
-		//print_memory("Registers", registers, REG_LEN, NULL);
 		op_no = fetch_instruction(cpu);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
 			cpu->curr_instruction->funct_ptr(cpu->memory, cpu->registers,
 											&cpu->carry, cpu->args_buff);
 		}
-		++cycle_no;
-		loop ? --cycle_no : (void)0;
+		loop ? (void)0 : ++cycle_no;
 	}
 }
+
+int		mem;
 
 int				main(void)
 {
 	uint8_t		ram[MEM_SIZE];
 	uint8_t		registers[REG_LEN];
 	t_vcpu		cpu;
-	int			fd;
 
 	ft_bzero(&ram, MEM_SIZE);
-	ft_bzero(&registers, REG_LEN);
-	init_cpu(&cpu, ram);
-	load_process(&cpu, registers, 0);
-
-/*
-	ram[1] = 0x01;
-	ram[MEM_SIZE - 4] = 0x01;
-	ram[MEM_SIZE - 3] = 0xC0;
-	cpu.pc = 5;
-*/
-
 	ram[0] = 0x01;
 	ram[1] = 0x80;
 	ram[2] = 0x00;
@@ -175,8 +158,10 @@ int				main(void)
 	ram[23] = 0x00;
 	ram[24] = 0x00;
 	ram[25] = 0x02;
+	ft_bzero(&registers, REG_LEN);
+	init_cpu(&cpu, ram);
+	load_process(&cpu, registers, 0);
 
-	fd = 1;
-	run_cpu(&cpu, MEM_SIZE * 3, 0, fd);
+	run_cpu(&cpu, 100, 1);
 	return (0);
 }
