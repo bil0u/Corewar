@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 11:36:25 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/14 04:29:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void		secure_fetch(uint64_t *pc, uint8_t *memory, uint8_t *dst, size_t s);
 **	-------- CPU _DEBUG  ---------
 */
 
-void	print_memory(char *name, uint8_t *mem, uint32_t len, uint64_t pc, int fd);
+void	print_memory(char *buff, uint8_t *mem, uint32_t len, uint64_t pc);
 void	print_cpu(t_vcpu *cpu);
 
 #endif
