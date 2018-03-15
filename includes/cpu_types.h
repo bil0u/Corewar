@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 18:46:10 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 20:34:26 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 */
 
 # define MEM_SIZE	32
+# define IDX_MOD	(MEM_SIZE / 8)
 
 /*
 **	-------- ALLOWED ARGS STRUCTURE AND MACROS ---------

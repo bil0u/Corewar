@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 18:39:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 20:34:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,18 @@ void 		load_process(t_vcpu *cpu, uint8_t *p_regs, uint64_t p_pc)
 **    > Return the PC address of a jump_pos value
 */
 
-uint64_t	jump_to(uint64_t pc, uint64_t jump_pos)
+uint64_t	jump_to(uint64_t pc, int jump_pos)
 {
-	return ((pc + jump_pos) % MEM_SIZE);
+	while (jump_pos < 0)
+		jump_pos += MEM_SIZE;
+	while (jump_pos >= MEM_SIZE)
+		jump_pos -= MEM_SIZE;
+	return (pc + jump_pos);
 }
 
 /*
 ** -- SECURE FETCH ARG
-**    > Handle the circular memory difficulty automatically
+**    > Handle the circular memory
 **    > BIG_ENDIAN >> LITTLE_ENDIAN
 */
 
