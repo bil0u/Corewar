@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/14 04:28:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 15:31:09 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 **    > Print the cpu->pc in red, and the busy memory cells in green
 */
 
-void	print_memory(char *buff, uint8_t *mem, uint32_t len, uint64_t pc)
+void	print_memory(uint8_t *mem, uint32_t len, uint64_t pc, int fd)
 {
 	uint64_t	i;
 
@@ -28,12 +28,10 @@ void	print_memory(char *buff, uint8_t *mem, uint32_t len, uint64_t pc)
 	while (i < len)
 	{
 		if (i == pc)
-			ft_sprintf(buff, "{red}%2.2hhX{eoc}", mem[i]);
+			ft_dprintf(fd, "{red}%2.2u{eoc}", mem[i]);
 		else
-			ft_sprintf(buff, mem[i] ? "{yellow}%2.2hhX{eoc}" : "%2.2hhX", mem[i]);
-		buff += 2;
+			ft_dprintf(fd, mem[i] != 0 ? "{yellow}%2.2u{eoc}" : "%2.2u", mem[i]);
 		i++;
 	}
-	buff[0] = '\n';
-	buff[1] = '\0';
+	ft_putchar_fd('\n', fd);
 }

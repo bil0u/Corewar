@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/14 04:31:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 14:38:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,16 +121,17 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 
 void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 {
-	char		buff[(MEM_SIZE << 1) + 2];
-	ft_bzero(&buff, (MEM_SIZE << 1) + 2);
 	uint64_t	cycle_no;
 	uint8_t		op_no;
+
+	int			mem_fd = new_logwindow("mem", 0);
+	int			reg_fd = new_logwindow("reg", 0);
 
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(buff, cpu->memory, MEM_SIZE, cpu->pc);
-		log_this("mem", buff, 0);
+		print_memory(cpu->memory, MEM_SIZE, cpu->pc, mem_fd);
+		print_memory(cpu->registers, REG_NUMBER * REG_SIZE, (REG_NUMBER * REG_SIZE) + 1, reg_fd);
 		op_no = fetch_instruction(cpu);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
@@ -152,10 +153,6 @@ int				main(void)
 	t_vcpu	cpu;
 	ft_bzero(&cpu, sizeof(cpu));
 
-	new_logwindow("mem", 0);
-	// new_logwindow("regs", 0);
-	// new_logwindow("inst", 0);
-
 	ram[0] = 0x01;
 	ram[1] = 0x80;
 	ram[2] = 0x00;
@@ -171,7 +168,7 @@ int				main(void)
 
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
-	run_cpu(&cpu, 100, 1);
+	run_cpu(&cpu, 10, 1);
 
 	return (0);
 }

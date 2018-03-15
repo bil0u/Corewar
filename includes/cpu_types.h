@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 10:00:34 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 14:39:27 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@
 # define T_LAB		0b1000
 
 # define ARG_REG	0b01
-# define ARG_IND	0b11
 # define ARG_DIR	0b10
+# define ARG_IND	0b11
 # define ARG_REGSZ	1
 # define ARG_INDSZ	2
 # define ARG_DIRSZ	4
