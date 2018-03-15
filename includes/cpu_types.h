@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 14:39:27 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 18:46:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,14 +45,8 @@
 # define ARG_INDSZ	2
 # define ARG_DIRSZ	4
 
+typedef uint32_t	t_arg;
 typedef uint8_t		t_argtypes;
-
-typedef union		u_arg
-{
-	uint8_t			reg_no;
-	uint16_t		ind;
-	uint32_t		dir;
-}					t_arg;
 
 /*
 **	-------- OPERATIONS STRUCTURE AND MACROS ---------
@@ -60,8 +54,8 @@ typedef union		u_arg
 
 # define OPBC_SIZE	1
 
-typedef void		(*t_instr)(uint8_t *memory, uint8_t *registers,
-								uint8_t *carry, t_arg *args);
+typedef struct		s_vcpu t_vcpu;
+typedef void		(*t_instr)(t_vcpu *cpu);
 
 typedef struct		s_op
 {
@@ -69,6 +63,7 @@ typedef struct		s_op
 	uint8_t			op_number;
 	uint8_t			nb_args;
 	t_instr			funct_ptr;
+	uint8_t			has_bytecode;
 	t_argtypes		valid_types[NBR_TYPES];
 }					t_op;
 
@@ -93,11 +88,12 @@ typedef struct		s_op
 typedef struct		s_vcpu
 {
 	uint64_t		pc;
-	t_arg			args_buff[MAX_ARGS];
+	t_arg			op_args[MAX_ARGS];
 	t_op			*curr_instruction;
 	uint8_t			*registers;
 	uint8_t			*memory;
 	uint8_t			carry;
+	uint8_t			op_bytecode;
 }					t_vcpu;
 
 #endif

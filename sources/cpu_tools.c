@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/05 12:17:10 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 18:39:18 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,29 +26,25 @@ void 		load_process(t_vcpu *cpu, uint8_t *p_regs, uint64_t p_pc)
 }
 
 /*
-** -- JUMP PC
-**    > Get the PC address of a jump_pos value
+** -- JUMP TO
+**    > Return the PC address of a jump_pos value
 */
 
 uint64_t	jump_to(uint64_t pc, uint64_t jump_pos)
 {
-	uint64_t	cumul;
-
-	cumul = pc + jump_pos;
-	while (cumul >= MEM_SIZE)
-		cumul -= MEM_SIZE;
-	return (cumul);
+	return ((pc + jump_pos) % MEM_SIZE);
 }
 
 /*
-** -- SECURE FECTH
+** -- SECURE FETCH ARG
 **    > Handle the circular memory difficulty automatically
 **    > BIG_ENDIAN >> LITTLE_ENDIAN
 */
 
-void		secure_fetch(uint64_t *pc, uint8_t *memory, uint8_t *dst, size_t sz)
+void		secure_fetch(uint64_t *pc, uint8_t *memory, t_arg *dst, size_t sz)
 {
 	uint32_t	buff;
+	uint8_t		*tmp;
 
 	if (*pc + sz < MEM_SIZE)
 	{
@@ -59,9 +55,10 @@ void		secure_fetch(uint64_t *pc, uint8_t *memory, uint8_t *dst, size_t sz)
 	}
 	else
 	{
+		tmp = (uint8_t *)dst;
 		while (sz--)
 		{
-			dst[sz] = *(memory + *pc);
+			tmp[sz] = *(memory + *pc);
 			++(*pc);
 			if (*pc == MEM_SIZE)
 				*pc = 0;

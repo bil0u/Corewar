@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/13 21:42:49 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/15 16:01:56 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,10 +62,10 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 
 # -- RULES --
 
-all: $(LIBFT_DEP)
+all:
 	@$(MAKE) -j $(NAME)
 
-$(NAME): $(LIBFT_LIB) $(OBJ_DIR) $(OBJECTS)
+$(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
 	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
 

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 14:38:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/15 18:46:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,29 +28,29 @@
 */
 
 static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
-								uint8_t arg_no, uint8_t bitmask)
+								uint8_t arg_no, uint8_t bytecode)
 {
 	t_arg		*buff;
 	uint8_t		arg_type;
 	uint8_t		valid_types;
 
-	buff = cpu->args_buff + arg_no;
+	buff = cpu->op_args + arg_no;
 	valid_types = cpu->curr_instruction->valid_types[arg_no];
-	arg_type = (bitmask & 0xC0) >> 6;
+	arg_type = (bytecode & 0xC0) >> 6;
 	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
 	{
-		buff->reg_no = *(cpu->memory + *pc_tmp);
-		return (sizeof(buff->reg_no));
+		buff[0] = *(cpu->memory + *pc_tmp);
+		return (ARG_REGSZ);
 	}
 	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
 	{
-		secure_fetch(pc_tmp, cpu->memory, (uint8_t *)buff, sizeof(buff->ind));
-		return (sizeof(buff->ind));
+		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
+		return (ARG_INDSZ);
 	}
 	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
 	{
-		secure_fetch(pc_tmp, cpu->memory, (uint8_t *)buff, sizeof(buff->dir));
-		return (sizeof(buff->dir));
+		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
+		return (ARG_DIRSZ);
 	}
 	return (0);
 }
@@ -58,7 +58,7 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 /*
 ** -- FETCH THE ARGUMENTS
 **    > Fetch the arguments bimask on ARGBC_SIZE bytes
-**    > Decode each argument one by one and store them in the vcpu->args_buff
+**    > Decode each argument one by one and store them in the vcpu->op_args
 **    > Moves the PC after reading them
 **
 **    >> Stop reading if there is an error in the instruction arg(s), and set
@@ -68,24 +68,25 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 {
 	uint64_t	pc_tmp;
-	uint8_t 	bitmask;
+	uint8_t		bytecode;
 	uint8_t		arg_no;
 	uint8_t		arg_sz;
 
-	bitmask = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, *bytes_read)));
+	bytecode = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, *bytes_read)));
+	cpu->op_bytecode = bytecode;
 	*bytes_read += ARGBC_SIZE;
 	arg_no = 0;
 	pc_tmp = jump_to(cpu->pc, *bytes_read);
 	while (arg_no < cpu->curr_instruction->nb_args)
 	{
-		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bitmask)) == 0)
+		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bytecode)) == 0)
 		{
 			cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
 			cpu->curr_instruction = &(g_op_set[0]);
 			return ;
 		}
 		*bytes_read += arg_sz;
-		bitmask <<= 2;
+		bytecode <<= 2;
 		++arg_no;
 	}
 	cpu->pc = pc_tmp;
@@ -108,7 +109,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu)
 	op_no = cpu->memory[cpu->pc];
 	cpu->curr_instruction = &(g_op_set[op_no]);
 	bytes_read = OPBC_SIZE;
-	if (op_no && op_no < NB_INSTRUCTIONS && cpu->curr_instruction->nb_args > 0)
+	if (op_no && op_no < NB_INSTRUCTIONS && cpu->curr_instruction->has_bytecode)
 		fetch_arguments(cpu, &bytes_read);
 	else
 		cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
@@ -124,20 +125,14 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 	uint64_t	cycle_no;
 	uint8_t		op_no;
 
-	int			mem_fd = new_logwindow("mem", 0);
-	int			reg_fd = new_logwindow("reg", 0);
-
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(cpu->memory, MEM_SIZE, cpu->pc, mem_fd);
-		print_memory(cpu->registers, REG_NUMBER * REG_SIZE, (REG_NUMBER * REG_SIZE) + 1, reg_fd);
+		print_memory(cpu);
+		print_registers(cpu);
 		op_no = fetch_instruction(cpu);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
-		{
-			cpu->curr_instruction->funct_ptr(cpu->memory, cpu->registers,
-											&cpu->carry, cpu->args_buff);
-		}
+			cpu->curr_instruction->funct_ptr(cpu);
 		loop ? (void)0 : ++cycle_no;
 	}
 }
@@ -153,18 +148,20 @@ int				main(void)
 	t_vcpu	cpu;
 	ft_bzero(&cpu, sizeof(cpu));
 
+	new_logwindow("mem", 0);
+	new_logwindow("reg", WF_CLOSE);
+	new_logwindow("ins", WF_CLOSE);
+
 	ram[0] = 0x01;
-	ram[1] = 0x80;
+	ram[1] = 0x00;
 	ram[2] = 0x00;
 	ram[3] = 0x00;
-	ram[4] = 0x00;
-	ram[5] = 0x01;
+	ram[4] = 0x01;
 	ram[20] = 0x01;
-	ram[21] = 0x80;
+	ram[21] = 0x00;
 	ram[22] = 0x00;
 	ram[23] = 0x00;
-	ram[24] = 0x00;
-	ram[25] = 0x02;
+	ram[24] = 0x02;
 
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);
