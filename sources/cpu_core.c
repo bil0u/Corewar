@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/16 06:14:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/16 19:02:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,23 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
 	{
 		buff[0] = *(cpu->memory + *pc_tmp);
+		log_this("arg", 0, "{green}Arg %hhu:{eoc} [REGISTER] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_REGSZ);
 	}
 	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
+		log_this("arg", 0, "{green}Arg %hhu:{eoc} [INDIRECT] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_INDSZ);
 	}
 	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
+		log_this("arg", 0, "{green}Arg %hhu:{eoc} [DIRECT] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_DIRSZ);
 	}
+	else
+		log_this("arg", 0, "{red}Arg #%hhu:{eoc} INVALID - STOP READING\n", arg_no + 1);
 	return (0);
 }
 
@@ -59,7 +64,6 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint64_t *pc_tmp,
 ** -- FETCH THE ARGUMENTS
 **    > Fetch the arguments bimask on ARGBC_SIZE bytes
 **    > Decode each argument one by one and store them in the vcpu->op_args
-**    > Moves the PC after reading them
 **
 **    >> Stop reading if there is an error in the instruction arg(s), and set
 **       the instruction to NULL
@@ -81,7 +85,6 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 	{
 		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bytecode)) == 0)
 		{
-			cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
 			cpu->curr_instruction = &(g_op_set[0]);
 			return ;
 		}
@@ -89,11 +92,24 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 		bytecode <<= 2;
 		++arg_no;
 	}
-	cpu->pc = pc_tmp;
 }
 
 /*
 ** -- FETCH THE CURRENT INSTRUCTION
+*/
+
+static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
+{
+	uint8_t		op_no;
+
+	op_no = cpu->memory[cpu->pc];
+	cpu->curr_instruction = &(g_op_set[op_no]);
+	*bytes_read = OPBC_SIZE;
+	return (op_no);
+}
+
+/*
+** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IF THE FLAG IS SET
 ** -- Steps of an instruction cycle :
 **    > Fetch the instruction on OPBC_SIZE bytes
 **    > Decode and check arguments if there is any & the opcode is known
@@ -101,68 +117,57 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 **    > Execute the instruction if the opcode is known
 */
 
-static uint8_t	fetch_instruction(t_vcpu *cpu)
-{
-	uint8_t		op_no;
-	uint8_t		bytes_read;
-
-	op_no = cpu->memory[cpu->pc];
-	cpu->curr_instruction = &(g_op_set[op_no]);
-	bytes_read = OPBC_SIZE;
-	if (op_no && op_no < NB_INSTRUCTIONS && cpu->curr_instruction->has_bytecode)
-		fetch_arguments(cpu, &bytes_read);
-	else
-		cpu->pc = jump_to(cpu->pc, OPBC_SIZE);
-	return (cpu->curr_instruction->op_number);
-}
-
-/*
-** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IF THE FLAG IS SET
-*/
-
 void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 {
 	uint64_t	cycle_no;
 	uint8_t		op_no;
+	uint8_t		bytes_read;
 
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
 		print_memory(cpu);
 		print_registers(cpu);
-		op_no = fetch_instruction(cpu);
+		op_no = fetch_instruction(cpu, &bytes_read);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
-			cpu->curr_instruction->funct_ptr(cpu);
+		{
+			log_this("arg", 0, "{yellow}%s:{eoc}\n", cpu->curr_instruction->name);
+			if (cpu->curr_instruction->has_bytecode)
+				fetch_arguments(cpu, &bytes_read);
+			bytes_read += cpu->curr_instruction->funct_ptr(cpu);
+			log_this("arg", 0, "----\n");
+		}
+		cpu->pc = jump_to(cpu->pc, bytes_read);
 		loop ? (void)0 : ++cycle_no;
 		sleep(1);
 	}
 }
 
-int		mem;
-
 int				main(void)
 {
-	uint8_t	ram[MEM_SIZE];
+	uint8_t		ram[MEM_SIZE];
+	uint32_t	registers[REG_NUMBER];
+	t_vcpu		cpu;
+
 	ft_bzero(&ram, MEM_SIZE);
-	uint8_t	registers[REG_LEN];
 	ft_bzero(&registers, REG_LEN);
-	t_vcpu	cpu;
 	ft_bzero(&cpu, sizeof(cpu));
 
 	new_logwindow("mem", WF_KEEP | WF_CLOSE);
 	new_logwindow("reg", WF_KEEP | WF_CLOSE);
 	new_logwindow("ins", WF_KEEP | WF_CLOSE);
+	new_logwindow("arg", WF_KEEP | WF_CLOSE);
 
 	ram[0] = 0x01;
 	ram[1] = 0x00;
 	ram[2] = 0x00;
 	ram[3] = 0x00;
 	ram[4] = 0x01;
-	ram[20] = 0x01;
-	ram[21] = 0x00;
-	ram[22] = 0x00;
-	ram[23] = 0x00;
-	ram[24] = 0x02;
+	ram[7] = 0x02;
+	ram[8] = 0xD0;
+	ram[9] = 0x00;
+	ram[10] = 0x05;
+	ram[11] = 0x02;
 
 	init_cpu(&cpu, ram);
 	load_process(&cpu, registers, 0);

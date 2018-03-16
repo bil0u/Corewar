@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 17:24:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/16 17:34:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@
 
 # define NB_INSTRUCTIONS	3
 
-void	live_instr(t_vcpu *cpu);
-void	load_instr(t_vcpu *cpu);
+int		live_instr(t_vcpu *cpu);
+int		load_instr(t_vcpu *cpu);
 
 t_op    g_op_set[NB_INSTRUCTIONS] =
 {

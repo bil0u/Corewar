@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/16 03:17:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/16 19:05:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void		init_cpu(t_vcpu *cpu, uint8_t *memory)
 	cpu->memory = memory;
 }
 
-void 		load_process(t_vcpu *cpu, uint8_t *p_regs, uint64_t p_pc)
+void 		load_process(t_vcpu *cpu, uint32_t *p_regs, uint64_t p_pc)
 {
 	cpu->registers = p_regs;
 	cpu->pc = p_pc;
@@ -50,25 +50,14 @@ uint64_t	jump_to(uint64_t pc, int jump_len)
 
 void		secure_fetch(uint64_t *pc, uint8_t *memory, t_arg *dst, size_t sz)
 {
-	uint32_t	buff;
 	uint8_t		*tmp;
 
-	if (*pc + sz < MEM_SIZE)
+	tmp = (uint8_t *)dst;
+	while (sz--)
 	{
-		buff = 0;
-		ft_memcpy(&buff, memory + *pc, sz);
-		*dst = SWAP_UINT32(buff);
-		*pc += sz;
-	}
-	else
-	{
-		tmp = (uint8_t *)dst;
-		while (sz--)
-		{
-			tmp[sz] = *(memory + *pc);
-			++(*pc);
-			if (*pc == MEM_SIZE)
-				*pc = 0;
-		}
+		tmp[sz] = *(memory + *pc);
+		++(*pc);
+		if (*pc == MEM_SIZE)
+			*pc = 0;
 	}
 }

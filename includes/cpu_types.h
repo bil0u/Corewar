@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/16 01:55:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/16 18:15:59 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ typedef uint8_t		t_argtypes;
 # define OPBC_SIZE	1
 
 typedef struct		s_vcpu t_vcpu;
-typedef void		(*t_instr)(t_vcpu *cpu);
+typedef int			(*t_instr)(t_vcpu *cpu);
 
 typedef struct		s_op
 {
@@ -73,7 +73,7 @@ typedef struct		s_op
 **	-------- VIRTUAL CPU STRUCTURE AND MACROS ---------
 */
 
-# define REG_NUMBER	16
+# define REG_NUMBER	8
 # define REG_SIZE	4
 # define REG_LEN	(REG_NUMBER * REG_SIZE)
 
@@ -92,7 +92,7 @@ typedef struct		s_vcpu
 	uint64_t		pc;
 	t_arg			op_args[MAX_ARGS];
 	t_op			*curr_instruction;
-	uint8_t			*registers;
+	uint32_t		*registers;
 	uint8_t			*memory;
 	uint8_t			carry;
 	uint8_t			op_bytecode;
