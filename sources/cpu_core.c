@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/15 18:46:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/16 06:14:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,11 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
 	uint8_t		arg_no;
 	uint8_t		arg_sz;
 
-	bytecode = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, *bytes_read)));
+	bytecode = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, (int)*bytes_read)));
 	cpu->op_bytecode = bytecode;
 	*bytes_read += ARGBC_SIZE;
 	arg_no = 0;
-	pc_tmp = jump_to(cpu->pc, *bytes_read);
+	pc_tmp = jump_to(cpu->pc, (int)*bytes_read);
 	while (arg_no < cpu->curr_instruction->nb_args)
 	{
 		if ((arg_sz = fetch_next_arg(cpu, &pc_tmp, arg_no, bytecode)) == 0)
@@ -134,6 +134,7 @@ void			run_cpu(t_vcpu *cpu, uint64_t nb_cycles, uint8_t loop)
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 			cpu->curr_instruction->funct_ptr(cpu);
 		loop ? (void)0 : ++cycle_no;
+		sleep(1);
 	}
 }
 
@@ -148,9 +149,9 @@ int				main(void)
 	t_vcpu	cpu;
 	ft_bzero(&cpu, sizeof(cpu));
 
-	new_logwindow("mem", 0);
-	new_logwindow("reg", WF_CLOSE);
-	new_logwindow("ins", WF_CLOSE);
+	new_logwindow("mem", WF_KEEP | WF_CLOSE);
+	new_logwindow("reg", WF_KEEP | WF_CLOSE);
+	new_logwindow("ins", WF_KEEP | WF_CLOSE);
 
 	ram[0] = 0x01;
 	ram[1] = 0x00;

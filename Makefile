@@ -6,45 +6,45 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/15 16:01:56 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/16 07:06:31 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 # -- PROJECT VARIABLES & COMMANDS --
 
-NAME =		corewar
-CC =		gcc
-CFLAGS =	-Wall -Werror -Wextra
-CPPFLAGS =	-I $(INC_DIR) -I $(LIBFT_DIR)
-DEPFLAGS =	-MMD
+NAME =			corewar
+CC =			gcc
+CFLAGS =		-Wall -Werror -Wextra
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR)
+DEPFLAGS =		-MMD
 
-SHELL =		/bin/bash
-LDMAKE =	make -C
-MKDIR =		mkdir -p
-RMDIR =		rm -rf
-RM =		rm -f
-NORM =		norminette
+SHELL =			/bin/bash
+LDMAKE =		make -C
+MKDIR =			mkdir -p
+RMDIR =			rm -rf
+RM =			rm -f
+NORM =			norminette
 
 # -- LIBRARIES --
 
-LDLIBS =	-lft
-LDFLAGS =	-Llibft
+LDLIBS =		-lft
+LDFLAGS =		-Llibft
 
-LIBFT_DIR =	libft
-LIBFT_DEP =	$(LIBFT_DIR)/libft.a $(LIBFT_DIR)/log_server
+LIBFT_DIR =		libft
+LIBFT_DEP =		$(LIBFT_DIR)/libft.a
 
 # -- PATHS NAMES --
 
-SRC_DIR =	sources
-INC_DIR =	includes
-OBJ_DIR =	.objects
+SRC_DIR =		sources
+INC_DIR =		includes
+OBJ_DIR =		.objects
 
 # -- PROJECT FILES --
 
-FILES =		cpu_core \
-			cpu_tools \
-			cpu_instructions \
-			cpu_debug \
+FILES =			cpu_core \
+				cpu_tools \
+				cpu_instructions \
+				cpu_debug \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 
@@ -69,8 +69,7 @@ $(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
 	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
 
-$(LIBFT_DEP):
-	@$(MAKE) lib
+$(LIBFT_DEP): lib
 
 $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)
