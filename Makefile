@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/16 07:06:31 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/17 16:43:39 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,6 @@ CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR)
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
-LDMAKE =		make -C
 MKDIR =			mkdir -p
 RMDIR =			rm -rf
 RM =			rm -f
@@ -62,14 +61,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 
 # -- RULES --
 
-all:
+all: $(LIBFT_DEP)
 	@$(MAKE) -j $(NAME)
 
 $(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
 	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
 
-$(LIBFT_DEP): lib
+$(LIBFT_DEP):
+	@$(MAKE) lib
 
 $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/16 18:15:59 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/17 20:48:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 */
 
 # define MEM_SIZE		32
-# define IDX_MOD		(MEM_SIZE / 8)
+# define IDX_MOD		15	//(MEM_SIZE / 8)
 # define MAX_PLAYERS	4
 
 /*
@@ -47,7 +47,6 @@
 # define ARG_INDSZ	2
 # define ARG_DIRSZ	4
 
-typedef uint32_t	t_arg;
 typedef uint8_t		t_argtypes;
 
 /*
@@ -77,20 +76,10 @@ typedef struct		s_op
 # define REG_SIZE	4
 # define REG_LEN	(REG_NUMBER * REG_SIZE)
 
-/*
-# define CPU_PC(cpu) ((cpu)->pc)
-# define CPU_CARRY(cpu) ((cpu)->carry)
-# define CPU_REGS(cpu) ((cpu)->registers)
-# define CPU_REG_NO(cpu, reg_no) (*(CPU_REGS(cpu) + (reg_no * REG_SIZE)))
-# define CPU_ARGS(cpu) ((cpu)->args_buff)
-# define CPU_ARG_NO(cpu, arg_no) (CPU_ARGS(cpu)[arg_no])
-# define CPU_OP_NO(op_no) (g_op_set[op_no])
-*/
-
 typedef struct		s_vcpu
 {
-	uint64_t		pc;
-	t_arg			op_args[MAX_ARGS];
+	uint32_t		pc;
+	uint32_t		op_args[MAX_ARGS];
 	t_op			*curr_instruction;
 	uint32_t		*registers;
 	uint8_t			*memory;
