@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/17 20:50:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/19 19:53:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
 **    > Execute the instruction if the opcode is known
 */
 
-void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, uint8_t loop)
+void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 {
 	uint32_t	cycle_no;
 	uint8_t		op_no;
@@ -128,8 +128,9 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, uint8_t loop)
 	while (cycle_no <= nb_cycles)
 	{
 		print_memory(cpu);
-		print_registers(cpu);
+
 		op_no = fetch_instruction(cpu, &bytes_read);
+
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
 			log_this("ins", 0, "{yellow}%s:{eoc}\n", cpu->curr_instruction->name);
@@ -139,18 +140,59 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, uint8_t loop)
 			log_this("ins", 0, "----\n");
 		}
 		cpu->pc = jump_to(cpu->pc, bytes_read);
+
+		print_registers(cpu);
+
 		loop ? (void)0 : ++cycle_no;
-		sleep(1);
+		slow ? sleep(1) : (void)0;
 	}
+}
+
+static void		set_test_values(uint8_t *memory)
+{
+	(void)memory;
+	//	TEST LIVE
+	//	memory[0] = 0x01;
+	//	memory[1] = 0x00;
+	//	memory[2] = 0x00;
+	//	memory[3] = 0x00;
+	//	memory[4] = 0x01;
+
+	//	TEST LOAD [IND][REG]
+		memory[6] = 0x02;
+		memory[7] = 0b11010000;
+		memory[8] = 0x00;
+		memory[9] = 0x01;
+		memory[10] = 0x02;
+
+	//	TEST LOAD [DIR][REG]
+	//	memory[6] = 0x02;
+	//	memory[7] = 0b10010000;
+	//	memory[8] = 0x00;
+	//	memory[9] = 0x01;
+	//	memory[10] = 0x02;
+
+	//	TEST STORE [REG][REG]
+		memory[12] = 0x03;
+		memory[13] = 0b01010000;
+		memory[14] = 0x02;
+		memory[15] = 0x07;
+
+	//	TEST STORE [REG][IND]
+		memory[17] = 0x03;
+		memory[18] = 0b01110000;
+		memory[19] = 0x07;
+		memory[20] = 0x00;
+		memory[21] = 0x08;
 }
 
 int				main(void)
 {
-	uint8_t		ram[MEM_SIZE];
+	uint8_t		memory[MEM_SIZE];
 	uint32_t	registers[REG_NUMBER];
 	t_vcpu		cpu;
 
-	ft_bzero(&ram, MEM_SIZE);
+	ft_bzero(&memory, MEM_SIZE);
 	ft_bzero(&registers, REG_LEN);
 	ft_bzero(&cpu, sizeof(cpu));
 
@@ -158,34 +200,10 @@ int				main(void)
 	new_logwindow("reg", WF_KEEP | WF_CLOSE);
 	new_logwindow("ins", WF_KEEP | WF_CLOSE);
 
-	ram[0] = 0x01;
-	ram[1] = 0x00;
-	ram[2] = 0x00;
-	ram[3] = 0x00;
-	ram[4] = 0x01;
-
-	ram[6] = 0x02;
-	ram[7] = 0xD0;
-	ram[8] = 0x00;
-	ram[9] = 0x01;
-	ram[10] = 0x02;
-
-	ram[12] = 0x03;
-	ram[13] = 0x50;
-	ram[14] = 0x02;
-	ram[15] = 0x07;
-
-	ram[17] = 0x03;
-	ram[18] = 0x70;
-	ram[19] = 0x07;
-	ram[20] = 0x00;
-	ram[21] = 0x08;
-
-
-
-	init_cpu(&cpu, ram);
+	init_cpu(&cpu, memory);
+	set_test_values(memory);
 	load_process(&cpu, registers, 0);
-	run_cpu(&cpu, 10, 1);
+	run_cpu(&cpu, 10, 1, 1);
 
 	return (0);
 }
