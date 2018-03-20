@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/19 19:53:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/20 17:44:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -152,38 +152,109 @@ static void		set_test_values(uint8_t *memory)
 {
 	(void)memory;
 	//	TEST LIVE
-	//	memory[0] = 0x01;
-	//	memory[1] = 0x00;
-	//	memory[2] = 0x00;
-	//	memory[3] = 0x00;
-	//	memory[4] = 0x01;
+	// memory[0] = 0x01;
+	// memory[1] = 0x00;
+	// memory[2] = 0x00;
+	// memory[3] = 0x00;
+	// memory[4] = 0x01;
 
 	//	TEST LOAD [IND][REG]
-		memory[6] = 0x02;
-		memory[7] = 0b11010000;
-		memory[8] = 0x00;
-		memory[9] = 0x01;
-		memory[10] = 0x02;
+	// memory[6] = 0x02;
+	// memory[7] = 0b11010000;
+	// memory[8] = 0x00;
+	// memory[9] = 0x01;
+	// memory[10] = 0x02;
 
 	//	TEST LOAD [DIR][REG]
-	//	memory[6] = 0x02;
-	//	memory[7] = 0b10010000;
-	//	memory[8] = 0x00;
-	//	memory[9] = 0x01;
-	//	memory[10] = 0x02;
+	// memory[6] = 0x02;
+	// memory[7] = 0b10010000;
+	// memory[8] = 0x00;
+	// memory[9] = 0x00;
+	// memory[10] = 0xca;
+	// memory[11] = 0xfe;
+	// memory[12] = 0x03;
 
 	//	TEST STORE [REG][REG]
-		memory[12] = 0x03;
-		memory[13] = 0b01010000;
-		memory[14] = 0x02;
-		memory[15] = 0x07;
+	// memory[12] = 0x03;
+	// memory[13] = 0b01010000;
+	// memory[14] = 0x02;
+	// memory[15] = 0x07;
 
 	//	TEST STORE [REG][IND]
-		memory[17] = 0x03;
-		memory[18] = 0b01110000;
-		memory[19] = 0x07;
-		memory[20] = 0x00;
-		memory[21] = 0x08;
+	// memory[17] = 0x03;
+	// memory[18] = 0b01110000;
+	// memory[19] = 0x07;
+	// memory[20] = 0x00;
+	// memory[21] = 0x08;
+
+	//	TEST ADD [REG][REG][REG]
+		// LOAD DIRECT
+		// memory[1] = 0x02;
+		// memory[2] = 0b10010000;
+		// memory[3] = 0x00;
+		// memory[4] = 0x00;
+		// memory[5] = 0x00;
+		// memory[6] = 0x05;
+		// memory[7] = 0x01;
+		// LOAD DIRECT
+		// memory[9] = 0x02;
+		// memory[10] = 0b10010000;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x00;
+		// memory[14] = 0x04;
+		// memory[15] = 0x02;
+	// memory[17] = 0x04;
+	// memory[18] = 0b01010100;
+	// memory[19] = 0x01;
+	// memory[20] = 0x02;
+	// memory[21] = 0x03;
+
+	//	TEST SUB [REG][REG][REG]
+		// LOAD DIRECT
+		// memory[1] = 0x02;
+		// memory[2] = 0b10010000;
+		// memory[3] = 0x00;
+		// memory[4] = 0x00;
+		// memory[5] = 0x00;
+		// memory[6] = 0x05;
+		// memory[7] = 0x01;
+		// LOAD DIRECT
+		// memory[9] = 0x02;
+		// memory[10] = 0b10010000;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x00;
+		// memory[14] = 0x09;
+		// memory[15] = 0x02;
+	// memory[17] = 0x05;
+	// memory[18] = 0b01010100;
+	// memory[19] = 0x01;
+	// memory[20] = 0x02;
+	// memory[21] = 0x03;
+
+	//	TEST SUB [REG][REG][REG]
+		// LOAD DIRECT
+		memory[1] = 0x02;
+		memory[2] = 0b10010000;
+		memory[3] = 0x00;
+		memory[4] = 0x00;
+		memory[5] = 0x00;
+		memory[6] = 0x01;
+		memory[7] = 0x01;
+		// LOAD DIRECT
+		memory[9] = 0x02;
+		memory[10] = 0b10010000;
+		memory[11] = 0x00;
+		memory[12] = 0x00;
+		memory[13] = 0x00;
+		memory[14] = 0x02;
+		memory[15] = 0x02;
+	memory[17] = 0x06;
+	memory[18] = 0b01010100;
+	memory[19] = 0x01;
+	memory[20] = 0x02;
+	memory[21] = 0x03;
 }
 
 int				main(void)

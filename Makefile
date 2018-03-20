@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/17 16:43:39 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/20 15:58:34 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -66,7 +66,7 @@ all: $(LIBFT_DEP)
 
 $(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)
 	@$(CC) $(LDLIBS) $(LDFLAGS) $(OBJECTS) -o $@
-	@printf "\r$(ERASELN)> $(YELLOW)$(NAME)$(EOC) : Binary created !\t$(GREEN_B)✓$(EOC)\n"
+	@printf "\r$(ERASELN)$(GREEN_B)✓$(EOC) $(YELLOW)$(NAME)$(EOC) : Binary created\n"
 
 $(LIBFT_DEP):
 	@$(MAKE) lib
@@ -78,14 +78,14 @@ clean: libclean
 	@if [ -e $(OBJ_DIR) ]; \
 	then \
 		$(RMDIR) $(OBJ_DIR); \
-		printf "> $(YELLOW)$(NAME)$(EOC) : Objects deleted\t$(RED_B)✗$(EOC)\n"; \
+		printf "$(RED_B)✗$(EOC) $(YELLOW)$(NAME)$(EOC) : Objects deleted\n"; \
 	fi;
 
 fclean: clean libfclean
 	@if [ -e $(NAME) ]; \
 	then \
 		$(RM) $(NAME); \
-		printf "> $(YELLOW)$(NAME)$(EOC) : Binary deleted\t$(RED_B)✗$(EOC)\n"; \
+		printf "$(RED_B)✗$(EOC) $(YELLOW)$(NAME)$(EOC) : Binary deleted\n"; \
 	fi;
 
 re: fclean all

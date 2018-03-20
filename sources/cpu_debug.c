@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/19 18:57:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/20 14:15:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,11 @@ void	print_memory(t_vcpu *cpu)
 	uint64_t	i;
 
 	i = 0;
+	clear_window("mem");
 	while (i < MEM_SIZE)
 	{
 		if (i == cpu->pc)
-			log_this("mem", 0, "{green}%2.2hhx{eoc}", cpu->memory[i]);
+			log_this("mem", 0, "{yellow}%2.2hhx{eoc}", cpu->memory[i]);
 		else if (cpu->memory[i])
 			log_this("mem", 0, "{cyan}%2.2hhx{eoc}", cpu->memory[i]);
 		else
@@ -45,6 +46,7 @@ void	print_registers(t_vcpu *cpu)
 	uint8_t	i;
 
 	i = 0;
+	clear_window("reg");
 	while (i < REG_NUMBER)
 	{
 		if (cpu->registers[i])
