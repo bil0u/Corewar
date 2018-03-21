@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/21 01:44:35 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/21 17:40:58 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 #include "cpu_types.h"
 #include "instructions.h"
 #include "cpu.h"
+#include "cpu_verbose.h"
 
 /*
 ** -- FETCH THE N_TH ARGUMENT
@@ -40,23 +41,23 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint32_t pc_tmp,
 	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
 	{
 		buff[0] = *(cpu->memory + pc_tmp);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [REGISTER] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, P_ARG_REG, arg_no + 1, *buff);
 		return (ARG_REGSZ);
 	}
 	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [INDIRECT] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, P_ARG_IND, arg_no + 1, *buff);
 		return (ARG_INDSZ);
 	}
 	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [DIRECT] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *buff);
 		return (ARG_DIRSZ);
 	}
 	else
-		log_this("ins", 0, "{red}Arg #%hhu:{eoc} INVALID - STOP READING\n", arg_no + 1);
+		log_this("ins", 0, P_ARG_KO, arg_no + 1);
 	return (0);
 }
 
@@ -130,10 +131,9 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow, char clean
 		print_memory(cpu, clean);
 
 		op_no = fetch_instruction(cpu, &bytes_read);
-
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
-			log_this("ins", 0, "{yellow}%s:{eoc}\n", cpu->curr_instruction->name);
+			log_this("ins", 0, P_OPNAME, cpu->curr_instruction->name);
 			if (cpu->curr_instruction->has_bytecode)
 				fetch_arguments(cpu, &bytes_read);
 			bytes_read += cpu->curr_instruction->funct_ptr(cpu);
@@ -167,13 +167,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// memory[10] = 0x02;
 
 	//	TEST LOAD [DIR][REG]
-	// memory[6] = 0x02;
-	// memory[7] = 0b10010000;
-	// memory[8] = 0x00;
-	// memory[9] = 0x00;
-	// memory[10] = 0xca;
-	// memory[11] = 0xfe;
-	// memory[12] = 0x03;
+	// memory[4] = 0x02;
+	// memory[5] = 0b10010000;
+	// memory[6] = 0x00;
+	// memory[7] = 0x00;
+	// memory[8] = 0xca;
+	// memory[9] = 0xfe;
+	// memory[10] = 0x02;
 
 	//	TEST STORE [REG][REG]
 	// memory[12] = 0x03;
@@ -198,13 +198,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 		// memory[6] = 0x05;
 		// memory[7] = 0x01;
 		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x00;
-		// memory[14] = 0x04;
-		// memory[15] = 0x02;
+	// 	memory[9] = 0x02;
+	// 	memory[10] = 0b10010000;
+	// 	memory[11] = 0x00;
+	// 	memory[12] = 0x00;
+	// 	memory[13] = 0x00;
+	// 	memory[14] = 0x04;
+	// 	memory[15] = 0x02;
 	// memory[17] = 0x04;
 	// memory[18] = 0b01010100;
 	// memory[19] = 0x01;
@@ -221,13 +221,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 		// memory[6] = 0x05;
 		// memory[7] = 0x01;
 		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x00;
-		// memory[14] = 0x09;
-		// memory[15] = 0x02;
+	// 	memory[9] = 0x02;
+	// 	memory[10] = 0b10010000;
+	// 	memory[11] = 0x00;
+	// 	memory[12] = 0x00;
+	// 	memory[13] = 0x00;
+	// 	memory[14] = 0x09;
+	// 	memory[15] = 0x02;
 	// memory[17] = 0x05;
 	// memory[18] = 0b01010100;
 	// memory[19] = 0x01;
@@ -244,13 +244,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 		// memory[6] = 0x01;
 		// memory[7] = 0x01;
 		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x00;
-		// memory[14] = 0x03;
-		// memory[15] = 0x02;
+	// 	memory[9] = 0x02;
+	// 	memory[10] = 0b10010000;
+	// 	memory[11] = 0x00;
+	// 	memory[12] = 0x00;
+	// 	memory[13] = 0x00;
+	// 	memory[14] = 0x03;
+	// 	memory[15] = 0x02;
 	// memory[17] = 0x06;
 	// memory[18] = 0b01010100;
 	// memory[19] = 0x01;
@@ -312,13 +312,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 		// memory[6] = 0x03;
 		// memory[7] = 0x01;
 		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x00;
-		// memory[14] = 0x02;
-		// memory[15] = 0x02;
+	// 	memory[9] = 0x02;
+	// 	memory[10] = 0b10010000;
+	// 	memory[11] = 0x00;
+	// 	memory[12] = 0x00;
+	// 	memory[13] = 0x00;
+	// 	memory[14] = 0x02;
+	// 	memory[15] = 0x02;
 	// memory[17] = 0x08;
 	// memory[18] = 0b01010100;
 	// memory[19] = 0x01;
@@ -340,6 +340,8 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// cpu->carry = 1;
 	// memory[20] = 0x09;
 	// *((uint32_t *)(memory + 21)) = SWAP_UINT32((uint32_t)-15);
+
+
 }
 
 int				main(void)
@@ -359,7 +361,7 @@ int				main(void)
 	init_cpu(&cpu, memory);
 	set_test_values(&cpu, memory);
 	load_process(&cpu, registers, 0);
-	run_cpu(&cpu, 10, 1, 0, 0);
+	run_cpu(&cpu, 10, 1, 1, 1);
 
 	return (0);
 }
