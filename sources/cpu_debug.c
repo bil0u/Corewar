@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/20 14:15:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/21 00:46:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,22 +18,27 @@
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
-void	print_memory(t_vcpu *cpu)
+void	print_memory(t_vcpu *cpu, char clean)
 {
-	uint64_t	i;
+	char		buff[4096];
+	uint32_t	i;
+	uint32_t	ret;
 
 	i = 0;
-	clear_window("mem");
+	ret = 0;
+	if (clean)
+		clear_window("mem");
 	while (i < MEM_SIZE)
 	{
 		if (i == cpu->pc)
-			log_this("mem", 0, "{yellow}%2.2hhx{eoc}", cpu->memory[i]);
+			ret += ft_sprintf(buff + ret, "{yellow}%2.2hhx{eoc}", cpu->memory[i]);
 		else if (cpu->memory[i])
-			log_this("mem", 0, "{cyan}%2.2hhx{eoc}", cpu->memory[i]);
+			ret += ft_sprintf(buff + ret, "{cyan}%2.2hhx{eoc}", cpu->memory[i]);
 		else
-			log_this("mem", 0, "%2.2hhx", cpu->memory[i]);
-		i++;
+			ret += ft_sprintf(buff + ret, "%2.2hhx", cpu->memory[i]);
+		++i;
 	}
+	log_this("mem", 0, buff);
 	ft_putchar_fd('\n', get_winfd("mem"));
 }
 
@@ -41,21 +46,26 @@ void	print_memory(t_vcpu *cpu)
 ** -- PRINT REGISTERS CONTENT (IN HEX)
 */
 
-void	print_registers(t_vcpu *cpu)
+void	print_registers(t_vcpu *cpu, char clean)
 {
-	uint8_t	i;
+	char		buff[4096];
+	uint8_t		i;
+	uint32_t	ret;
 
 	i = 0;
-	clear_window("reg");
+	ret = 0;
+	if (clean)
+		clear_window("reg");
 	while (i < REG_NUMBER)
 	{
 		if (cpu->registers[i])
-			log_this("reg", 0, "{yellow}%8.8x{eoc}", cpu->registers[i]);
+			ret += ft_sprintf(buff + ret, "{yellow}%8.8x{eoc}", cpu->registers[i]);
 		else
-			log_this("reg", 0, "%8.8x", cpu->registers[i]);
+			ret += ft_sprintf(buff + ret, "%8.8x", cpu->registers[i]);
 		i++;
 		if (i != REG_NUMBER)
-			log_this("reg", 0, "{red}|{eoc}");
+			ret += ft_sprintf(buff + ret, "{red}|{eoc}");
 	}
+	log_this("reg", 0, buff);
 	ft_putchar_fd('\n', get_winfd("reg"));
 }

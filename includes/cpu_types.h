@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/20 14:47:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/21 01:43:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 **	-------- TMP ---------
 */
 
-# define MEM_SIZE		32
-# define IDX_MOD		15
+# define MEM_SIZE		32				// TEST VALUE - TO BE MODIFIED
+# define IDX_MOD		MEM_SIZE		// TEST VALUE - TO BE MODIFIED
 # define MAX_PLAYERS	4
 
 /*

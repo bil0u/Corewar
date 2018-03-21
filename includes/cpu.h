@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/20 14:45:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/21 00:38:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void		secure_store(uint32_t pc, uint8_t *mem, uint32_t src, size_t sz);
 **	-------- CPU _DEBUG  ---------
 */
 
-void		print_memory(t_vcpu *cpu);
-void		print_registers(t_vcpu *cpu);
+void		print_memory(t_vcpu *cpu, char clean);
+void		print_registers(t_vcpu *cpu, char clean);
 
 #endif

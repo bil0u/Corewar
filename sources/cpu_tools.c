@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/17 18:31:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/20 23:36:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 {
 	uint8_t		*tmp;
 
+	*dst = 0;
 	tmp = (uint8_t *)dst;
 	if (pc + sz < MEM_SIZE)
 	{

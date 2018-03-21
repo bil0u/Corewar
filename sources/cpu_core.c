@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/20 17:44:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/21 01:44:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,19 @@ static uint8_t	fetch_next_arg(t_vcpu *cpu, uint32_t pc_tmp,
 	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
 	{
 		buff[0] = *(cpu->memory + pc_tmp);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [REGISTER] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, "{green}Arg %hhu:{eoc} [REGISTER] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_REGSZ);
 	}
 	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [INDIRECT] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, "{green}Arg %hhu:{eoc} [INDIRECT] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_INDSZ);
 	}
 	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
 	{
 		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
-		log_this("ins", 0, "{green}Arg %hhu:{eoc} [DIRECT] | ({yellow}%#.2x{eoc})\n", arg_no + 1, *buff);
+		log_this("ins", 0, "{green}Arg %hhu:{eoc} [DIRECT] | ({yellow}0x%.2x{eoc})\n", arg_no + 1, *buff);
 		return (ARG_DIRSZ);
 	}
 	else
@@ -118,7 +118,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
 **    > Execute the instruction if the opcode is known
 */
 
-void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
+void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow, char clean)
 {
 	uint32_t	cycle_no;
 	uint8_t		op_no;
@@ -127,7 +127,7 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(cpu);
+		print_memory(cpu, clean);
 
 		op_no = fetch_instruction(cpu, &bytes_read);
 
@@ -141,16 +141,17 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 		}
 		cpu->pc = jump_to(cpu->pc, bytes_read);
 
-		print_registers(cpu);
+		print_registers(cpu, clean);
 
 		loop ? (void)0 : ++cycle_no;
 		slow ? sleep(1) : (void)0;
 	}
 }
 
-static void		set_test_values(uint8_t *memory)
+static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 {
 	(void)memory;
+	(void)cpu;
 	//	TEST LIVE
 	// memory[0] = 0x01;
 	// memory[1] = 0x00;
@@ -233,28 +234,112 @@ static void		set_test_values(uint8_t *memory)
 	// memory[20] = 0x02;
 	// memory[21] = 0x03;
 
-	//	TEST SUB [REG][REG][REG]
+	//	TEST AND [REG][REG][REG]
 		// LOAD DIRECT
-		memory[1] = 0x02;
-		memory[2] = 0b10010000;
-		memory[3] = 0x00;
-		memory[4] = 0x00;
-		memory[5] = 0x00;
-		memory[6] = 0x01;
-		memory[7] = 0x01;
+		// memory[1] = 0x02;
+		// memory[2] = 0b10010000;
+		// memory[3] = 0x00;
+		// memory[4] = 0x00;
+		// memory[5] = 0x00;
+		// memory[6] = 0x01;
+		// memory[7] = 0x01;
 		// LOAD DIRECT
-		memory[9] = 0x02;
-		memory[10] = 0b10010000;
-		memory[11] = 0x00;
-		memory[12] = 0x00;
-		memory[13] = 0x00;
-		memory[14] = 0x02;
-		memory[15] = 0x02;
-	memory[17] = 0x06;
-	memory[18] = 0b01010100;
-	memory[19] = 0x01;
-	memory[20] = 0x02;
-	memory[21] = 0x03;
+		// memory[9] = 0x02;
+		// memory[10] = 0b10010000;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x00;
+		// memory[14] = 0x03;
+		// memory[15] = 0x02;
+	// memory[17] = 0x06;
+	// memory[18] = 0b01010100;
+	// memory[19] = 0x01;
+	// memory[20] = 0x02;
+	// memory[21] = 0x03;
+
+	//	TEST AND [DIR][IND][REG]
+	// memory[2] = 0x06;
+	// memory[3] = 0b10110100;
+	// memory[4] = 0x00;
+	// memory[5] = 0x00;
+	// memory[6] = 0x00;
+	// memory[7] = 0x02;
+	// memory[8] = 0x00;
+	// memory[9] = 0x00;
+	// memory[10] = 0x03;
+
+	//	TEST OR [REG][REG][REG]
+		// LOAD DIRECT
+		// memory[1] = 0x02;
+		// memory[2] = 0b10010000;
+		// memory[3] = 0x00;
+		// memory[4] = 0x00;
+		// memory[5] = 0x00;
+		// memory[6] = 0x01;
+		// memory[7] = 0x01;
+		// LOAD DIRECT
+		// memory[9] = 0x02;
+		// memory[10] = 0b10010000;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x00;
+		// memory[14] = 0x02;
+		// memory[15] = 0x02;
+	// memory[17] = 0x07;
+	// memory[18] = 0b01010100;
+	// memory[19] = 0x01;
+	// memory[20] = 0x02;
+	// memory[21] = 0x03;
+
+	//	TEST OR [DIR][IND][REG]
+	// memory[2] = 0x07;
+	// memory[3] = 0b10110100;
+	// memory[4] = 0x00;
+	// memory[5] = 0x00;
+	// memory[6] = 0x00;
+	// memory[7] = 0x01;
+	// memory[8] = 0x00;
+	// memory[9] = 0x00;
+	// memory[10] = 0x03;
+
+	//	TEST XOR [REG][REG][REG]
+		// LOAD DIRECT
+		// memory[1] = 0x02;
+		// memory[2] = 0b10010000;
+		// memory[3] = 0x00;
+		// memory[4] = 0x00;
+		// memory[5] = 0x00;
+		// memory[6] = 0x03;
+		// memory[7] = 0x01;
+		// LOAD DIRECT
+		// memory[9] = 0x02;
+		// memory[10] = 0b10010000;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x00;
+		// memory[14] = 0x02;
+		// memory[15] = 0x02;
+	// memory[17] = 0x08;
+	// memory[18] = 0b01010100;
+	// memory[19] = 0x01;
+	// memory[20] = 0x02;
+	// memory[21] = 0x03;
+
+	//	TEST XOR [DIR][IND][REG]
+	// memory[2] = 0x08;
+	// memory[3] = 0b10110100;
+	// memory[4] = 0x00;
+	// memory[5] = 0x00;
+	// memory[6] = 0x00;
+	// memory[7] = 0x03;
+	// memory[8] = 0x00;
+	// memory[9] = 0x00;
+	// memory[10] = 0x03;
+
+	//	TEST ZJMP [DIR]
+	// cpu->carry = 1;
+	// memory[20] = 0x09;
+	// *((uint32_t *)(memory + 21)) = SWAP_UINT32((uint32_t)-15);
 }
 
 int				main(void)
@@ -272,9 +357,9 @@ int				main(void)
 	new_logwindow("ins", WF_KEEP | WF_CLOSE);
 
 	init_cpu(&cpu, memory);
-	set_test_values(memory);
+	set_test_values(&cpu, memory);
 	load_process(&cpu, registers, 0);
-	run_cpu(&cpu, 10, 1, 1);
+	run_cpu(&cpu, 10, 1, 0, 0);
 
 	return (0);
 }
