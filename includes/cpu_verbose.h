@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/21 17:41:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/22 17:27:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,11 @@
 # define P_INT		"[{yellow}%+d{eoc}]"
 # define P_HEX_INT	P_HEX " <-> " P_INT
 
+# define P_ARG_OK	"{green}Args bytecode valid, fetching %hhu args{eoc}\n"
+# define P_ARG_KO	"{red}Bytecode is invalid, PC >> {yellow}+%hhd{eoc}\n"
 # define P_ARG_REG	"{green}Arg %hhu:{eoc} [REGISTER] | " P_HEX "\n"
 # define P_ARG_IND	"{green}Arg %hhu:{eoc} [INDIRECT] | " P_HEX "\n"
 # define P_ARG_DIR	"{green}Arg %hhu:{eoc} [DIRECT] | " P_HEX "\n"
-# define P_ARG_KO	"{red}Arg #%hhu:{eoc} INVALID - STOP READING\n"
 
 # define OP_LIVE_OK	"{green}LIVE:{eoc} Player %u is alive !\n"
 # define OP_LIVE_KO	"{red}LIVE:{eoc} Player no %u does not exist\n"

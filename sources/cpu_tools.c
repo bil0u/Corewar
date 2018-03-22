@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/20 23:36:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/22 17:05:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,23 @@ uint32_t	jump_to(uint32_t pc, int jump_len)
 	while (tmp >= MEM_SIZE)
 		tmp -= MEM_SIZE;
 	return ((uint32_t)tmp);
+}
+
+/*
+** -- GET ARG SIZE
+**    > Return the associated size for a given arg type
+*/
+
+uint8_t		get_argsize(uint8_t arg_type)
+{
+	if (arg_type == ARG_REG)
+		return (ARG_REGSZ);
+	else if (arg_type == ARG_IND)
+		return (ARG_INDSZ);
+	else if (arg_type == ARG_DIR)
+		return (ARG_DIRSZ);
+	else
+		return (0);
 }
 
 /*

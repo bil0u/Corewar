@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/21 17:40:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/22 17:39:06 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,80 +23,6 @@
 #include "cpu_verbose.h"
 
 /*
-** -- FETCH THE N_TH ARGUMENT
-**    > Securely fetch (circular buffer proof) the n_th argument, and return
-**      the number of bytes read;
-*/
-
-static uint8_t	fetch_next_arg(t_vcpu *cpu, uint32_t pc_tmp,
-								uint8_t arg_no, uint8_t bytecode)
-{
-	uint32_t	*buff;
-	uint8_t		arg_type;
-	uint8_t		valid_types;
-
-	buff = cpu->op_args + arg_no;
-	valid_types = cpu->curr_instruction->valid_types[arg_no];
-	arg_type = (bytecode & 0xC0) >> 6;
-	if (arg_type == ARG_REG && (valid_types & T_REG) != 0)
-	{
-		buff[0] = *(cpu->memory + pc_tmp);
-		log_this("ins", 0, P_ARG_REG, arg_no + 1, *buff);
-		return (ARG_REGSZ);
-	}
-	else if (arg_type == ARG_IND && (valid_types & T_IND) != 0)
-	{
-		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
-		log_this("ins", 0, P_ARG_IND, arg_no + 1, *buff);
-		return (ARG_INDSZ);
-	}
-	else if (arg_type == ARG_DIR && (valid_types & T_DIR) != 0)
-	{
-		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
-		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *buff);
-		return (ARG_DIRSZ);
-	}
-	else
-		log_this("ins", 0, P_ARG_KO, arg_no + 1);
-	return (0);
-}
-
-/*
-** -- FETCH THE ARGUMENTS
-**    > Fetch the arguments bimask on ARGBC_SIZE bytes
-**    > Decode each argument one by one and store them in the vcpu->op_args
-**
-**    >> Stop reading if there is an error in the instruction arg(s), and set
-**       the instruction to NULL
-*/
-
-static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_read)
-{
-	uint32_t	pc_tmp;
-	uint8_t		bytecode;
-	uint8_t		arg_no;
-	uint8_t		arg_sz;
-
-	bytecode = *((uint8_t *)(cpu->memory + jump_to(cpu->pc, (int)*bytes_read)));
-	cpu->op_bytecode = bytecode;
-	*bytes_read += ARGBC_SIZE;
-	arg_no = 0;
-	pc_tmp = jump_to(cpu->pc, (int)*bytes_read);
-	while (arg_no < cpu->curr_instruction->nb_args)
-	{
-		if ((arg_sz = fetch_next_arg(cpu, pc_tmp, arg_no, bytecode)) == 0)
-		{
-			cpu->curr_instruction = &(g_op_set[0]);
-			return ;
-		}
-		pc_tmp = jump_to(pc_tmp, arg_sz);
-		*bytes_read += arg_sz;
-		bytecode <<= 2;
-		++arg_no;
-	}
-}
-
-/*
 ** -- FETCH THE CURRENT INSTRUCTION
 */
 
@@ -111,12 +37,111 @@ static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
 }
 
 /*
+** -- FETCH THE N_TH ARGUMENT
+**    > Securely fetch (circular buffer proof) the n_th argument, and return
+**      the number of bytes read;
+*/
+
+static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
+								uint8_t arg_no, uint8_t arg_type)
+{
+	uint32_t	*buff;
+
+	buff = cpu->op_args + arg_no;
+	if (arg_type == ARG_REG)
+	{
+		buff[0] = *(cpu->memory + pc_tmp);
+		log_this("ins", 0, P_ARG_REG, arg_no + 1, *buff);
+		return (ARG_REGSZ);
+	}
+	else if (arg_type == ARG_IND)
+	{
+		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
+		log_this("ins", 0, P_ARG_IND, arg_no + 1, *buff);
+		return (ARG_INDSZ);
+	}
+	else if (arg_type == ARG_DIR)
+	{
+		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
+		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *buff);
+		return (ARG_DIRSZ);
+	}
+	return (0);
+}
+
+/*
+** -- CHECK THE SANITY OF ARGS BYTECODE
+*/
+
+static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
+{
+	uint8_t		arg_no;
+	uint8_t		arg_type;
+	uint8_t		valid_types;
+	uint8_t		valid_args;
+
+	valid_args = 0;
+	arg_no = 0;
+	while (arg_no < op->nb_args)
+	{
+		arg_type = (bytecode & 0xC0) >> 6;
+		valid_types = op->valid_types[arg_no];
+		if (arg_type == ARG_REG && valid_types & T_REG)
+			++valid_args;
+		else if (arg_type == ARG_IND && valid_types & T_IND)
+			++valid_args;
+		else if (arg_type == ARG_DIR && valid_types & T_DIR)
+			++valid_args;
+		*bytes_read += get_argsize(arg_type);
+		bytecode <<= 2;
+		++arg_no;
+	}
+	return (valid_args == arg_no);
+}
+
+/*
+** -- FETCH THE ARGUMENTS
+**    > Fetch the arguments bytecode on ARGBC_SIZE bytes
+**    > If the sanity check is successful :
+**      > Decode each argument one by one and store them in the vcpu->op_args
+*/
+
+static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
+{
+	uint32_t	pc_tmp;
+	uint8_t		bytecode;
+	uint8_t		arg_no;
+	uint8_t		arg_sz;
+
+	bytecode = *(cpu->memory + jump_to(cpu->pc, OPBC_SIZE));
+	*bytes_rd += ARGBC_SIZE;
+	*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd);
+	if (*valid)
+	{
+		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
+		cpu->op_bytecode = bytecode;
+		pc_tmp = jump_to(cpu->pc, OPBC_SIZE + ARGBC_SIZE);
+		arg_no = 0;
+		while (arg_no < cpu->curr_instruction->nb_args)
+		{
+			arg_sz = fetch_nextarg(cpu, pc_tmp, arg_no, (bytecode & 0xC0) >> 6);
+			pc_tmp = jump_to(pc_tmp, arg_sz);
+			bytecode <<= 2;
+			++arg_no;
+		}
+	}
+	else
+		log_this("ins", 0, P_ARG_KO, *bytes_rd);
+}
+
+/*
 ** -- RUN THE CPU FOR NB_CYCLES, OR IN A LOOP IF THE FLAG IS SET
 ** -- Steps of an instruction cycle :
 **    > Fetch the instruction on OPBC_SIZE bytes
-**    > Decode and check arguments if there is any & the opcode is known
+**    > If the op_code is valid :
+**       > Fetch & decode arguments if there is an ocp
+**       > Execute the instruction
 **    > Moves the PC to the next instruction
-**    > Execute the instruction if the opcode is known
 */
 
 void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow, char clean)
@@ -124,6 +149,7 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow, char clean
 	uint32_t	cycle_no;
 	uint8_t		op_no;
 	uint8_t		bytes_read;
+	uint8_t		valid;
 
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
@@ -134,9 +160,13 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow, char clean
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 		{
 			log_this("ins", 0, P_OPNAME, cpu->curr_instruction->name);
+
+			valid = TRUE;
 			if (cpu->curr_instruction->has_bytecode)
-				fetch_arguments(cpu, &bytes_read);
-			bytes_read += cpu->curr_instruction->funct_ptr(cpu);
+				fetch_arguments(cpu, &bytes_read, &valid);
+			if (valid == TRUE)
+				bytes_read += cpu->curr_instruction->funct_ptr(cpu);
+
 			log_this("ins", 0, "----\n");
 		}
 		cpu->pc = jump_to(cpu->pc, bytes_read);
@@ -160,11 +190,11 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// memory[4] = 0x01;
 
 	//	TEST LOAD [IND][REG]
-	// memory[6] = 0x02;
-	// memory[7] = 0b11010000;
-	// memory[8] = 0x00;
-	// memory[9] = 0x01;
-	// memory[10] = 0x02;
+	memory[6] = 0x02;
+	memory[7] = 0b11010000;
+	memory[8] = 0x00;
+	memory[9] = 0x01;
+	memory[10] = 0x02;
 
 	//	TEST LOAD [DIR][REG]
 	// memory[4] = 0x02;
