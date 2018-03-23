@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/22 17:05:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/23 17:24:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,18 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
 	}
+}
+
+/*
+** -- INTERPRET ARG VALUE AS INDIRECT
+*/
+
+void		decode_indirect(t_vcpu *cpu, uint8_t arg_type, uint32_t *arg_buff)
+{
+	if (arg_type == ARG_REG)
+		*arg_buff = cpu->registers[*arg_buff];
+	else if (arg_type == ARG_IND)
+		secure_fetch(*arg_buff, cpu->memory, arg_buff, REG_SIZE);
 }
 
 /*

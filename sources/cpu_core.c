@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 02:03:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/23 18:21:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,29 +46,28 @@ static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
 static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 								uint8_t arg_no, uint8_t arg_type)
 {
-	uint32_t	*buff;
+	uint32_t	*arg_buff;
 
-	buff = cpu->op_args + arg_no;
+	arg_buff = cpu->op_args + arg_no;
 	if (arg_type == ARG_REG)
 	{
-		*buff = *(cpu->memory + pc_tmp);
-		log_this("ins", 0, P_ARG_REG, arg_no + 1, *buff, *buff);
-		return (ARG_REGSZ);
+		*arg_buff = *(cpu->memory + pc_tmp);
+		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff, *arg_buff);
 	}
 	else if (arg_type == ARG_IND)
 	{
-		secure_fetch(pc_tmp, cpu->memory, buff, ARG_INDSZ);
-		*buff = jump_to(cpu->pc, ((int)(*buff & 0xFFFF) % IDX_MOD));
-		log_this("ins", 0, P_ARG_IND, arg_no + 1, *buff, *buff);
-		return (ARG_INDSZ);
+		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
+		if (cpu->curr_instruction->op_number < 13)
+			*arg_buff = (uint32_t)((int)(*arg_buff & 0xFFFF) % IDX_MOD);
+		*arg_buff = jump_to(cpu->pc, (int)*arg_buff);
+		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff, *arg_buff);
 	}
 	else if (arg_type == ARG_DIR)
 	{
-		secure_fetch(pc_tmp, cpu->memory, buff, ARG_DIRSZ);
-		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *buff, *buff);
-		return (ARG_DIRSZ);
+		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_DIRSZ);
+		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff, *arg_buff);
 	}
-	return (0);
+	return (get_argsize(arg_type));
 }
 
 /*
@@ -360,11 +359,30 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// memory[10] = 0x03;
 
 	//	TEST ZJMP [DIR]
-	cpu->carry = 1;
-	memory[5] = 0x09;
-	*((uint32_t *)(memory + 6)) = SWAP_UINT32((uint32_t)-2);
+	// cpu->carry = 1;
+	// memory[5] = 0x09;
+	// *((uint32_t *)(memory + 6)) = SWAP_UINT32((uint32_t)-2);
 
-
+	// TEST LDI [IND][DIR][REG]
+		// TEST VALUES
+		memory[10] = 0x00;
+		memory[11] = 0x00;
+		memory[12] = 0x00;
+		memory[13] = 0x05;
+		// TEST VALUES
+		memory[20] = 0x00;
+		memory[21] = 0x00;
+		memory[22] = 0xca;
+		memory[23] = 0xfe;
+	memory[1] = 0x0a;
+	memory[2] = 0b11100100;
+	memory[3] = 0x00;
+	memory[4] = 0x09;
+	memory[5] = 0x00;
+	memory[6] = 0x00;
+	memory[7] = 0x00;
+	memory[8] = 0x0e;
+	memory[9] = 0x03;
 }
 
 int				main(void)
