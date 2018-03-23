@@ -6,60 +6,62 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/22 17:27:46 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/23 02:03:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CPU_VERBOSE_H
 # define CPU_VERBOSE_H
 
-# define P_OPNAME	"{yellow}%s:{eoc}\n"
-# define P_RNO		"{yellow}R%hhu{eoc}"
-# define P_PC		"(PC{cyan}%+hd{eoc}: {yellow}%u{eoc})"
+# define P_CURR_OP	"> {yellow}%s {magenta}(Op. %d){blue} at PC %u\n"
+# define P_RNO		"{cyan}R%hhu{eoc}"
+# define P_PC		"(PC: {magenta}%u{eoc})"
 # define P_HEX		"[{yellow}0x%.2x{eoc}]"
 # define P_INT		"[{yellow}%+d{eoc}]"
 # define P_HEX_INT	P_HEX " <-> " P_INT
 
-# define P_ARG_OK	"{green}Args bytecode valid, fetching %hhu args{eoc}\n"
-# define P_ARG_KO	"{red}Bytecode is invalid, PC >> {yellow}+%hhd{eoc}\n"
-# define P_ARG_REG	"{green}Arg %hhu:{eoc} [REGISTER] | " P_HEX "\n"
-# define P_ARG_IND	"{green}Arg %hhu:{eoc} [INDIRECT] | " P_HEX "\n"
-# define P_ARG_DIR	"{green}Arg %hhu:{eoc} [DIRECT] | " P_HEX "\n"
+# define P_ARG_OK	"{green}Bytecode OK{eoc} - fetching %hhu args\n"
+# define P_ARG_KO	"{red}Bytecode KO{eoc} - PC >> {yellow}+%hhd{eoc}\n"
+# define P_ARG_PMPT	" {blue}#%hhu:{eoc} "
+# define P_ARG_REG	P_ARG_PMPT "[{cyan}REGISTER{eoc}] | " P_HEX_INT "\n"
+# define P_ARG_IND	P_ARG_PMPT "[{magenta}INDIRECT{eoc}] | " P_HEX_INT "\n"
+# define P_ARG_DIR	P_ARG_PMPT "[{yellow}DIRECT{eoc}]   | " P_HEX_INT "\n"
 
-# define OP_LIVE_OK	"{green}LIVE:{eoc} Player %u is alive !\n"
-# define OP_LIVE_KO	"{red}LIVE:{eoc} Player no %u does not exist\n"
+# define LIVE_OK	"{green}LIVE OK:{eoc} Player %u is alive !\n"
+# define LIVE_KO	"{red}LIVE KO:{eoc} Player %u does not exist\n"
 
-# define OP_LD_IND	"{green}LOAD:{eoc} " P_PC " >> " P_RNO "\t" P_HEX "\n"
-# define OP_LD_DIR	"{green}LOAD:{eoc} " P_HEX " >> " P_RNO "\n"
-# define OP_LD_KO	"{red}LOAD:{eoc} " P_RNO " does not exists\n"
+# define LD_IND		"{green}LD OK:{eoc} " P_PC " >> " P_RNO " | " P_HEX "\n"
+# define LD_DIR		"{green}LD OK:{eoc} " P_HEX " >> " P_RNO "\n"
+# define LD_KO		"{red}LD KO:{eoc} " P_RNO " does not exists\n"
 
-# define OP_ST_IND	"{green}STORE:{eoc} " P_RNO " >> " P_PC "\t" P_HEX "\n"
-# define OP_ST_REG	"{green}STORE:{eoc} " P_RNO " >> " P_RNO "\t" P_HEX "\n"
-# define OP_ST_KO	"{red}STORE:{eoc} " P_RNO " does not exists\n"
+# define ST_IND		"{green}ST OK:{eoc} " P_RNO " >> " P_PC " | " P_HEX "\n"
+# define ST_REG		"{green}ST OK:{eoc} " P_RNO " >> " P_RNO " | " P_HEX "\n"
+# define ST_KO		"{red}ST KO:{eoc} " P_RNO " does not exists\n"
 
-# define OP_ADD_OK1	"{green}ADD:{eoc} " P_RNO " + " P_RNO " >> " P_RNO
-# define OP_ADD_OK	OP_ADD_OK1 "\t" P_HEX_INT "\n"
-# define OP_ADD_KO	"{red}ADD:{eoc} One of the three parameters is invalid\n"
+# define ADD_OK1	"{green}ADD OK:{eoc} " P_RNO " + " P_RNO " >> " P_RNO
+# define ADD_OK		ADD_OK1 " | " P_HEX_INT "\n"
+# define ADD_KO		"{red}ADD KO:{eoc} One of the three parameters is invalid\n"
 
-# define OP_SUB_OK1	"{green}SUB:{eoc} " P_RNO " - " P_RNO " >> " P_RNO
-# define OP_SUB_OK	OP_SUB_OK1 "\t" P_HEX_INT "\n"
-# define OP_SUB_KO	"{red}SUB:{eoc} One of the three parameters is invalid\n"
+# define SUB_OK1	"{green}SUB OK:{eoc} " P_RNO " - " P_RNO " >> " P_RNO
+# define SUB_OK		SUB_OK1 " | " P_HEX_INT "\n"
+# define SUB_KO		"{red}SUB KO:{eoc} One of the three parameters is invalid\n"
 
-# define OP_AND_OK1	"{green}AND:{eoc} " P_HEX " & " P_HEX " >> " P_RNO
-# define OP_AND_OK	OP_AND_OK1 "\t" P_HEX "\n"
-# define OP_AND_KO	"{red}AND:{eoc} " P_RNO " does not exists\n"
+# define AND_OK1	"{green}AND OK:{eoc} " P_HEX " & " P_HEX " >> " P_RNO
+# define AND_OK		AND_OK1 " | " P_HEX "\n"
+# define AND_KO		"{red}AND KO:{eoc} " P_RNO " does not exists\n"
 
-# define OP_OR_OK1	"{green}OR:{eoc} " P_HEX " | " P_HEX " >> " P_RNO
-# define OP_OR_OK	OP_OR_OK1 "\t" P_HEX "\n"
-# define OP_OR_KO	"{red}OR:{eoc} " P_RNO " does not exists\n"
+# define OR_OK1		"{green}OR OK:{eoc} " P_HEX " | " P_HEX " >> " P_RNO
+# define OR_OK		OR_OK1 " | " P_HEX "\n"
+# define OR_KO		"{red}OR KO:{eoc} " P_RNO " does not exists\n"
 
-# define OP_XOR_OK1	"{green}XOR:{eoc} " P_HEX " ^ " P_HEX " >> " P_RNO
-# define OP_XOR_OK	OP_XOR_OK1 "\t" P_HEX "\n"
-# define OP_XOR_KO	"{red}XOR:{eoc} " P_RNO " does not exists\n"
+# define XOR_OK1	"{green}XOR OK:{eoc} " P_HEX " ^ " P_HEX " >> " P_RNO
+# define XOR_OK		XOR_OK1 " | " P_HEX "\n"
+# define XOR_KO		"{red}XOR KO:{eoc} " P_RNO " does not exists\n"
 
-# define OP_ZJMP_OK	"{green}ZJUMP:{eoc} [Carry = 1] moving PC at " P_INT "\n"
-# define OP_ZJMP_KO "{red}ZJUMP:{eoc} [Carry = 0] continuing to next op\n"
+# define ZJMP_OK1	"{green}ZJMP OK:{eoc} [Carry = 1] moving PC of " P_INT
+# define ZJMP_OK	ZJMP_OK1 " >> PC" P_INT "\n"
+# define ZJMP_KO	"{red}ZJMP KO:{eoc} [Carry = 0] continuing to next op\n"
 
-# define OP_LDI_KO	"{red}LDI:{eoc} " P_RNO " does not exists\n"
+# define LDI_KO		"{red}LDI KO:{eoc} " P_RNO " does not exists\n"
 
 #endif

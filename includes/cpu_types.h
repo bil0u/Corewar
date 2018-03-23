@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/21 01:43:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/22 23:21:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,14 +25,11 @@
 # define MAX_PLAYERS	4
 
 /*
-**	-------- ALLOWED ARGS STRUCTURE AND MACROS ---------
-**	registers	-> ptr
-**	directs 	-> u32
-**	indirects	-> u16
+**	-------- ARGUMENTS  ---------
 */
 
-# define MAX_ARGS	4
 # define ARGBC_SIZE	1
+# define MAX_ARGS	4
 # define NBR_TYPES	4
 
 # define T_REG		0b0001
@@ -50,7 +47,7 @@
 typedef uint8_t		t_argtypes;
 
 /*
-**	-------- OPERATIONS STRUCTURE AND MACROS ---------
+**	-------- INSTRUCTIONS ---------
 */
 
 # define OPBC_SIZE	1
@@ -69,7 +66,11 @@ typedef struct		s_op
 }					t_op;
 
 /*
-**	-------- VIRTUAL CPU STRUCTURE AND MACROS ---------
+**	-------- VIRTUAL CPU ---------
+**
+**  pc					->	index (in memory) of next instruction to be exec.
+**  op_args				->	buffer where arguments are stored before exec.
+**  curr_instruction	->	points to an
 */
 
 # define REG_NUMBER	8

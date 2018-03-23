@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/21 00:46:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/23 00:21:54 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ void	print_memory(t_vcpu *cpu, char clean)
 	while (i < MEM_SIZE)
 	{
 		if (i == cpu->pc)
-			ret += ft_sprintf(buff + ret, "{yellow}%2.2hhx{eoc}", cpu->memory[i]);
+			ret += ft_sprintf(buff + ret, "{magenta}%2.2hhx{eoc}", cpu->memory[i]);
 		else if (cpu->memory[i])
 			ret += ft_sprintf(buff + ret, "{cyan}%2.2hhx{eoc}", cpu->memory[i]);
 		else
