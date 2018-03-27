@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/26 23:33:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/27 06:19:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,10 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
 		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff, *arg_buff);
 		if (cpu->curr_instruction->op_number < 13)
+		{
 			*arg_buff = (uint32_t)((int)(*arg_buff & 0xFFFF) % IDX_MOD);
+			log_this("ins", 0, P_IND_MOD, arg_no + 1, *arg_buff, *arg_buff);
+		}
 		*arg_buff = jump_to(cpu->pc, (int)*arg_buff);
 	}
 	else if (arg_type == ARG_DIR)
@@ -190,14 +193,14 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// memory[3] = 0x00;
 	// memory[4] = 0x01;
 
-	//	TEST LOAD [IND][REG]
+	//	TEST LD [IND][REG]
 	// memory[6] = 0x02;
 	// memory[7] = 0b11010000;
 	// memory[8] = 0x00;
 	// memory[9] = 0x01;
 	// memory[10] = 0x02;
 
-	//	TEST LOAD [DIR][REG]
+	//	TEST LD [DIR][REG]
 	// memory[4] = 0x02;
 	// memory[5] = 0b10010000;
 	// memory[6] = 0x00;
@@ -206,13 +209,13 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 	// memory[9] = 0xfe;
 	// memory[10] = 0x02;
 
-	//	TEST STORE [REG][REG]
+	//	TEST ST [REG][REG]
 	// memory[12] = 0x03;
 	// memory[13] = 0b01010000;
 	// memory[14] = 0x02;
 	// memory[15] = 0x07;
 
-	//	TEST STORE [REG][IND]
+	//	TEST ST [REG][IND]
 	// memory[17] = 0x03;
 	// memory[18] = 0b01110000;
 	// memory[19] = 0x07;
@@ -366,48 +369,99 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 
 	// TEST LDI [IND][DIR][REG]
 		// TEST VALUES
-		// memory[10] = 0x00;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x05;
+		// memory[25] = 0x00;
+		// memory[26] = 0x00;
+		// memory[27] = 0x00;
+		// memory[28] = 0x05;
 		// TEST VALUES
-		// memory[20] = 0x00;
-		// memory[21] = 0x00;
-		// memory[22] = 0xca;
-		// memory[23] = 0xfe;
+		// memory[30] = 0x00;
+		// memory[31] = 0x00;
+		// memory[32] = 0xca;
+		// memory[33] = 0xfe;
 	// memory[1] = 0x0a;
 	// memory[2] = 0b11100100;
 	// memory[3] = 0x00;
-	// memory[4] = 0x09;
+	// memory[4] = 0x18;
 	// memory[5] = 0x00;
 	// memory[6] = 0x00;
 	// memory[7] = 0x00;
-	// memory[8] = 0x0e;
+	// memory[8] = 0x18;
 	// memory[9] = 0x03;
 
 	// TEST STI [REG][IND][DIR]
 		// TEST VALUES
+		// memory[4] = 0x02;
+		// memory[5] = 0b10010000;
+		// memory[6] = 0x00;
+		// memory[7] = 0x00;
+		// memory[8] = 0xca;
+		// memory[9] = 0xfe;
+		// memory[10] = 0x02;
+		// TEST VALUES
+		// memory[25] = 0x00;
+		// memory[26] = 0x00;
+		// memory[27] = 0x00;
+		// memory[28] = 0x05;
+	// memory[15] = 0x0b;
+	// memory[16] = 0b01111000;
+	// memory[17] = 0x02;
+	// memory[18] = 0x00;
+	// memory[19] = 0x0a;
+	// memory[20] = 0x00;
+	// memory[21] = 0x00;
+	// memory[22] = 0x00;
+	// memory[23] = 0x0e;
+
+	//	TEST LLD [IND][REG]
+		// memory[31] = 0x00;
+		// memory[32] = 0x00;
+		// memory[33] = 0xca;
+		// memory[34] = 0xfe;
+		// TEST LD [IND][REG]
+		// memory[11] = 0x02;
+		// memory[12] = 0b11010000;
+		// memory[13] = 0x00;
+		// memory[14] = 0x14;
+		// memory[15] = 0x02;
+	// memory[1] = 0x0d;
+	// memory[2] = 0b11010000;
+	// memory[3] = 0x00;
+	// memory[4] = 0x1e;
+	// memory[5] = 0x02;
+
+	// TEST LLDI [IND][DIR][REG]
+		// TEST VALUES
+		// memory[25] = 0x00;
+		// memory[26] = 0x00;
+		// memory[27] = 0x00;
+		// memory[28] = 0x05;
+		// TEST VALUES
+		// memory[30] = 0x00;
+		// memory[31] = 0x00;
+		// memory[32] = 0xca;
+		// memory[33] = 0xfe;
+	// memory[1] = 0x0e;
+	// memory[2] = 0b11100100;
+	// memory[3] = 0x00;
+	// memory[4] = 0x18;
+	// memory[5] = 0x00;
+	// memory[6] = 0x00;
+	// memory[7] = 0x00;
+	// memory[8] = 0x18;
+	// memory[9] = 0x03;
+
+	// TEST AFF
+		// LOAD TEST VALUE
 		memory[4] = 0x02;
 		memory[5] = 0b10010000;
 		memory[6] = 0x00;
 		memory[7] = 0x00;
-		memory[8] = 0xca;
-		memory[9] = 0xfe;
+		memory[8] = 0x1B;
+		memory[9] = 0x41;
 		memory[10] = 0x02;
-		// TEST VALUES
-		memory[25] = 0x00;
-		memory[26] = 0x00;
-		memory[27] = 0x00;
-		memory[28] = 0x05;
-	memory[15] = 0x0b;
-	memory[16] = 0b01111000;
-	memory[17] = 0x02;
-	memory[18] = 0x00;
-	memory[19] = 0x0a;
-	memory[20] = 0x00;
-	memory[21] = 0x00;
-	memory[22] = 0x00;
-	memory[23] = 0x0e;
+	memory[12] = 0x10;
+	memory[13] = 0b01000000;
+	memory[14] = 0x02;
 }
 
 int				main(void)

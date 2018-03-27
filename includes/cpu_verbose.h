@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/26 23:24:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/27 06:16:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 # define P_ARG_PMPT	" {blue}#%hhu:{eoc} "
 # define P_ARG_REG	P_ARG_PMPT "[{cyan}REGISTER{eoc}] | " P_HEX_INT "\n"
 # define P_ARG_IND	P_ARG_PMPT "[{magenta}INDIRECT{eoc}] | " P_HEX_INT "\n"
+# define P_IND_MOD	"      %% IDX_MOD | " P_HEX_INT "\n"
 # define P_ARG_DIR	P_ARG_PMPT "[{yellow}DIRECT{eoc}]   | " P_HEX_INT "\n"
 
 # define LIVE_OK	"{green}LIVE OK:{eoc} Player %u is alive !\n"
@@ -69,5 +70,17 @@
 # define STI_OK1	"{green}STI OK:{eoc} " P_RNO " >> " P_INT " + " P_INT
 # define STI_OK		STI_OK1 " <-> " P_PC " | " P_HEX "\n"
 # define STI_KO		"{red}STI KO:{eoc} " P_RNO " does not exists\n"
+
+# define LLD_IND	"{green}LLD OK:{eoc} " P_PC " >> " P_RNO " | " P_HEX "\n"
+# define LLD_DIR	"{green}LLD OK:{eoc} " P_HEX " >> " P_RNO "\n"
+# define LLD_KO		"{red}LLD KO:{eoc} " P_RNO " does not exists\n"
+
+# define LLDI_OK1	"{green}LLDI OK:{eoc} " P_INT " + " P_INT " <-> " P_PC
+# define LLDI_OK	LLDI_OK1 " >> " P_RNO " | " P_HEX "\n"
+# define LLDI_KO	"{red}LLDI KO:{eoc} " P_RNO " does not exists\n"
+
+# define AFF_OK1	"{green}AFF OK:{eoc} Printed '{yellow}%c{eoc}' from " P_RNO
+# define AFF_OK		AFF_OK1 "\n"
+# define AFF_KO		"{red}AFF KO:{eoc} " P_RNO " does not exists\n"
 
 #endif
