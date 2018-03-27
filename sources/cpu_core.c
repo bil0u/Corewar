@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 18:21:17 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/26 23:33:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,10 +57,10 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 	else if (arg_type == ARG_IND)
 	{
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
+		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff, *arg_buff);
 		if (cpu->curr_instruction->op_number < 13)
 			*arg_buff = (uint32_t)((int)(*arg_buff & 0xFFFF) % IDX_MOD);
 		*arg_buff = jump_to(cpu->pc, (int)*arg_buff);
-		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff, *arg_buff);
 	}
 	else if (arg_type == ARG_DIR)
 	{
@@ -81,6 +81,8 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 	uint8_t		valid_types;
 	uint8_t		valid_args;
 
+	if (bytecode == 0)
+		return (0);
 	valid_args = 0;
 	arg_no = 0;
 	while (arg_no < op->nb_args)
@@ -113,10 +115,9 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 	uint8_t		arg_sz;
 
 	bytecode = *(cpu->memory + jump_to(cpu->pc, OPBC_SIZE));
-	*bytes_rd += ARGBC_SIZE;
-	*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd);
-	if (*valid)
+	if ((*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd)) != 0)
 	{
+		*bytes_rd += ARGBC_SIZE;
 		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
 		cpu->op_bytecode = bytecode;
 		pc_tmp = jump_to(cpu->pc, OPBC_SIZE + ARGBC_SIZE);
@@ -365,24 +366,48 @@ static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
 
 	// TEST LDI [IND][DIR][REG]
 		// TEST VALUES
-		memory[10] = 0x00;
-		memory[11] = 0x00;
-		memory[12] = 0x00;
-		memory[13] = 0x05;
+		// memory[10] = 0x00;
+		// memory[11] = 0x00;
+		// memory[12] = 0x00;
+		// memory[13] = 0x05;
 		// TEST VALUES
-		memory[20] = 0x00;
-		memory[21] = 0x00;
-		memory[22] = 0xca;
-		memory[23] = 0xfe;
-	memory[1] = 0x0a;
-	memory[2] = 0b11100100;
-	memory[3] = 0x00;
-	memory[4] = 0x09;
-	memory[5] = 0x00;
-	memory[6] = 0x00;
-	memory[7] = 0x00;
-	memory[8] = 0x0e;
-	memory[9] = 0x03;
+		// memory[20] = 0x00;
+		// memory[21] = 0x00;
+		// memory[22] = 0xca;
+		// memory[23] = 0xfe;
+	// memory[1] = 0x0a;
+	// memory[2] = 0b11100100;
+	// memory[3] = 0x00;
+	// memory[4] = 0x09;
+	// memory[5] = 0x00;
+	// memory[6] = 0x00;
+	// memory[7] = 0x00;
+	// memory[8] = 0x0e;
+	// memory[9] = 0x03;
+
+	// TEST STI [REG][IND][DIR]
+		// TEST VALUES
+		memory[4] = 0x02;
+		memory[5] = 0b10010000;
+		memory[6] = 0x00;
+		memory[7] = 0x00;
+		memory[8] = 0xca;
+		memory[9] = 0xfe;
+		memory[10] = 0x02;
+		// TEST VALUES
+		memory[25] = 0x00;
+		memory[26] = 0x00;
+		memory[27] = 0x00;
+		memory[28] = 0x05;
+	memory[15] = 0x0b;
+	memory[16] = 0b01111000;
+	memory[17] = 0x02;
+	memory[18] = 0x00;
+	memory[19] = 0x0a;
+	memory[20] = 0x00;
+	memory[21] = 0x00;
+	memory[22] = 0x00;
+	memory[23] = 0x0e;
 }
 
 int				main(void)

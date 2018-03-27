@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 18:20:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/26 23:24:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,5 +258,26 @@ int		ldi_instr(t_vcpu *cpu)
 	}
 	else
 		log_this("ins", 0, LDI_KO, cpu->op_args[2]);
+	return (0);
+}
+
+int		sti_instr(t_vcpu *cpu)
+{
+	uint32_t	data;
+	uint8_t		reg_src;
+
+	cpu->carry = 0;
+	if ((reg_src = cpu->op_args[0]) != 0 && --reg_src <= REG_NUMBER)
+	{
+		decode_indirect(cpu, (cpu->op_bytecode >> 4) & 0x03, cpu->op_args + 1);
+		decode_indirect(cpu, (cpu->op_bytecode >> 2) & 0x03, cpu->op_args + 2);
+		data = ((int)cpu->op_args[1] + (int)cpu->op_args[2]) % IDX_MOD;
+		data = jump_to(cpu->pc, (int)data);
+		secure_store(data, cpu->memory, *(cpu->registers + reg_src), REG_SIZE);
+		log_this("ins", 0, STI_OK, reg_src + 1, cpu->op_args[1],
+					cpu->op_args[2], data, cpu->registers[reg_src]);
+	}
+	else
+		log_this("ins", 0, STI_KO, cpu->op_args[2]);
 	return (0);
 }

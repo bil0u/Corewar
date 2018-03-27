@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 18:20:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/26 23:24:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,5 +65,9 @@
 # define LDI_OK1	"{green}LDI OK:{eoc} " P_INT " + " P_INT " <-> " P_PC
 # define LDI_OK		LDI_OK1 " >> " P_RNO " | " P_HEX "\n"
 # define LDI_KO		"{red}LDI KO:{eoc} " P_RNO " does not exists\n"
+
+# define STI_OK1	"{green}STI OK:{eoc} " P_RNO " >> " P_INT " + " P_INT
+# define STI_OK		STI_OK1 " <-> " P_PC " | " P_HEX "\n"
+# define STI_KO		"{red}STI KO:{eoc} " P_RNO " does not exists\n"
 
 #endif

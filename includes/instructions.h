@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 17:23:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/26 23:27:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 **	-------- INSTRUCTIONS ALLOWED ---------
 */
 
-# define NB_INSTRUCTIONS	11
+# define NB_INSTRUCTIONS	12
 
 int		live_instr(t_vcpu *cpu);
 int		load_instr(t_vcpu *cpu);
@@ -29,6 +29,7 @@ int		or_instr(t_vcpu *cpu);
 int		xor_instr(t_vcpu *cpu);
 int		zjmp_instr(t_vcpu *cpu);
 int		ldi_instr(t_vcpu *cpu);
+int		sti_instr(t_vcpu *cpu);
 
 t_op    g_op_set[NB_INSTRUCTIONS] =
 {
@@ -43,7 +44,8 @@ t_op    g_op_set[NB_INSTRUCTIONS] =
 	{"or",		&or_instr,		7,	3,	1,	0,	{T_REG|T_DIR|T_IND, T_REG|T_DIR|T_IND, T_REG}},
 	{"xor",		&xor_instr,		8,	3,	1,	0,	{T_REG|T_DIR|T_IND, T_REG|T_DIR|T_IND, T_REG}},
 	{"zjmp",	&zjmp_instr,	9,	1,	0,	1,	{T_DIR}},
-	{"ldi",		&ldi_instr,		10,	3,	1,	1,	{T_REG|T_DIR|T_IND, T_DIR|T_REG, T_REG}}
+	{"ldi",		&ldi_instr,		10,	3,	1,	1,	{T_REG|T_DIR|T_IND, T_DIR|T_REG, T_REG}},
+	{"sti",		&sti_instr,		11,	3,	1,	1,	{T_REG, T_REG|T_DIR|T_IND, T_DIR|T_REG}}
 };
 
 #endif
