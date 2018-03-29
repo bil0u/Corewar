@@ -6,12 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 00:21:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/29 07:09:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "corewar_types.h"
 
 /*
 ** -- PRINT MEMORY CONTENT (IN HEX)

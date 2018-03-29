@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/27 06:19:25 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/29 08:12:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "corewar_types.h"
 #include "instructions.h"
 #include "cpu.h"
 #include "cpu_verbose.h"
@@ -49,11 +50,8 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 	uint32_t	*arg_buff;
 
 	arg_buff = cpu->op_args + arg_no;
-	if (arg_type == ARG_REG)
-	{
-		*arg_buff = *(cpu->memory + pc_tmp);
+	if (arg_type == ARG_REG && ((*arg_buff = *(cpu->memory + pc_tmp)) || 1))
 		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff, *arg_buff);
-	}
 	else if (arg_type == ARG_IND)
 	{
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
@@ -67,6 +65,8 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 	}
 	else if (arg_type == ARG_DIR)
 	{
+		if (cpu->curr_instruction->ind_address)
+			return (fetch_nextarg(cpu, pc_tmp, arg_no, ARG_IND));
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_DIRSZ);
 		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff, *arg_buff);
 	}
@@ -97,6 +97,7 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 		|| (arg_type == ARG_DIR && valid_types & T_DIR))
 			++valid_args;
 		*bytes_read += get_argsize(arg_type);
+		*bytes_read -= op->ind_address && arg_type == ARG_DIR ? 2 : 0;
 		bytecode <<= 2;
 		++arg_no;
 	}
@@ -180,308 +181,4 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 		loop ? (void)0 : ++cycle_no;
 		slow ? sleep(1) : (void)0;
 	}
-}
-
-static void		set_test_values(t_vcpu *cpu, uint8_t *memory)
-{
-	(void)memory;
-	(void)cpu;
-	//	TEST LIVE
-	// memory[0] = 0x01;
-	// memory[1] = 0x00;
-	// memory[2] = 0x00;
-	// memory[3] = 0x00;
-	// memory[4] = 0x01;
-
-	//	TEST LD [IND][REG]
-	// memory[6] = 0x02;
-	// memory[7] = 0b11010000;
-	// memory[8] = 0x00;
-	// memory[9] = 0x01;
-	// memory[10] = 0x02;
-
-	//	TEST LD [DIR][REG]
-	// memory[4] = 0x02;
-	// memory[5] = 0b10010000;
-	// memory[6] = 0x00;
-	// memory[7] = 0x00;
-	// memory[8] = 0xca;
-	// memory[9] = 0xfe;
-	// memory[10] = 0x02;
-
-	//	TEST ST [REG][REG]
-	// memory[12] = 0x03;
-	// memory[13] = 0b01010000;
-	// memory[14] = 0x02;
-	// memory[15] = 0x07;
-
-	//	TEST ST [REG][IND]
-	// memory[17] = 0x03;
-	// memory[18] = 0b01110000;
-	// memory[19] = 0x07;
-	// memory[20] = 0x00;
-	// memory[21] = 0x08;
-
-	//	TEST ADD [REG][REG][REG]
-		// LOAD DIRECT
-	// 	memory[1] = 0x02;
-	// 	memory[2] = 0b10010000;
-	// 	memory[3] = 0x00;
-	// 	memory[4] = 0x00;
-	// 	memory[5] = 0x00;
-	// 	memory[6] = 0x05;
-	// 	memory[7] = 0x01;
-	// memory[10] = 0x04;
-	// memory[11] = 0b01010100;
-	// memory[12] = 0x01;
-	// memory[13] = 0x03;
-	// memory[14] = 0x03;
-
-	//	TEST SUB [REG][REG][REG]
-		// LOAD DIRECT
-		// memory[1] = 0x02;
-		// memory[2] = 0b10010000;
-		// memory[3] = 0x00;
-		// memory[4] = 0x00;
-		// memory[5] = 0x00;
-		// memory[6] = 0x05;
-		// memory[7] = 0x01;
-		// LOAD DIRECT
-	// 	memory[9] = 0x02;
-	// 	memory[10] = 0b10010000;
-	// 	memory[11] = 0x00;
-	// 	memory[12] = 0x00;
-	// 	memory[13] = 0x00;
-	// 	memory[14] = 0x09;
-	// 	memory[15] = 0x02;
-	// memory[17] = 0x05;
-	// memory[18] = 0b01010100;
-	// memory[19] = 0x01;
-	// memory[20] = 0x02;
-	// memory[21] = 0x03;
-
-	//	TEST AND [REG][REG][REG]
-		// LOAD DIRECT
-		// memory[1] = 0x02;
-		// memory[2] = 0b10010000;
-		// memory[3] = 0x00;
-		// memory[4] = 0x00;
-		// memory[5] = 0xca;
-		// memory[6] = 0xfe;
-		// memory[7] = 0x01;
-		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0xFF;
-		// memory[14] = 0xFF;
-		// memory[15] = 0x02;
-	// memory[17] = 0x06;
-	// memory[18] = 0b01010100;
-	// memory[19] = 0x01;
-	// memory[20] = 0x02;
-	// memory[21] = 0x03;
-
-	//	TEST AND [DIR][IND][REG]
-	// memory[2] = 0x06;
-	// memory[3] = 0b10110100;
-	// memory[4] = 0x00;
-	// memory[5] = 0x00;
-	// memory[6] = 0x00;
-	// memory[7] = 0x02;
-	// memory[8] = 0x00;
-	// memory[9] = 0x00;
-	// memory[10] = 0x03;
-
-	//	TEST OR [REG][REG][REG]
-		// LOAD DIRECT
-		// memory[1] = 0x02;
-		// memory[2] = 0b10010000;
-		// memory[3] = 0x00;
-		// memory[4] = 0x00;
-		// memory[5] = 0xc0;
-		// memory[6] = 0xf0;
-		// memory[7] = 0x01;
-		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0x0a;
-		// memory[14] = 0x0e;
-		// memory[15] = 0x02;
-	// memory[17] = 0x07;
-	// memory[18] = 0b01010100;
-	// memory[19] = 0x01;
-	// memory[20] = 0x02;
-	// memory[21] = 0x03;
-
-	//	TEST OR [DIR][IND][REG]
-	// memory[2] = 0x07;
-	// memory[3] = 0b10110100;
-	// memory[4] = 0x00;
-	// memory[5] = 0x00;
-	// memory[6] = 0x00;
-	// memory[7] = 0x01;
-	// memory[8] = 0x00;
-	// memory[9] = 0x00;
-	// memory[10] = 0x03;
-
-	//	TEST XOR [REG][REG][REG]
-		// LOAD DIRECT
-		// memory[1] = 0x02;
-		// memory[2] = 0b10010000;
-		// memory[3] = 0x00;
-		// memory[4] = 0x00;
-		// memory[5] = 0xca;
-		// memory[6] = 0x0e;
-		// memory[7] = 0x01;
-		// LOAD DIRECT
-		// memory[9] = 0x02;
-		// memory[10] = 0b10010000;
-		// memory[11] = 0x00;
-		// memory[12] = 0x00;
-		// memory[13] = 0xc0;
-		// memory[14] = 0xf0;
-		// memory[15] = 0x02;
-	// memory[17] = 0x08;
-	// memory[18] = 0b01010100;
-	// memory[19] = 0x01;
-	// memory[20] = 0x02;
-	// memory[21] = 0x03;
-
-	//	TEST XOR [DIR][IND][REG]
-	// memory[2] = 0x08;
-	// memory[3] = 0b10110100;
-	// memory[4] = 0x00;
-	// memory[5] = 0x00;
-	// memory[6] = 0x00;
-	// memory[7] = 0x03;
-	// memory[8] = 0x00;
-	// memory[9] = 0x00;
-	// memory[10] = 0x03;
-
-	//	TEST ZJMP [DIR]
-	// cpu->carry = 1;
-	// memory[5] = 0x09;
-	// *((uint32_t *)(memory + 6)) = SWAP_UINT32((uint32_t)-2);
-
-	// TEST LDI [IND][DIR][REG]
-		// TEST VALUES
-		// memory[25] = 0x00;
-		// memory[26] = 0x00;
-		// memory[27] = 0x00;
-		// memory[28] = 0x05;
-		// TEST VALUES
-		// memory[30] = 0x00;
-		// memory[31] = 0x00;
-		// memory[32] = 0xca;
-		// memory[33] = 0xfe;
-	// memory[1] = 0x0a;
-	// memory[2] = 0b11100100;
-	// memory[3] = 0x00;
-	// memory[4] = 0x18;
-	// memory[5] = 0x00;
-	// memory[6] = 0x00;
-	// memory[7] = 0x00;
-	// memory[8] = 0x18;
-	// memory[9] = 0x03;
-
-	// TEST STI [REG][IND][DIR]
-		// TEST VALUES
-		// memory[4] = 0x02;
-		// memory[5] = 0b10010000;
-		// memory[6] = 0x00;
-		// memory[7] = 0x00;
-		// memory[8] = 0xca;
-		// memory[9] = 0xfe;
-		// memory[10] = 0x02;
-		// TEST VALUES
-		// memory[25] = 0x00;
-		// memory[26] = 0x00;
-		// memory[27] = 0x00;
-		// memory[28] = 0x05;
-	// memory[15] = 0x0b;
-	// memory[16] = 0b01111000;
-	// memory[17] = 0x02;
-	// memory[18] = 0x00;
-	// memory[19] = 0x0a;
-	// memory[20] = 0x00;
-	// memory[21] = 0x00;
-	// memory[22] = 0x00;
-	// memory[23] = 0x0e;
-
-	//	TEST LLD [IND][REG]
-		// memory[31] = 0x00;
-		// memory[32] = 0x00;
-		// memory[33] = 0xca;
-		// memory[34] = 0xfe;
-		// TEST LD [IND][REG]
-		// memory[11] = 0x02;
-		// memory[12] = 0b11010000;
-		// memory[13] = 0x00;
-		// memory[14] = 0x14;
-		// memory[15] = 0x02;
-	// memory[1] = 0x0d;
-	// memory[2] = 0b11010000;
-	// memory[3] = 0x00;
-	// memory[4] = 0x1e;
-	// memory[5] = 0x02;
-
-	// TEST LLDI [IND][DIR][REG]
-		// TEST VALUES
-		// memory[25] = 0x00;
-		// memory[26] = 0x00;
-		// memory[27] = 0x00;
-		// memory[28] = 0x05;
-		// TEST VALUES
-		// memory[30] = 0x00;
-		// memory[31] = 0x00;
-		// memory[32] = 0xca;
-		// memory[33] = 0xfe;
-	// memory[1] = 0x0e;
-	// memory[2] = 0b11100100;
-	// memory[3] = 0x00;
-	// memory[4] = 0x18;
-	// memory[5] = 0x00;
-	// memory[6] = 0x00;
-	// memory[7] = 0x00;
-	// memory[8] = 0x18;
-	// memory[9] = 0x03;
-
-	// TEST AFF
-		// LOAD TEST VALUE
-		memory[4] = 0x02;
-		memory[5] = 0b10010000;
-		memory[6] = 0x00;
-		memory[7] = 0x00;
-		memory[8] = 0x1B;
-		memory[9] = 0x41;
-		memory[10] = 0x02;
-	memory[12] = 0x10;
-	memory[13] = 0b01000000;
-	memory[14] = 0x02;
-}
-
-int				main(void)
-{
-	uint8_t		memory[MEM_SIZE];
-	uint32_t	registers[REG_NUMBER];
-	t_vcpu		cpu;
-
-	ft_bzero(&memory, MEM_SIZE);
-	ft_bzero(&registers, REG_LEN);
-	ft_bzero(&cpu, sizeof(cpu));
-
-	new_logwindow("mem", WF_KEEP | WF_CLOSE);
-	new_logwindow("reg", WF_KEEP | WF_CLOSE);
-	new_logwindow("ins", WF_KEEP | WF_CLOSE);
-
-	init_cpu(&cpu, memory);
-	set_test_values(&cpu, memory);
-	load_process(&cpu, registers, 0);
-	run_cpu(&cpu, 10, 1, 1);
-
-	return (0);
 }

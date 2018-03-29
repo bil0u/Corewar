@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/20 15:58:34 by upopee           ###   ########.fr        #
+#    Updated: 2018/03/29 02:52:15 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,8 @@ OBJ_DIR =		.objects
 
 # -- PROJECT FILES --
 
-FILES =			cpu_core \
+FILES =			main_corewar \
+				cpu_core \
 				cpu_tools \
 				cpu_instructions \
 				cpu_debug \

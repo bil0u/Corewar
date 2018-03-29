@@ -6,12 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/27 06:32:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/29 08:14:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "corewar_types.h"
 #include "cpu.h"
 #include "cpu_verbose.h"
 
@@ -227,8 +228,8 @@ int		zjmp_instr(t_vcpu *cpu)
 {
 	if (cpu->carry == 1)
 	{
-		secure_fetch(cpu->pc + OPBC_SIZE, cpu->memory, cpu->op_args, ARG_DIRSZ);
-		log_this("ins", 0, P_ARG_DIR, 1, cpu->op_args[0], cpu->op_args[0]);
+		secure_fetch(cpu->pc + OPBC_SIZE, cpu->memory, cpu->op_args, ARG_INDSZ);
+		log_this("ins", 0, P_ARG_IND, 1, cpu->op_args[0], cpu->op_args[0]);
 		cpu->pc = jump_to(cpu->pc, (int)(cpu->op_args[0] & 0xFFFF) % IDX_MOD);
 		log_this("ins", 0, ZJMP_OK, (int)cpu->op_args[0] % IDX_MOD, cpu->pc);
 		return (-OPBC_SIZE);
@@ -236,7 +237,7 @@ int		zjmp_instr(t_vcpu *cpu)
 	else
 	{
 		log_this("ins", 0, ZJMP_KO);
-		return (ARG_DIRSZ);
+		return (ARG_INDSZ);
 	}
 }
 

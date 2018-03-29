@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 17:05:31 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/29 02:53:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 /*
 ** --------- CPU CORE ------------
 */
+
+void		run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow);
 
 /*
 ** --------- CPU TOOLS ------------
@@ -31,7 +33,7 @@ void		secure_fetch(uint32_t pc, uint8_t *mem, uint32_t *dst, size_t sz);
 void		secure_store(uint32_t pc, uint8_t *mem, uint32_t src, size_t sz);
 
 /*
-**	-------- CPU _DEBUG  ---------
+**	-------- CPU DEBUG  ---------
 */
 
 void		print_memory(t_vcpu *cpu, char clean);

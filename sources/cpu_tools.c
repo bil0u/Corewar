@@ -6,12 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/23 17:24:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/29 07:09:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "corewar_types.h"
 
 void		init_cpu(t_vcpu *cpu, uint8_t *memory)
 {
