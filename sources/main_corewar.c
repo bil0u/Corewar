@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/31 00:07:12 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/31 00:13:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,6 @@ int			main(int argc, char **argv)
 	if (init_arena(arena, players, argc - 1, &argv[1]) == FAILURE)
 		return (FAILURE);
 
-	run_cpu(&cpu, 10, 1, 1);
+	run_cpu(&cpu, 10, 1, 0);
 	return (SUCCESS);
 }
