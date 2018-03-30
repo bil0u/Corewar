@@ -6,25 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 07:09:35 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/30 23:46:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
 #include "corewar_types.h"
-
-void		init_cpu(t_vcpu *cpu, uint8_t *memory)
-{
-	ft_bzero(cpu, sizeof(*cpu));
-	cpu->memory = memory;
-}
-
-void 		load_process(t_vcpu *cpu, uint32_t *p_regs, uint32_t p_pc)
-{
-	cpu->registers = p_regs;
-	cpu->pc = p_pc;
-}
 
 /*
 ** -- JUMP TO
@@ -91,15 +79,20 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 }
 
 /*
-** -- INTERPRET ARG VALUE AS INDIRECT
+** -- INTERPRET ARG VALUE
+**    > Returns an error if the arg is a non valid register
 */
 
-void		decode_indirect(t_vcpu *cpu, uint8_t arg_type, uint32_t *arg_buff)
+int			decode_arg(t_vcpu *cpu, uint8_t arg_type, uint32_t *arg_buff)
 {
 	if (arg_type == ARG_REG)
-		*arg_buff = cpu->registers[*arg_buff];
+		if (*arg_buff != 0 && *arg_buff - 1 < REG_NUMBER)
+			*arg_buff = cpu->registers[*arg_buff - 1];
+		else
+			return (FAILURE);
 	else if (arg_type == ARG_IND)
 		secure_fetch(*arg_buff, cpu->memory, arg_buff, REG_SIZE);
+	return (SUCCESS);
 }
 
 /*

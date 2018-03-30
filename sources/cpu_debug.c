@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 07:09:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/30 19:05:58 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ void	print_memory(t_vcpu *cpu, char clean)
 			ret += ft_sprintf(buff + ret, "%2.2hhx", cpu->memory[i]);
 		++i;
 	}
+	buff[ret] = '\n';
+	buff[ret + 1] = '\0';
 	log_this("mem", 0, buff);
-	ft_putchar_fd('\n', get_winfd("mem"));
 }
 
 /*
@@ -67,6 +68,7 @@ void	print_registers(t_vcpu *cpu, char clean)
 		if (i != REG_NUMBER)
 			ret += ft_sprintf(buff + ret, "{red}|{eoc}");
 	}
+	buff[ret] = '\n';
+	buff[ret + 1] = '\0';
 	log_this("reg", 0, buff);
-	ft_putchar_fd('\n', get_winfd("reg"));
 }

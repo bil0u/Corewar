@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 07:42:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/30 20:13:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ typedef struct		s_header
 
 typedef struct		s_process
 {
+	uint32_t		registers[REG_NUMBER];
 	uint32_t		pid;
 	uint32_t		pc;
-	uint32_t		registers[REG_NUMBER];
 	uint32_t		timer;
+	uint32_t		last_live;
 	uint8_t			carry;
-	uint8_t			is_alive;
 }					t_process;
 
 typedef struct		s_player

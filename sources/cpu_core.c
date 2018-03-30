@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 08:12:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/31 00:06:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,30 +51,32 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 
 	arg_buff = cpu->op_args + arg_no;
 	if (arg_type == ARG_REG && ((*arg_buff = *(cpu->memory + pc_tmp)) || 1))
-		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff, *arg_buff);
+		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
 	else if (arg_type == ARG_IND)
 	{
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
-		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff, *arg_buff);
+		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
 		if (cpu->curr_instruction->op_number < 13)
 		{
-			*arg_buff = (uint32_t)((int)(*arg_buff & 0xFFFF) % IDX_MOD);
-			log_this("ins", 0, P_IND_MOD, arg_no + 1, *arg_buff, *arg_buff);
+			*arg_buff = (uint32_t)((int16_t)(*arg_buff & 0xFFFF) % IDX_MOD);
+			log_this("ins", 0, P_IND_MOD, *arg_buff);
 		}
 		*arg_buff = jump_to(cpu->pc, (int)*arg_buff);
 	}
 	else if (arg_type == ARG_DIR)
 	{
 		if (cpu->curr_instruction->ind_address)
-			return (fetch_nextarg(cpu, pc_tmp, arg_no, ARG_IND));
-		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_DIRSZ);
-		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff, *arg_buff);
+			arg_type = ARG_IND;
+		secure_fetch(pc_tmp, cpu->memory, arg_buff, get_argsize(arg_type));
+		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff);
 	}
 	return (get_argsize(arg_type));
 }
 
 /*
 ** -- CHECK THE SANITY OF ARGS BYTECODE
+**    > Check if the given bytecode is valid for the current instruction
+**    > Increment the value pointed by 'bytes_read' pointer of total args size
 */
 
 static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
@@ -90,15 +92,15 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 	arg_no = 0;
 	while (arg_no < op->nb_args)
 	{
-		arg_type = (bytecode & 0xC0) >> 6;
+		arg_type = (bytecode >> (6 - (arg_no << 1))) & 0x03;
 		valid_types = op->valid_types[arg_no];
 		if ((arg_type == ARG_REG && valid_types & T_REG)
 		|| (arg_type == ARG_IND && valid_types & T_IND)
 		|| (arg_type == ARG_DIR && valid_types & T_DIR))
 			++valid_args;
+		if (op->ind_address && arg_type == ARG_DIR)
+			arg_type = ARG_IND;
 		*bytes_read += get_argsize(arg_type);
-		*bytes_read -= op->ind_address && arg_type == ARG_DIR ? 2 : 0;
-		bytecode <<= 2;
 		++arg_no;
 	}
 	return (valid_args == arg_no);
@@ -109,6 +111,7 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 **    > Fetch the arguments bytecode on ARGBC_SIZE bytes
 **    > If the sanity check is successful :
 **      > Decode each argument one by one and store them in the vcpu->op_args
+**    > Otherwise :
 */
 
 static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
@@ -122,15 +125,15 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 	if ((*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd)) != 0)
 	{
 		*bytes_rd += ARGBC_SIZE;
-		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
 		cpu->op_bytecode = bytecode;
 		pc_tmp = jump_to(cpu->pc, OPBC_SIZE + ARGBC_SIZE);
 		arg_no = 0;
+		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
 		while (arg_no < cpu->curr_instruction->nb_args)
 		{
-			arg_sz = fetch_nextarg(cpu, pc_tmp, arg_no, (bytecode & 0xC0) >> 6);
+			arg_sz = (bytecode >> (6 - (arg_no << 1))) & 0x03;
+			arg_sz = fetch_nextarg(cpu, pc_tmp, arg_no, arg_sz);
 			pc_tmp = jump_to(pc_tmp, arg_sz);
-			bytecode <<= 2;
 			++arg_no;
 		}
 	}
@@ -169,7 +172,7 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 			valid = TRUE;
 			if (cpu->curr_instruction->has_bytecode)
 				fetch_arguments(cpu, &bytes_read, &valid);
-			if (valid == TRUE)
+			if (valid)
 				bytes_read += cpu->curr_instruction->funct_ptr(cpu);
 
 			log_this("ins", 0, "----\n");

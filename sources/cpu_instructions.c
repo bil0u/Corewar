@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 08:14:12 by upopee           ###   ########.fr       */
+/*   Updated: 2018/03/31 00:04:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,18 +18,18 @@
 
 int		live_instr(t_vcpu *cpu)			// NEEDS TO BE COMPLETED
 {
-	uint32_t	playereg_no;
+	uint32_t	player_no;
 
 	secure_fetch(cpu->pc + OPBC_SIZE, cpu->memory, cpu->op_args, ARG_DIRSZ);
-	playereg_no = cpu->op_args[0];
-	log_this("ins", 0, P_ARG_DIR, 1, playereg_no, playereg_no);
-	if (playereg_no && playereg_no < MAX_PLAYERS + 1)
+	player_no = cpu->op_args[0];
+	log_this("ins", 0, P_ARG_DIR, 1, player_no);
+	if (player_no && player_no < MAX_PLAYERS + 1)
 	{
-		log_this("ins", 0, LIVE_OK, playereg_no);
+		log_this("ins", 0, LIVE_OK, player_no);
 	}
 	else
 	{
-		log_this("ins", 0, LIVE_KO, playereg_no);
+		log_this("ins", 0, LIVE_KO, player_no);
 	}
 	return (ARG_DIRSZ);
 }
@@ -41,21 +41,21 @@ int		ld_instr(t_vcpu *cpu)
 	uint8_t		reg_dst;
 
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[1]) != 0 && --reg_dst <= REG_NUMBER)
+	if ((reg_dst = cpu->op_args[1]) != 0 && --reg_dst < REG_NUMBER)
 	{
 		data = cpu->op_args[0];
 		r = cpu->registers;
 		if (((cpu->op_bytecode >> 6) & 0x03) == ARG_IND)
 		{
 			secure_fetch(data, cpu->memory, r + reg_dst, REG_SIZE);
-			log_this("ins", 0, LD_IND, data, reg_dst + 1, r[reg_dst]);
+			log_this("ins", 0, LD_IND, data, r[reg_dst], reg_dst + 1);
 		}
 		else
 		{
 			r[reg_dst] = data;
 			log_this("ins", 0, LD_DIR, data, reg_dst + 1);
 		}
-		cpu->carry = ((int)r[reg_dst] == 0);
+		cpu->carry = (r[reg_dst] == 0);
 	}
 	else
 		log_this("ins", 0, LD_KO, cpu->op_args[1]);
@@ -75,16 +75,15 @@ int		st_instr(t_vcpu *cpu)
 		if (((cpu->op_bytecode >> 4) & 0x03) == ARG_IND)
 		{
 			secure_store(data, cpu->memory, r[reg_src], REG_SIZE);
-			log_this("ins", 0, ST_IND, reg_src + 1, data, r[reg_src]);
+			log_this("ins", 0, ST_IND, reg_src + 1, r[reg_src], data);
 		}
 		else if (data != 0 && --data < REG_NUMBER)
 		{
 			r[data] = r[reg_src];
-			log_this("ins", 0, ST_REG, reg_src + 1, data + 1, r[reg_src]);
+			log_this("ins", 0, ST_REG, reg_src + 1, r[reg_src], data + 1);
 		}
 		else
 			log_this("ins", 0, ST_KO, cpu->op_args[1]);
-
 	}
 	else
 		log_this("ins", 0, ST_KO, cpu->op_args[0]);
@@ -105,9 +104,8 @@ int		add_instr(t_vcpu *cpu)
 	{
 		r = cpu->registers;
 		r[reg_dst] = (uint32_t)((int)(r[reg_a]) + (int)(r[reg_b]));
-		cpu->carry = ((int)r[reg_dst] == 0);
-		log_this("ins", 0, ADD_OK, reg_a + 1, reg_b + 1, reg_dst + 1,
-												r[reg_dst], r[reg_dst]);
+		cpu->carry = (r[reg_dst] == 0);
+		log_this("ins", 0, ADD_OK, ++reg_a, ++reg_b, r[reg_dst], reg_dst + 1);
 	}
 	else
 		log_this("ins", 0, ADD_KO);
@@ -128,9 +126,8 @@ int		sub_instr(t_vcpu *cpu)
 	{
 		r = cpu->registers;
 		r[reg_dst] = (uint32_t)((int)(r[reg_a]) - (int)(r[reg_b]));
-		cpu->carry = ((int)r[reg_dst] == 0);
-		log_this("ins", 0, SUB_OK, reg_a + 1, reg_b + 1, reg_dst + 1,
-												r[reg_dst], r[reg_dst]);
+		cpu->carry = (r[reg_dst] == 0);
+		log_this("ins", 0, SUB_OK, ++reg_a, ++reg_b, r[reg_dst], reg_dst + 1);
 	}
 	else
 		log_this("ins", 0, SUB_KO);
@@ -139,99 +136,88 @@ int		sub_instr(t_vcpu *cpu)
 
 int		and_instr(t_vcpu *cpu)
 {
-	int			i;
 	uint32_t	*arg;
 	uint32_t	*r;
 	uint8_t		reg_dst;
 
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[2]) != 0 && --reg_dst < REG_NUMBER)
+	arg = cpu->op_args;
+	if ((reg_dst = arg[2]) != 0 && --reg_dst < REG_NUMBER)
 	{
 		r = cpu->registers;
-		i = -1;
-		while (++i < 2 && (arg = cpu->op_args + i) != NULL)
-			if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_REG)
-				if (*arg != 0 && --(*arg) < REG_NUMBER)
-					*arg = r[*arg];
-				else
-					return (log_this("ins", 0, AND_KO, *(cpu->op_args + i)));
-			else if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_IND)
-				secure_fetch(*arg, cpu->memory, arg, REG_SIZE);
-		r[reg_dst] = cpu->op_args[0] & cpu->op_args[1];
-		cpu->carry = ((int)r[reg_dst] == 0);
-		log_this("ins", 0, AND_OK, cpu->op_args[0], cpu->op_args[1], reg_dst + 1, r[reg_dst]);
+		if (decode_arg(cpu, (cpu->op_bytecode >> 6) & 0x03, arg) == FAILURE)
+			return (log_this("ins", 0, AND_KO, arg[0]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, AND_KO, arg[1]));
+		r[reg_dst] = arg[0] & arg[1];
+		cpu->carry = (r[reg_dst] == 0);
+		log_this("ins", 0, AND_OK, arg[0], arg[1], r[reg_dst], reg_dst + 1);
 	}
 	else
-		log_this("ins", 0, AND_KO, cpu->op_args[2]);
+		log_this("ins", 0, AND_KO, arg[2]);
 	return (0);
 }
 
 int		or_instr(t_vcpu *cpu)
 {
-	int			i;
 	uint32_t	*arg;
 	uint32_t	*r;
 	uint8_t		reg_dst;
 
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[2]) != 0 && --reg_dst < REG_NUMBER)
+	arg = cpu->op_args;
+	if ((reg_dst = arg[2]) != 0 && --reg_dst < REG_NUMBER)
 	{
 		r = cpu->registers;
-		i = -1;
-		while (++i < 2 && (arg = cpu->op_args + i) != NULL)
-			if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_REG)
-				if (*arg != 0 && --(*arg) < REG_NUMBER)
-					*arg = r[*arg];
-				else
-					return (log_this("ins", 0, OR_KO, *(cpu->op_args + i)));
-			else if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_IND)
-				secure_fetch(*arg, cpu->memory, arg, REG_SIZE);
-		r[reg_dst] = cpu->op_args[0] | cpu->op_args[1];
-		cpu->carry = ((int)r[reg_dst] == 0);
-		log_this("ins", 0, OR_OK, cpu->op_args[0], cpu->op_args[1], reg_dst + 1, r[reg_dst]);
+		if (decode_arg(cpu, (cpu->op_bytecode >> 6) & 0x03, arg) == FAILURE)
+			return (log_this("ins", 0, OR_KO, arg[0]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, OR_KO, arg[1]));
+		r[reg_dst] = arg[0] | arg[1];
+		cpu->carry = (r[reg_dst] == 0);
+		log_this("ins", 0, OR_OK, arg[0], arg[1], r[reg_dst], reg_dst + 1);
 	}
 	else
-		log_this("ins", 0, OR_KO, cpu->op_args[2]);
+		log_this("ins", 0, OR_KO, arg[2]);
 	return (0);
 }
 
 int		xor_instr(t_vcpu *cpu)
 {
-	int			i;
 	uint32_t	*arg;
 	uint32_t	*r;
 	uint8_t		reg_dst;
 
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[2]) != 0 && --reg_dst < REG_NUMBER)
+	arg = cpu->op_args;
+	if ((reg_dst = arg[2]) != 0 && --reg_dst < REG_NUMBER)
 	{
 		r = cpu->registers;
-		i = -1;
-		while (++i < 2 && (arg = cpu->op_args + i) != NULL)
-			if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_REG)
-				if (*arg != 0 && --(*arg) < REG_NUMBER)
-					*arg = r[*arg];
-				else
-					return(log_this("ins", 0, XOR_KO, *(cpu->op_args + i)));
-			else if (((cpu->op_bytecode >> (6 - (i << 1))) & 0x03) == ARG_IND)
-				secure_fetch(*arg, cpu->memory, arg, REG_SIZE);
-		r[reg_dst] = cpu->op_args[0] ^ cpu->op_args[1];
-		cpu->carry = ((int)r[reg_dst] == 0);
-		log_this("ins", 0, XOR_OK, cpu->op_args[0], cpu->op_args[1], reg_dst + 1, r[reg_dst]);
+		if (decode_arg(cpu, (cpu->op_bytecode >> 6) & 0x03, arg) == FAILURE)
+			return (log_this("ins", 0, XOR_KO, arg[0]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, XOR_KO, arg[1]));
+		r[reg_dst] = arg[0] ^ arg[1];
+		cpu->carry = (r[reg_dst] == 0);
+		log_this("ins", 0, XOR_OK, arg[0], arg[1], r[reg_dst], reg_dst + 1);
 	}
 	else
-		log_this("ins", 0, XOR_KO, cpu->op_args[2]);
+		log_this("ins", 0, XOR_KO, arg[2]);
 	return (0);
 }
 
 int		zjmp_instr(t_vcpu *cpu)
 {
+	int16_t		restricted;
+
 	if (cpu->carry == 1)
 	{
 		secure_fetch(cpu->pc + OPBC_SIZE, cpu->memory, cpu->op_args, ARG_INDSZ);
-		log_this("ins", 0, P_ARG_IND, 1, cpu->op_args[0], cpu->op_args[0]);
-		cpu->pc = jump_to(cpu->pc, (int)(cpu->op_args[0] & 0xFFFF) % IDX_MOD);
-		log_this("ins", 0, ZJMP_OK, (int)cpu->op_args[0] % IDX_MOD, cpu->pc);
+		restricted = (int16_t)(cpu->op_args[0] & 0xFFFF) % IDX_MOD;
+		cpu->pc = jump_to(cpu->pc, restricted);
+		log_this("ins", 0, P_ARG_IND, 1, (int16_t)(cpu->op_args[0] & 0xFFFF));
+		log_this("ins", 0, P_IND_MOD, restricted);
+		log_this("ins", 0, ZJMP_OK, restricted, cpu->pc);
 		return (-OPBC_SIZE);
 	}
 	else
@@ -243,43 +229,51 @@ int		zjmp_instr(t_vcpu *cpu)
 
 int		ldi_instr(t_vcpu *cpu)
 {
+	uint32_t	*arg;
 	uint32_t	data;
 	uint8_t		reg_dst;
 
+	arg = cpu->op_args;
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[2]) != 0 && --reg_dst <= REG_NUMBER)
+	if ((reg_dst = arg[2]) != 0 && --reg_dst < REG_NUMBER)
 	{
-		decode_indirect(cpu, (cpu->op_bytecode >> 6) & 0x03, cpu->op_args);
-		decode_indirect(cpu, (cpu->op_bytecode >> 4) & 0x03, cpu->op_args + 1);
-		data = ((int)cpu->op_args[0] + (int)cpu->op_args[1]) % IDX_MOD;
+		if (decode_arg(cpu, (cpu->op_bytecode >> 6) & 0x03, arg) == FAILURE)
+			return (log_this("ins", 0, LDI_KO, arg[0]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, LDI_KO, arg[1]));
+		data = ((int)arg[0] + (int)arg[1]) % IDX_MOD;
 		data = jump_to(cpu->pc, (int)data);
 		secure_fetch(data, cpu->memory, cpu->registers + reg_dst, REG_SIZE);
-		log_this("ins", 0, LDI_OK, cpu->op_args[0], cpu->op_args[1],
+		cpu->carry = (cpu->registers[reg_dst] == 0);
+		log_this("ins", 0, LDI_OK, arg[0], arg[1],
 						data, reg_dst + 1, cpu->registers[reg_dst]);
 	}
 	else
-		log_this("ins", 0, LDI_KO, cpu->op_args[2]);
+		log_this("ins", 0, LDI_KO, arg[2]);
 	return (0);
 }
 
 int		sti_instr(t_vcpu *cpu)
 {
+	uint32_t	*arg;
 	uint32_t	data;
 	uint8_t		reg_src;
 
-	cpu->carry = 0;
-	if ((reg_src = cpu->op_args[0]) != 0 && --reg_src <= REG_NUMBER)
+	arg = cpu->op_args;
+	if ((reg_src = arg[0]) != 0 && --reg_src < REG_NUMBER)
 	{
-		decode_indirect(cpu, (cpu->op_bytecode >> 4) & 0x03, cpu->op_args + 1);
-		decode_indirect(cpu, (cpu->op_bytecode >> 2) & 0x03, cpu->op_args + 2);
-		data = ((int)cpu->op_args[1] + (int)cpu->op_args[2]) % IDX_MOD;
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, LDI_KO, arg[1]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 2) & 0x03, arg + 2) == FAILURE)
+			return (log_this("ins", 0, LDI_KO, arg[2]));
+		data = ((int)arg[1] + (int)arg[2]) % IDX_MOD;
 		data = jump_to(cpu->pc, (int)data);
 		secure_store(data, cpu->memory, cpu->registers[reg_src], REG_SIZE);
-		log_this("ins", 0, STI_OK, reg_src + 1, cpu->op_args[1],
-					cpu->op_args[2], data, cpu->registers[reg_src]);
+		log_this("ins", 0, STI_OK, reg_src + 1, arg[1],
+					arg[2], data, cpu->registers[reg_src]);
 	}
 	else
-		log_this("ins", 0, STI_KO, cpu->op_args[2]);
+		log_this("ins", 0, STI_KO, arg[0]);
 	return (0);
 }
 
@@ -297,7 +291,7 @@ int		lld_instr(t_vcpu *cpu)
 	uint8_t		reg_dst;
 
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[1]) != 0 && --reg_dst <= REG_NUMBER)
+	if ((reg_dst = cpu->op_args[1]) != 0 && --reg_dst < REG_NUMBER)
 	{
 		data = cpu->op_args[0];
 		r = cpu->registers;
@@ -312,7 +306,7 @@ int		lld_instr(t_vcpu *cpu)
 			r[reg_dst] = data;
 			log_this("ins", 0, LLD_DIR, data, reg_dst + 1);
 		}
-		cpu->carry = ((int)r[reg_dst] == 0);
+		cpu->carry = (r[reg_dst] == 0);
 	}
 	else
 		log_this("ins", 0, LLD_KO, cpu->op_args[1]);
@@ -321,22 +315,27 @@ int		lld_instr(t_vcpu *cpu)
 
 int		lldi_instr(t_vcpu *cpu)
 {
+	uint32_t	*arg;
 	uint32_t	data;
 	uint8_t		reg_dst;
 
+	arg = cpu->op_args;
 	cpu->carry = 0;
-	if ((reg_dst = cpu->op_args[2]) != 0 && --reg_dst <= REG_NUMBER)
+	if ((reg_dst = arg[2]) != 0 && --reg_dst < REG_NUMBER)
 	{
-		decode_indirect(cpu, (cpu->op_bytecode >> 6) & 0x03, cpu->op_args);
-		decode_indirect(cpu, (cpu->op_bytecode >> 4) & 0x03, cpu->op_args + 1);
-		data = ((int)cpu->op_args[0] + (int)cpu->op_args[1]);
+		if (decode_arg(cpu, (cpu->op_bytecode >> 6) & 0x03, arg) == FAILURE)
+			return (log_this("ins", 0, LLDI_KO, arg[0]));
+		if (decode_arg(cpu, (cpu->op_bytecode >> 4) & 0x03, arg + 1) == FAILURE)
+			return (log_this("ins", 0, LLDI_KO, arg[1]));
+		data = ((int)arg[0] + (int)arg[1]);
 		data = jump_to(cpu->pc, (int)data);
 		secure_fetch(data, cpu->memory, cpu->registers + reg_dst, REG_SIZE);
-		log_this("ins", 0, LLDI_OK, cpu->op_args[0], cpu->op_args[1],
+		cpu->carry = (cpu->registers[reg_dst] == 0);
+		log_this("ins", 0, LLDI_OK, arg[0], arg[1],
 						data, reg_dst + 1, cpu->registers[reg_dst]);
 	}
 	else
-		log_this("ins", 0, LLDI_KO, cpu->op_args[2]);
+		log_this("ins", 0, LLDI_KO, arg[2]);
 	return (0);
 }
 
