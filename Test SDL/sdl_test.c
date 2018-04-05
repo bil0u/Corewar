@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/31 15:04:17 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/03 04:48:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 05:43:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,8 @@ void	init_audio(Mix_Music **music, Mix_Chunk **effects)
 	Mix_Volume(2, MIX_MAX_VOLUME >> 1);
 	effects[2] = Mix_LoadWAV(EFF_MONSTERK);
 	effects[NB_EFFECTS] = NULL;
+	Mix_PlayMusic(*music, -1);
+	Mix_PauseMusic();
 }
 
 void	del_audio(Mix_Music *music, Mix_Chunk **effects)
@@ -127,7 +129,6 @@ void	main_loop(SDL_Surface *screen)
 
 	init_images(images);
 	init_audio(&music, effects);
-	Mix_PlayMusic(music, -1);
 	while (42)
 	{
 		put_images(screen, images);
@@ -141,11 +142,13 @@ void	main_loop(SDL_Surface *screen)
 				break ;
 			else if (event.key.keysym.sym == SDLK_SPACE)
 				Mix_PausedMusic() ? Mix_ResumeMusic() : Mix_PauseMusic();
-			else if (event.key.keysym.sym == SDLK_1)
+			else if (event.key.keysym.sym == SDLK_BACKSPACE)
+				Mix_RewindMusic();
+			else if (event.key.keysym.sym == SDLK_a)
 				Mix_PlayChannel(0, effects[0], 0);
-			else if (event.key.keysym.sym == SDLK_2)
+			else if (event.key.keysym.sym == SDLK_z)
 				Mix_PlayChannel(1, effects[1], 0);
-			else if (event.key.keysym.sym == SDLK_3)
+			else if (event.key.keysym.sym == SDLK_e)
 				Mix_PlayChannel(2, effects[2], 0);
 		}
 	}
