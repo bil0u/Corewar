@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:34:34 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 19:45:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,30 @@ static void	load_process(t_process *p, t_vcpu *cpu)
 static void	run_cpu(t_cwdata *env, uint32_t nb_cycles, uint16_t flags)
 {
 	t_player	*p;
+	uint32_t	delta_ticks;
 	uint8_t		curr;
-	uint32_t	cycle_no;
 
-	cycle_no = 1;
-	ft_printf("YooooCPU\n");
-	while (cycle_no <= nb_cycles)
+	delta_ticks = 0;
+	while (env->cpu.tick - delta_ticks < nb_cycles)
 	{
-		while (42)
+		curr = 0;
+		while (curr < env->nb_players)
 		{
-			curr = 0;
-			while (curr < env->nb_players)
+			//	print_memory(&env->cpu, BIS_SET(flags, CWF_SLOW));
+			p = env->players + curr;
+			p->pending = p->pending ? p->pending->next : p->processes;
+			if (p->pending)
 			{
-				p = env->players + curr;
-				p->pending = !p->pending ? p->processes : p->pending->next;
 				load_process((t_process *)(p->pending->content), &env->cpu);
-				print_memory(&env->cpu, BIS_SET(flags, CWF_SLOW));
 				exec_instruction(&env->cpu);
-				print_registers(&env->cpu, BIS_SET(flags, CWF_SLOW));
-				++p;
 			}
+			print_registers(&env->cpu, BIS_SET(flags, CWF_SLOW));
+			++curr;
 		}
-		BIS_SET(flags, CWF_DUMP | CWF_SDMP) ? ++cycle_no : (void)0;
+		BIS_SET(flags, CWF_DUMP | CWF_SDMP) ? (void)0 : ++delta_ticks;
 		BIS_SET(flags, CWF_SLOW) ? sleep(1) : (void)0;
+		++(env->cpu.tick);
 	}
-	print_memory(&env->cpu, BIS_SET(flags, CWF_SLOW));
 	BIS_SET(flags, CWF_SDMP) ? run_cpu(env, nb_cycles, flags) : (void)0;
 }
 
