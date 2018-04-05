@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 15:02:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 19:33:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "corewar_types.h"
 #include "instructions.h"
 #include "cpu.h"
-#include "cpu_verbose.h"
-#include "corewar_types.h"
 #include "corewar.h"
+#include "cpu_verbose.h"
 
 /*
 ** -- FETCH THE CURRENT INSTRUCTION
@@ -32,7 +32,7 @@ static uint8_t	fetch_instruction(t_vcpu *cpu, uint8_t *bytes_read)
 {
 	uint8_t		op_no;
 
-	op_no = cpu->memory[cpu->pc];
+	op_no = cpu->memory[cpu->pc[0]];
 	cpu->curr_instruction = &(g_op_set[op_no]);
 	*bytes_read = OPBC_SIZE;
 	return (op_no);
@@ -62,7 +62,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 			*arg_buff = (uint32_t)((int16_t)(*arg_buff & 0xFFFF) % IDX_MOD);
 			log_this("ins", 0, P_IND_MOD, *arg_buff);
 		}
-		*arg_buff = jump_to(cpu->pc, (int)*arg_buff);
+		*arg_buff = jump_to(cpu->pc[0], (int)*arg_buff);
 	}
 	else if (arg_type == ARG_DIR)
 	{
@@ -122,12 +122,12 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 	uint8_t		arg_no;
 	uint8_t		arg_sz;
 
-	bytecode = *(cpu->memory + jump_to(cpu->pc, OPBC_SIZE));
+	bytecode = *(cpu->memory + jump_to(cpu->pc[0], OPBC_SIZE));
 	if ((*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd)) != 0)
 	{
 		*bytes_rd += ARGBC_SIZE;
 		cpu->op_bytecode = bytecode;
-		pc_tmp = jump_to(cpu->pc, OPBC_SIZE + ARGBC_SIZE);
+		pc_tmp = jump_to(cpu->pc[0], OPBC_SIZE + ARGBC_SIZE);
 		arg_no = 0;
 		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
 		while (arg_no < cpu->curr_instruction->nb_args)
@@ -152,37 +152,24 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 **    > Moves the PC to the next instruction
 */
 
-void			run_cpu(t_vcpu *cpu, uint16_t flags, uint32_t nb_cycles)
+void			exec_instruction(t_vcpu *cpu)
 {
-	uint32_t	cycle_no;
+	t_op		*op;
 	uint8_t		op_no;
 	uint8_t		bytes_read;
 	uint8_t		valid;
 
-	cycle_no = 1;
-	while (cycle_no <= nb_cycles)
+	op_no = fetch_instruction(cpu, &bytes_read);
+	if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 	{
-		print_memory(cpu, BIS_SET(flags, CWF_SDMP));
-
-		op_no = fetch_instruction(cpu, &bytes_read);
-		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
-		{
-			log_this("ins", 0, P_CURR_OP, cpu->curr_instruction->name,
-								cpu->curr_instruction->op_number, cpu->pc);
-
+		op = cpu->curr_instruction;
+		log_this("ins", 0, P_CURR_OP, op->name, op->op_number, cpu->pc[0]);
 			valid = TRUE;
-			if (cpu->curr_instruction->has_bytecode)
-				fetch_arguments(cpu, &bytes_read, &valid);
-			if (valid)
-				bytes_read += cpu->curr_instruction->funct_ptr(cpu);
-
+		if (op->has_bytecode)
+			fetch_arguments(cpu, &bytes_read, &valid);
+		if (valid)
+			bytes_read += op->funct_ptr(cpu);
 			log_this("ins", 0, "----\n");
-		}
-		cpu->pc = jump_to(cpu->pc, bytes_read);
-
-		print_registers(cpu, BIS_SET(flags, CWF_SDMP));
-
-		BIS_SET(flags, CWF_SDMP) ? (void)0 : ++cycle_no;
-		BIS_SET(flags, CWF_SLOW) ? sleep(1) : (void)0;
 	}
+	cpu->pc[0] = jump_to(cpu->pc[0], bytes_read);
 }

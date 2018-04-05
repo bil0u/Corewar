@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/29 07:09:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 19:28:18 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,18 +70,16 @@ typedef struct		s_op
 **  op_bytecode			->	byte where the current op bytecode is stored
 */
 
-# define REG_NUMBER	8
-# define REG_SIZE	4
-# define REG_LEN	(REG_NUMBER * REG_SIZE)
-
 typedef struct		s_vcpu
 {
-	uint32_t		pc;
-	uint32_t		op_args[MAX_ARGS];
-	t_op			*curr_instruction;
+	uint64_t		tick;
+	uint32_t		*timer;
+	uint32_t		*pc;
 	uint32_t		*registers;
+	uint32_t		op_args[MAX_ARGS];
+	uint8_t			*carry;
 	uint8_t			*memory;
-	uint8_t			carry;
+	t_op			*curr_instruction;
 	uint8_t			op_bytecode;
 }					t_vcpu;
 

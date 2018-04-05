@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 15:36:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 18:20:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,20 @@
 ** - MACROS FOR USAGE'S STYLE
 */
 
-# define OPC(x)		"{cyan}" x "{eoc}"
-# define OPG(x)		"{green}" x "{eoc}"
-# define OPR(x)		"{red}" x "{eoc}"
-# define OPB(x)		"{blue}" x "{eoc}"
-# define OPY(x)		"{yellow}" x "{eoc}"
-# define OPM(x)		"{magenta}" x "{eoc}"
+# define COLD(str)		"{default}" str "{eoc}"
+# define COLBK(str)		"{black}" str "{eoc}"
+# define COLW(str)		"{white}" str "{eoc}"
+# define COLR(str)		"{red}" str "{eoc}"
+# define COLG(str)		"{green}" str "{eoc}"
+# define COLY(str)		"{yellow}" str "{eoc}"
+# define COLB(str)		"{blue}" str "{eoc}"
+# define COLM(str)		"{magenta}" str "{eoc}"
+# define COLC(str)		"{cyan}" str "{eoc}"
 
-# define OPT(o)			OPB(o)
-# define OPTN(n)		OPY(n)
-# define OPTA(a)		OPC(a)
-# define OPTS(s)		OPM(s)
+# define OPT(o)			COLB(o)
+# define OPTN(n)		COLY(n)
+# define OPTA(a)		COLC(a)
+# define OPTS(s)		COLM(s)
 
 # define OPT_N(o)		OPT(o) " " OPTN("N")
 # define OPT_A(o, a)	OPT(o) " " OPTA(a)
@@ -87,6 +90,17 @@
 # define CW_USAGE3		CWU_L16 CWU_L17 CWU_L18 CWU_LEND
 # define CW_USAGE		CW_USAGE1 CW_USAGE2 CW_USAGE3
 
+/*
+** - CLASSIC OUTPUT & ERROR MESSAGES
+*/
+
+# define CW_LOADING		"{yellow}>>>{eoc} Introducing contestants ...\n" CW_SEP
+
+# define CW_SEP			"{red}-------------------------------------{eoc}\n"
+# define CW_PLAYER1		"{yellow}*{eoc} Player " COLC("%hhu") ", weighing "
+# define CW_PLAYER2		COLM("%u") " bytes, '" COLG("%s") "' * is saying *\n"
+# define CW_PLAYER		CW_PLAYER1 CW_PLAYER2 "%s\n" CW_SEP
+
 # define CWE_NUMERIC	"Please provide a numeric value for '{cyan}%s{eoc}'\n"
 # define CWE_OPTARG		"Option '{cyan}%s{eoc}' > {yellow}%s{eoc}"
 # define CWE_NOTNUM		CWE_OPTARG " is not a numeric value\n"
@@ -98,5 +112,20 @@
 # define CWE_BADPNO		CWE_BADPNO1 "Bad player number\n"
 # define CWE_PNOUSED	CWE_BADPNO1 "Player number already used\n"
 # define CWE_BADOPT		"Option '{yellow}%s{eoc}' is invalid\n"
+# define CWE_NOPLAYERS	"No .cor files given\n"
+# define CWE_BADVERB	"%hu > invalid verbose level\n"
+
+/*
+** - DBUG STYLE
+*/
+
+# define BPL			32
+# define MEM_VALUE		"{yellow}0x%4.4x{eoc}\t\t"
+# define PCCOLOR_P1		"{white}{b_green}%2.2hhx{eoc}"
+# define PCCOLOR_P2		"{white}{b_blue}%2.2hhx{eoc}"
+# define PCCOLOR_P3		"{white}{b_yellow}%2.2hhx{eoc}"
+# define PCCOLOR_P4		"{white}{b_red}%2.2hhx{eoc}"
+# define MEMSET_COLOR	"{cyan}%2.2hhx{eoc}"
+# define MEMZERO_COLOR	"{white}%2.2hhx{eoc}"
 
 #endif

@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/05 14:54:29 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/05 18:36:40 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,8 +42,8 @@ OBJ_DIR =		.objects
 
 FILES =			main_corewar \
 				debug \
-				args_core \
-				args_tools \
+				load_core \
+				load_tools \
 				cpu_core \
 				cpu_tools \
 				cpu_instructions \

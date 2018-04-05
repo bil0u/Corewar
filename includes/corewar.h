@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 15:01:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 18:38:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@ int		is_numeric(int argc, char **argv, int c);
 
 int		load_binary(int fd, t_player *pbuff, uint8_t *mbuff);
 int 	check_argv(int argc, char **argv, t_cwdata *env);
+void	load_players(t_cwdata *env);
+
 
 /*
 ** - _DEBUG_
 */
 
+//void	print_memory(t_cwdata *env, char clean);
 void	print_memory(t_vcpu *cpu, char clean);
 void	print_registers(t_vcpu *cpu, char clean);
 int		err_msg(char *msg);

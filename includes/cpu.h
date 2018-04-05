@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 15:02:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 19:30:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** --------- CPU CORE ------------
 */
 
-void		run_cpu(t_vcpu *cpu, uint16_t flags, uint32_t nb_cycles);
+void		exec_instruction(t_vcpu *cpu);
 
 /*
 ** --------- CPU TOOLS ------------
