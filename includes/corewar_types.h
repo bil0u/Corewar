@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/30 20:13:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 14:59:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,5 +49,29 @@ typedef struct		s_player
 	t_header		header;
 	t_list			*processes;
 }					t_player;
+
+typedef struct		s_cwdata
+{
+	t_vcpu			cpu;
+	uint8_t			arena[MEM_SIZE];
+	uint32_t		nb_cycles;
+	t_player		players[MAX_PLAYERS];
+	int				players_files[MAX_PLAYERS];
+	uint8_t			players_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
+	uint16_t		flags;
+	uint8_t			nb_players;
+	uint8_t			next_pno;
+	uint8_t			verbose_level;
+}					t_cwdata;
+
+# define CWF_PNO(x)	(1 << (x - 1))
+
+# define CWF_VERB	(1 << 4)
+# define CWF_DUMP	(1 << 5)
+# define CWF_SDMP	(1 << 6)
+# define CWF_NCUR	(1 << 7)
+# define CWF_VISU	(1 << 8)
+# define CWF_AFFON	(1 << 9)
+# define CWF_SLOW	(1 << 10)
 
 #endif

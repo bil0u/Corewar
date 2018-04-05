@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/30 23:47:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 15:02:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 ** --------- CPU CORE ------------
 */
 
-void		run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow);
+void		run_cpu(t_vcpu *cpu, uint16_t flags, uint32_t nb_cycles);
 
 /*
 ** --------- CPU TOOLS ------------
@@ -28,12 +28,5 @@ uint8_t		get_argsize(uint8_t arg_type);
 int			decode_arg(t_vcpu *cpu, uint8_t arg_type, uint32_t *arg_buff);
 void		secure_fetch(uint32_t pc, uint8_t *mem, uint32_t *dst, size_t sz);
 void		secure_store(uint32_t pc, uint8_t *mem, uint32_t src, size_t sz);
-
-/*
-**	-------- CPU DEBUG  ---------
-*/
-
-void		print_memory(t_vcpu *cpu, char clean);
-void		print_registers(t_vcpu *cpu, char clean);
 
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpu_debug.c                                        :+:      :+:    :+:   */
+/*   debug.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/30 19:05:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 08:27:31 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,4 +71,14 @@ void	print_registers(t_vcpu *cpu, char clean)
 	buff[ret] = '\n';
 	buff[ret + 1] = '\0';
 	log_this("reg", 0, buff);
+}
+
+/*
+** -- PRINT THE MSG PARAM AND RETURNS A FAILURE STATUS
+*/
+
+int		err_msg(char *msg)
+{
+	ft_printf(msg);
+	return (FAILURE);
 }

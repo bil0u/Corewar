@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/03/30 19:04:23 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/05 14:54:29 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME =			corewar
 CC =			gcc
-CFLAGS =		-Wall -Werror -Wextra
+CFLAGS =		-Wall -Werror -Wextra -g
 CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR)
 DEPFLAGS =		-MMD
 
@@ -41,10 +41,12 @@ OBJ_DIR =		.objects
 # -- PROJECT FILES --
 
 FILES =			main_corewar \
+				debug \
+				args_core \
+				args_tools \
 				cpu_core \
 				cpu_tools \
 				cpu_instructions \
-				cpu_debug \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 

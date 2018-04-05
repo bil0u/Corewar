@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/31 00:06:36 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/05 15:02:06 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,10 +18,11 @@
 
 #include "libft.h"
 #include "cpu_types.h"
-#include "corewar_types.h"
 #include "instructions.h"
 #include "cpu.h"
 #include "cpu_verbose.h"
+#include "corewar_types.h"
+#include "corewar.h"
 
 /*
 ** -- FETCH THE CURRENT INSTRUCTION
@@ -151,7 +152,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 **    > Moves the PC to the next instruction
 */
 
-void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
+void			run_cpu(t_vcpu *cpu, uint16_t flags, uint32_t nb_cycles)
 {
 	uint32_t	cycle_no;
 	uint8_t		op_no;
@@ -161,7 +162,7 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 	cycle_no = 1;
 	while (cycle_no <= nb_cycles)
 	{
-		print_memory(cpu, slow);
+		print_memory(cpu, BIS_SET(flags, CWF_SDMP));
 
 		op_no = fetch_instruction(cpu, &bytes_read);
 		if (op_no != 0 && op_no < NB_INSTRUCTIONS)
@@ -179,9 +180,9 @@ void			run_cpu(t_vcpu *cpu, uint32_t nb_cycles, char loop, char slow)
 		}
 		cpu->pc = jump_to(cpu->pc, bytes_read);
 
-		print_registers(cpu, slow);
+		print_registers(cpu, BIS_SET(flags, CWF_SDMP));
 
-		loop ? (void)0 : ++cycle_no;
-		slow ? sleep(1) : (void)0;
+		BIS_SET(flags, CWF_SDMP) ? (void)0 : ++cycle_no;
+		BIS_SET(flags, CWF_SLOW) ? sleep(1) : (void)0;
 	}
 }
