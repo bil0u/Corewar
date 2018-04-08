@@ -6,14 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/30 23:22:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 07:10:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CPU_VERBOSE_H
 # define CPU_VERBOSE_H
 
-# define P_CURR_OP	"> {yellow}%s {magenta}(Op. %d){blue} at PC %u\n"
+# define P_CURR_OP	"> Op {magenta}%d{eoc} '{yellow}%s{eoc}'{blue} @ PC %u\n"
 # define P_RNO		"{cyan}R%hhu{eoc}"
 # define P_PC		"(PC: {magenta}%u{eoc})"
 # define P_HEX		"{yellow}0x%.2x{eoc}"

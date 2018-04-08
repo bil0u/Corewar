@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:45:37 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 11:43:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,61 +20,64 @@
 static void	init_env(t_cwdata *env)
 {
 	ft_bzero(env, sizeof(*env));
+	env->control.cycles_to_die = CYCLE_TO_DIE;
 	env->cpu.memory = env->arena;
 }
 
-static void	load_process(t_process *p, t_vcpu *cpu)
+static int	dump_stop(t_cwdata *env, uint16_t flags, uint64_t *breakpoint)
 {
-	cpu->pc = &p->pc;
-	cpu->timer = &p->timer;
-	cpu->carry = &p->carry;
-	cpu->registers = p->registers;
-	cpu->curr_instruction = NULL;
+	print_memory(env, NULL);
+	if (flags & CWF_DUMP)
+		return (TRUE);
+	sleep(3);
+	*breakpoint += env->control.nb_cycles;
+	return (FALSE);
 }
 
-static void	run_cpu(t_cwdata *env, uint32_t nb_cycles, uint16_t flags)
+static void	run_cpu(t_cwdata *env, t_vcpu *cpu, uint16_t flags)
 {
-	t_player	*p;
-	uint32_t	delta_ticks;
-	uint8_t		curr;
+	uint64_t	breakpoint;
+	t_list		*p;
+	int			curr_player;
 
-	delta_ticks = 0;
-	while (env->cpu.tick - delta_ticks < nb_cycles)
+	breakpoint = env->control.nb_cycles;
+	while (++cpu->tick && env->control.cycles_to_die > 0)
 	{
-		curr = 0;
-		while (curr < env->nb_players)
-		{
-			//	print_memory(&env->cpu, BIS_SET(flags, CWF_SLOW));
-			p = env->players + curr;
-			p->pending = p->pending ? p->pending->next : p->processes;
-			if (p->pending)
+		curr_player = -1;
+		while (++curr_player < env->nb_players)
+			if ((p = (env->players + curr_player)->pending) != NULL)
 			{
-				load_process((t_process *)(p->pending->content), &env->cpu);
-				exec_instruction(&env->cpu);
+				load_process((t_process *)(p->content), cpu);
+				exec_instruction(cpu);
+				print_memory(env, "mem");
+				print_registers((t_process *)(p->content), "reg");
+				p = p->next ? p->next : (env->players + curr_player)->processes;
+				flags & CWF_SLOW ? sleep(1) : (void)0;
 			}
-			print_registers(&env->cpu, BIS_SET(flags, CWF_SLOW));
-			++curr;
-		}
-		BIS_SET(flags, CWF_DUMP | CWF_SDMP) ? (void)0 : ++delta_ticks;
-		BIS_SET(flags, CWF_SLOW) ? sleep(1) : (void)0;
-		++(env->cpu.tick);
+		if (cpu->tick == env->control.last_check + env->control.cycles_to_die)
+			kill_quiet_processes(env);
+		if (cpu->tick == breakpoint)
+			if (dump_stop(env, flags, &breakpoint) == TRUE)
+				break ;
 	}
-	BIS_SET(flags, CWF_SDMP) ? run_cpu(env, nb_cycles, flags) : (void)0;
 }
 
 int			main(int argc, char **argv)
 {
 	t_cwdata	env;
 
-	// new_logwindow("mem", WF_KEEP | WF_CLOSE);
-	// new_logwindow("reg", WF_KEEP | WF_CLOSE);
-	// new_logwindow("ins", WF_KEEP | WF_CLOSE);
-	// new_logwindow("chp", WF_KEEP | WF_CLOSE);
+	new_logwindow("mem", WF_KEEP | WF_CLOSE);
+	new_logwindow("reg", WF_KEEP | WF_CLOSE);
+	new_logwindow("ins", WF_KEEP | WF_CLOSE);
+	new_logwindow("chp", WF_KEEP | WF_CLOSE);
 
 	init_env(&env);
 	if (check_argv(argc, argv, &env) != SUCCESS)
-		return (FAILURE);
+		return (err_msg(CWE_HELP));
 	load_players(&env);
-	run_cpu(&env, env.nb_cycles, env.flags);
+	print_memory(&env, "mem");
+	sleep(1);
+	run_cpu(&env, &env.cpu, env.control.flags);
+	print_memory(&env, "mem");
 	return (SUCCESS);
 }

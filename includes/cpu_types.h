@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:28:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 08:07:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,12 +70,15 @@ typedef struct		s_op
 **  op_bytecode			->	byte where the current op bytecode is stored
 */
 
+typedef struct		s_pcontrol t_pcontrol;
+
 typedef struct		s_vcpu
 {
 	uint64_t		tick;
 	uint32_t		*timer;
 	uint32_t		*pc;
 	uint32_t		*registers;
+	uint32_t		*last_live;
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			*carry;
 	uint8_t			*memory;

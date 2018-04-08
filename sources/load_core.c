@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:36:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 09:24:44 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,31 @@ static int	check_opt_args(int argc, char **argv, t_cwdata *env, int *cur)
 		if (is_numeric(argc, argv, *cur + 1) != TRUE)
 			return (FAILURE);
 		++(*cur);
-		opt == 'd' ? BSET(env->flags, CWF_DUMP) : (void)env;
-		opt == 's' ? BSET(env->flags, CWF_SDMP) : (void)env;
-		opt == 'v' ? BSET(env->flags, CWF_VERB) : (void)env;
-		if (BSET(env->flags, CWF_SDMP | CWF_DUMP))
-			env->nb_cycles = ft_atoi(argv[*cur]);
-		opt == 'v' ? env->verbose_level = ft_atoi(argv[*cur]) : (void)env;
-		opt == 'n' ? env->next_pno = ft_atoi(argv[*cur]) : (void)env;
-		if (opt == 'n' && (is_valid_pno(env->flags, env->next_pno) != TRUE
+		opt == 'd' ? BSET(env->control.flags, CWF_DUMP) : (void)0;
+		opt == 's' ? BSET(env->control.flags, CWF_SDMP) : (void)0;
+		opt == 'v' ? BSET(env->control.flags, CWF_VERB) : (void)0;
+		opt == 'v' ? env->control.verb_level = ft_atoi(argv[*cur]) : (void)0;
+		if (BIS_SET(env->control.flags, CWF_SDMP | CWF_DUMP))
+			env->control.nb_cycles = ft_atoi(argv[*cur]);
+		opt == 'n' ? env->control.next_pno = ft_atoi(argv[*cur]) : (void)0;
+		if (opt == 'n' &&
+		(is_valid_pno(env->control.flags, env->control.next_pno) != TRUE
 		|| is_valid_file(argv[++(*cur)], env) != TRUE))
 			return (FAILURE);
 	}
 	else
 	{
-		opt == 'V' ? BSET(env->flags, CWF_VISU) : (void)env;
-		opt == 'S' ? BSET(env->flags, CWF_SLOW) : (void)env;
-		opt == 'a' ? BSET(env->flags, CWF_AFFON) : (void)env;
+		opt == 'V' ? BSET(env->control.flags, CWF_VISU) : (void)0;
+		opt == 'S' ? BSET(env->control.flags, CWF_SLOW) : (void)0;
+		opt == 'a' ? BSET(env->control.flags, CWF_AFFON) : (void)0;
 	}
 	return (SUCCESS);
 }
 
 static int	check_validity(t_cwdata *env)
 {
-	if (env->verbose_level >= CWVL_BAD)
-		return (log_this(NULL, LF_ERR, CWE_BADVERB, env->verbose_level));
+	if (env->control.verb_level >= CWVL_BAD)
+		return (log_this(NULL, LF_ERR, CWE_BADVERB, env->control.verb_level));
 	if (env->nb_players == 0)
 		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
 	return (SUCCESS);
@@ -91,7 +92,7 @@ int		 	check_argv(int argc, char **argv, t_cwdata *env)
 	int		valid;
 	int		curr_arg;
 
-	if (argc == 1)
+	if (argc == 1 || ft_strequ(argv[1], "-h"))
 		return (err_msg(CW_USAGE));
 	curr_arg = 0;
 	while (++curr_arg < argc)
@@ -114,24 +115,28 @@ int		 	check_argv(int argc, char **argv, t_cwdata *env)
 void		load_players(t_cwdata *env)
 {
 	int			curr_player;
-	t_player	*p_data;
+	t_player	*p;
 	uint32_t	init_pos;
 	t_process	new;
 
 	curr_player = -1;
 	ft_printf(CW_LOADING);
+	log_this("chp", 0, CW_LOADING);
 	while (++curr_player < env->nb_players)
 	{
 		init_pos = (MEM_SIZE / env->nb_players) * curr_player;
-		p_data = env->players + curr_player;
+		p = env->players + curr_player;
 		ft_memcpy(env->arena + init_pos, env->players_binaries + curr_player,
-					p_data->header.prog_size);
+					p->header.prog_size);
 		ft_bzero(&new, sizeof(new));
-		new.registers[0] = REG_MAXVALUE - p_data->player_no;
+		new.registers[0] = REG_MAXVALUE - (p->player_no - 1);
 		new.pc = init_pos;
-		ft_lstadd(&p_data->processes, ft_lstnew(&new, sizeof(new)));
-		++(p_data->nb_processes);
-		ft_printf(CW_PLAYER, p_data->player_no, p_data->header.prog_size,
-				p_data->header.prog_name, p_data->header.comment);
+		ft_lstadd(&p->processes, ft_lstnew(&new, sizeof(new)));
+		++(p->nb_processes);
+		p->pending = p->processes;
+		ft_printf(CW_PLAYER, p->player_no, p->header.prog_size,
+				p->header.prog_name, p->header.comment);
+		log_this("chp", 0, CW_PLAYER, p->player_no, p->header.prog_size,
+				p->header.prog_name, p->header.comment);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 18:20:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 11:27:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,24 +94,30 @@
 ** - CLASSIC OUTPUT & ERROR MESSAGES
 */
 
-# define CW_LOADING		"{yellow}>>>{eoc} Introducing contestants ...\n" CW_SEP
+# define CW_SEP			COLR("-------------------------------------\n")
 
-# define CW_SEP			"{red}-------------------------------------{eoc}\n"
-# define CW_PLAYER1		"{yellow}*{eoc} Player " COLC("%hhu") ", weighing "
-# define CW_PLAYER2		COLM("%u") " bytes, '" COLG("%s") "' * is saying *\n"
-# define CW_PLAYER		CW_PLAYER1 CW_PLAYER2 "%s\n" CW_SEP
+# define CW_LOADING		COLY(">>> ") "Introducing contestants ...\n" CW_SEP
 
-# define CWE_NUMERIC	"Please provide a numeric value for '{cyan}%s{eoc}'\n"
-# define CWE_OPTARG		"Option '{cyan}%s{eoc}' > {yellow}%s{eoc}"
+# define CW_PLAYERP1	COLY("* ") "Player " COLC("%hhu") ", weighing "
+# define CW_PLAYERP2	COLM("%u") " bytes, '" COLG("%s") "' * is saying *\n"
+# define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 "%s\n" CW_SEP
+
+# define CW_RESTMSG1	COLG(" >> ")
+# define CW_RESTMSG2	"Memory at Cycle " COLY("%d") ", continuing in 3 secs\n"
+# define CW_RESTART		CW_SEP CW_RESTMSG1 CW_RESTMSG2 CW_SEP
+
+# define CWE_HELP		"Type '" COLC("./corewar -h") "' to see the usage\n"
+# define CWE_NUMERIC	"Please provide a numeric value for '" COLC("%s") "'\n"
+# define CWE_OPTARG		"Option '" COLC("%s") "' > " COLY("%s")
 # define CWE_NOTNUM		CWE_OPTARG " is not a numeric value\n"
-# define CWE_SIGN		CWE_OPTARG " remove {green}%c{eoc} sign\n"
-# define CWE_OPEN		"Could not open '{yellow}%s{eoc}' file\n"
-# define CWE_FILEKO		"'{yellow}%s{eoc}' : invalid binary file\n"
+# define CWE_SIGN		CWE_OPTARG " remove " COLG("%c") " sign\n"
+# define CWE_UNKNOWN	"'" COLY("%s") "' ; file or option does not exists\n"
+# define CWE_FILEKO		"'" COLY("%s") "' : invalid binary file\n"
 # define CWE_NOFILE		"Missing binary file\n"
-# define CWE_BADPNO1	" Option '{cyan}-n{eoc}' > {yellow}%d{eoc} "
+# define CWE_BADPNO1	" Option '" COLC("-n") "' > " COLY("%d")
 # define CWE_BADPNO		CWE_BADPNO1 "Bad player number\n"
 # define CWE_PNOUSED	CWE_BADPNO1 "Player number already used\n"
-# define CWE_BADOPT		"Option '{yellow}%s{eoc}' is invalid\n"
+# define CWE_BADOPT		"Option '" COLY("%s") "' is invalid\n"
 # define CWE_NOPLAYERS	"No .cor files given\n"
 # define CWE_BADVERB	"%hu > invalid verbose level\n"
 
@@ -120,12 +126,37 @@
 */
 
 # define BPL			32
-# define MEM_VALUE		"{yellow}0x%4.4x{eoc}\t\t"
-# define PCCOLOR_P1		"{white}{b_green}%2.2hhx{eoc}"
+# define MEM_VALUE		COLY("0x%4.4x\t\t")
+# define MEMSET_COLOR	COLC("%2.2hhx")
+# define MEMZERO_COLOR	COLW("%2.2hhx")
+
+# define PCCOLOR_P1		"{black}{b_green}%2.2hhx{eoc}"
 # define PCCOLOR_P2		"{white}{b_blue}%2.2hhx{eoc}"
-# define PCCOLOR_P3		"{white}{b_yellow}%2.2hhx{eoc}"
+# define PCCOLOR_P3		"{black}{b_yellow}%2.2hhx{eoc}"
 # define PCCOLOR_P4		"{white}{b_red}%2.2hhx{eoc}"
-# define MEMSET_COLOR	"{cyan}%2.2hhx{eoc}"
-# define MEMZERO_COLOR	"{white}%2.2hhx{eoc}"
+
+# define REGSET_COLOR	COLY("%8.8x")
+# define REGZERO_COLOR	COLW("%8.8x")
+
+# define REG_SEPC		COLB("+")
+# define REG_SEPH		COLB("|")
+# define REG_SEP2		COLB("-")
+# define REG_SEPL		REG_SEPC COLB("--------")
+# define REG_ENDL1	 	REG_SEPC "\n"
+# define REG_ENDL2		REG_SEPH "\n"
+# define REGNO_FSZ		COLM("R") REG_SEP2 COLM("%2.2d")
+# define REGN			REG_SEPC COLB("--") REGNO_FSZ COLB("--")
+
+# define MEM_HEADER1	"\tCycle " COLY("%u\t")
+# define MEM_HEADER2	"\tCTD " COLC("%u")
+# define MEM_HEADER3	"\tLast check " COLC("%u")
+# define MEM_HEADER4	"\tMax checks " COLC("%u")
+# define MEM_HEADERP1	COLG(">> MEMORY <<") MEM_HEADER1 MEM_HEADER2 MEM_HEADER3
+# define MEM_HEADERP2	MEM_HEADER4
+# define MEM_HEADER		MEM_HEADERP1 MEM_HEADERP2 "\n\n"
+
+# define REG_HEADER1	"\tCarry " COLY("%u")
+# define REG_HEADER2	"\tTimer " COLY("%u")
+# define REG_HEADER		COLG(">> REGISTERS <<") REG_HEADER1 REG_HEADER2 "\n\n"
 
 #endif

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   args_tools.c                                       :+:      :+:    :+:   */
+/*   load_tools.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:57:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 15:37:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 07:55:06 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,17 +61,17 @@ int		is_valid_file(char *opt, t_cwdata *env)
 	if (!opt || opt[0] == '\0')
 		return (log_this(NULL, LF_ERR, CWE_NOFILE));
 	if ((fd = open(opt, O_RDONLY)) < 0)
-		return (log_this(NULL, LF_ERR, CWE_OPEN, opt));
+		return (log_this(NULL, LF_ERR, CWE_UNKNOWN, opt));
 	cur_p = env->nb_players;
 	ret = load_binary(fd, env->players + cur_p, env->players_binaries[cur_p]);
 	close(fd);
 	if (ret == FAILURE)
 		return (log_this(NULL, LF_ERR, CWE_FILEKO, opt));
-	if ((player_no = env->next_pno) == 0)
-		player_no = get_nextpno(env->flags);
+	if ((player_no = env->control.next_pno) == 0)
+		player_no = get_nextpno(env->control.flags);
 	env->players[cur_p].player_no = player_no;
-	BSET(env->flags, CWF_PNO(player_no));
-	env->next_pno = 0;
+	BSET(env->control.flags, CWF_PNO(player_no));
+	env->control.next_pno = 0;
 	++env->nb_players;
 	return (TRUE);
 }

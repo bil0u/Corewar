@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:37:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 07:42:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void			exec_instruction(t_vcpu *cpu)
 	if (op_no != 0 && op_no < NB_INSTRUCTIONS)
 	{
 		op = cpu->curr_instruction;
-		log_this("ins", 0, P_CURR_OP, op->name, op->op_number, cpu->pc[0]);
+		log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
 			valid = TRUE;
 		if (op->has_bytecode)
 			fetch_arguments(cpu, &bytes_read, &valid);

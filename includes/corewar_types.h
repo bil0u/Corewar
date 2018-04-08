@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:24:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 11:06:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,13 @@
 # define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 # define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 # define MAX_PLAYERS			4
+
+# define CYCLE_TO_DIE			10
+# define NBR_LIVE				5
+# define CYCLE_DELTA			2
+# define MAX_CHECKS				5
+
+# define PRINT_BUFF_SIZE		(MEM_SIZE << 4)
 
 # define SPACING_LENGTH			4
 # define MAGIC_LENGTH			4
@@ -33,7 +40,7 @@ typedef struct		s_header
 	char			comment[COMMENT_LENGTH + 1];
 }					t_header;
 
-# define REG_NUMBER				8
+# define REG_NUMBER				16
 # define REG_SIZE				4
 # define REG_LEN				(REG_NUMBER * REG_SIZE)
 # define REG_MAXVALUE			((1UL << (REG_SIZE * CHAR_BIT)) - 1)
@@ -56,17 +63,25 @@ typedef struct		s_player
 	t_list			*pending;
 }					t_player;
 
+typedef struct		s_pcontrol
+{
+	uint32_t		nb_cycles;
+	uint32_t		max_checks;
+	uint32_t		cycles_to_die;
+	uint32_t		last_check;
+	uint16_t		flags;
+	uint16_t		verb_level;
+	uint8_t			next_pno;
+}					t_pcontrol;
+
 typedef struct		s_cwdata
 {
-	t_vcpu			cpu;
 	uint8_t			arena[MEM_SIZE];
-	uint32_t		nb_cycles;
-	t_player		players[MAX_PLAYERS];
 	uint8_t			players_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
-	uint16_t		flags;
-	uint16_t		verbose_level;
+	t_player		players[MAX_PLAYERS];
+	t_vcpu			cpu;
+	t_pcontrol		control;
 	uint8_t			nb_players;
-	uint8_t			next_pno;
 }					t_cwdata;
 
 # define CWF_PNO(x)				(1 << (x - 1))

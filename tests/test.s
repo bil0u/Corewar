@@ -1,8 +1,7 @@
 .name "test"
 .comment "champion de test - upopee"
 
-main:	ld		%-1,r1
-		ld		%1,r2
-		add		r1,r2,r3
+main:	sti	r1,%:live,%1
+	and	r2,r2,r2
 live:	live	%1
-		zjmp	%:live
+	zjmp	%:live
