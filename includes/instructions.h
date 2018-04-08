@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 07:43:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 14:07:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,22 +19,22 @@
 
 # define NB_INSTRUCTIONS	17
 
-int		live_instr(t_vcpu *cpu);
-int		ld_instr(t_vcpu *cpu);
-int		st_instr(t_vcpu *cpu);
-int		add_instr(t_vcpu *cpu);
-int		sub_instr(t_vcpu *cpu);
-int		and_instr(t_vcpu *cpu);
-int		or_instr(t_vcpu *cpu);
-int		xor_instr(t_vcpu *cpu);
-int		zjmp_instr(t_vcpu *cpu);
-int		ldi_instr(t_vcpu *cpu);
-int		sti_instr(t_vcpu *cpu);
-int		fork_instr(t_vcpu *cpu);
-int		lld_instr(t_vcpu *cpu);
-int		lldi_instr(t_vcpu *cpu);
-int		lfork_instr(t_vcpu *cpu);
-int		aff_instr(t_vcpu *cpu);
+int		live_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		ld_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		st_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		add_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		sub_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		and_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		or_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		xor_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		zjmp_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		ldi_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		sti_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		fork_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		lld_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		lldi_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		lfork_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		aff_instr(t_vcpu *cpu, t_vcpudata *dat);
 
 t_op    g_op_set[NB_INSTRUCTIONS] =
 {

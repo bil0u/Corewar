@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 13:15:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 14:07:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ typedef uint8_t		t_argtypes;
 # define OPBC_SIZE	1
 
 typedef struct		s_vcpu t_vcpu;
-typedef int			(*t_instr)(t_vcpu *cpu);
+typedef struct		s_vcpudata t_vcpudata;
+typedef int			(*t_instr)(t_vcpu*, t_vcpudata*);
 
 typedef struct		s_op
 {
@@ -69,22 +70,25 @@ typedef struct		s_op
 **  carry				->	flag modified by certains instructions
 **  op_bytecode			->	byte where the current op bytecode is stored
 */
-
-typedef struct		s_pcontrol t_pcontrol;
+typedef struct		s_vcpudata
+{
+	t_list			*child_process;
+	uint32_t		*timer;
+	uint32_t		*last_live;
+	uint8_t			*last_alive;
+	uint32_t		op_args[MAX_ARGS];
+	uint8_t			op_bytecode;
+}					t_vcpudata;
 
 typedef struct		s_vcpu
 {
 	uint64_t		tick;
-	uint32_t		*timer;
 	uint32_t		*pc;
 	uint32_t		*registers;
-	uint32_t		*last_live;
-	uint32_t		op_args[MAX_ARGS];
 	uint8_t			*carry;
 	uint8_t			*memory;
-	uint8_t			*last_alive;
 	t_op			*curr_instruction;
-	uint8_t			op_bytecode;
+	t_vcpudata		data;
 }					t_vcpu;
 
 #endif

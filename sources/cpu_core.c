@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 07:42:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 14:09:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 {
 	uint32_t	*arg_buff;
 
-	arg_buff = cpu->op_args + arg_no;
+	arg_buff = cpu->data.op_args + arg_no;
 	if (arg_type == ARG_REG && ((*arg_buff = *(cpu->memory + pc_tmp)) || 1))
 		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
 	else if (arg_type == ARG_IND)
@@ -126,7 +126,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 	if ((*valid = sanity_check(cpu->curr_instruction, bytecode, bytes_rd)) != 0)
 	{
 		*bytes_rd += ARGBC_SIZE;
-		cpu->op_bytecode = bytecode;
+		cpu->data.op_bytecode = bytecode;
 		pc_tmp = jump_to(cpu->pc[0], OPBC_SIZE + ARGBC_SIZE);
 		arg_no = 0;
 		log_this("ins", 0, P_ARG_OK, cpu->curr_instruction->nb_args);
@@ -168,7 +168,7 @@ void			exec_instruction(t_vcpu *cpu)
 		if (op->has_bytecode)
 			fetch_arguments(cpu, &bytes_read, &valid);
 		if (valid)
-			bytes_read += op->funct_ptr(cpu);
+			bytes_read += op->funct_ptr(cpu, &cpu->data);
 			log_this("ins", 0, "----\n");
 	}
 	cpu->pc[0] = jump_to(cpu->pc[0], bytes_read);

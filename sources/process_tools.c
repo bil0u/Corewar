@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 12:16:27 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 14:05:31 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,12 @@
 void			load_process(t_process *p, t_vcpu *cpu)
 {
 	cpu->pc = &(p->pc);
-	cpu->timer = &(p->timer);
 	cpu->carry = &(p->carry);
-	cpu->last_live = &(p->last_live);
 	cpu->registers = p->registers;
 	cpu->curr_instruction = NULL;
+	cpu->data.child_process = NULL;
+	cpu->data.timer = &(p->timer);
+	cpu->data.last_live = &(p->last_live);
 }
 
 static void		delete_process(t_player *pl, t_process **pr,

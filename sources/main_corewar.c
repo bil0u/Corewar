@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 13:20:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 14:11:21 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	init_env(t_cwdata *env)
 	env->control.nb_processes = env->nb_players;
 	env->control.winner = env->players[env->nb_players - 1].player_no;
 	env->cpu.memory = env->arena;
-	env->cpu.last_alive = &(env->control.winner);
+	env->cpu.data.last_alive = &(env->control.winner);
 }
 
 static int	dump_stop(t_cwdata *env, uint16_t flags, uint64_t *breakpoint)
