@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 11:06:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 12:39:44 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,12 +65,14 @@ typedef struct		s_player
 
 typedef struct		s_pcontrol
 {
+	uint32_t		nb_processes;
 	uint32_t		nb_cycles;
-	uint32_t		max_checks;
-	uint32_t		cycles_to_die;
 	uint32_t		last_check;
+	uint32_t		max_checks;
+	uint32_t		to_die;
 	uint16_t		flags;
 	uint16_t		verb_level;
+	uint8_t			winner;
 	uint8_t			next_pno;
 }					t_pcontrol;
 

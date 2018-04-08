@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 11:27:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 12:15:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,8 @@ void	print_memory(t_cwdata *env, char *win)
 	i = 0;
 	ret = 0;
 	win != NULL ? clear_window(win) : (void)0;
-	ret += ft_sprintf(buff, (win != NULL ? MEM_HEADER : CW_RESTART),
-						env->cpu.tick, env->control.cycles_to_die,
-						env->control.last_check, env->control.max_checks);
+	ret += ft_sprintf(buff,
+			(win != NULL ? MEM_HEADER : CW_RESTART), env->cpu.tick);
 	while (i < MEM_SIZE)
 	{
 		if ((i & (BPL - 1)) == 0)
@@ -73,6 +72,9 @@ void	print_memory(t_cwdata *env, char *win)
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
+	if (win != NULL)
+		ret += ft_sprintf(buff + ret, (win != NULL ? MEM_FOOTER : CW_RESTART),
+		env->control.to_die, env->control.last_check, env->control.max_checks, env->control.nb_processes);
 	log_this(win, 0, buff);
 }
 

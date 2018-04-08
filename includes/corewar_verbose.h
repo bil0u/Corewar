@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 11:27:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 13:25:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,17 +94,23 @@
 ** - CLASSIC OUTPUT & ERROR MESSAGES
 */
 
-# define CW_SEP			COLR("-------------------------------------\n")
+# define CW_SEPR		COLR("-------------------------------------\n")
+# define CW_SEPG		COLG("-------------------------------------\n")
 
-# define CW_LOADING		COLY(">>> ") "Introducing contestants ...\n" CW_SEP
+# define CW_LOADING		COLY(">>> ") "Introducing contestants ...\n" CW_SEPR
 
 # define CW_PLAYERP1	COLY("* ") "Player " COLC("%hhu") ", weighing "
-# define CW_PLAYERP2	COLM("%u") " bytes, '" COLG("%s") "' * is saying *\n"
-# define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 "%s\n" CW_SEP
+# define CW_PLAYERP2	COLM("%u") " bytes, known as '" COLG("%s") "'\n"
+# define CW_PLAYERP3	COLB("* He's saying *") "\n%s\n"
+# define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 CW_PLAYERP3 CW_SEPR
 
 # define CW_RESTMSG1	COLG(" >> ")
 # define CW_RESTMSG2	"Memory at Cycle " COLY("%d") ", continuing in 3 secs\n"
-# define CW_RESTART		CW_SEP CW_RESTMSG1 CW_RESTMSG2 CW_SEP
+# define CW_RESTART		CW_SEPR CW_RESTMSG1 CW_RESTMSG2 CW_SEPR
+
+# define CW_WIN_MSG1	COLY(">>> ") "Contestant " COLC("%hhu") " aka '"
+# define CW_WIN_MSG2	COLG("%s") "' has won !"
+# define CW_WINNER_IS	CW_SEPG CW_WIN_MSG1 CW_WIN_MSG2 "\n" CW_SEPG
 
 # define CWE_HELP		"Type '" COLC("./corewar -h") "' to see the usage\n"
 # define CWE_NUMERIC	"Please provide a numeric value for '" COLC("%s") "'\n"
@@ -148,12 +154,12 @@
 # define REGN			REG_SEPC COLB("--") REGNO_FSZ COLB("--")
 
 # define MEM_HEADER1	"\tCycle " COLY("%u\t")
-# define MEM_HEADER2	"\tCTD " COLC("%u")
-# define MEM_HEADER3	"\tLast check " COLC("%u")
-# define MEM_HEADER4	"\tMax checks " COLC("%u")
-# define MEM_HEADERP1	COLG(">> MEMORY <<") MEM_HEADER1 MEM_HEADER2 MEM_HEADER3
-# define MEM_HEADERP2	MEM_HEADER4
-# define MEM_HEADER		MEM_HEADERP1 MEM_HEADERP2 "\n\n"
+# define MEM_HEADER		COLG(">> MEMORY <<") MEM_HEADER1 "\n\n"
+# define MEM_FOOTER1	"\n" REG_SEPH " CTD " COLC("%u ") REG_SEPH
+# define MEM_FOOTER2	" Last check " COLC("%u ") REG_SEPH
+# define MEM_FOOTER3	" Max checks " COLC("%u ") REG_SEPH
+# define MEM_FOOTER4	" Nb processes " COLY("%u ") REG_SEPH
+# define MEM_FOOTER		MEM_FOOTER1 MEM_FOOTER2 MEM_FOOTER3 MEM_FOOTER4 "\n"
 
 # define REG_HEADER1	"\tCarry " COLY("%u")
 # define REG_HEADER2	"\tTimer " COLY("%u")

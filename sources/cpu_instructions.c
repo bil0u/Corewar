@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 08:07:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 12:39:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ int		live_instr(t_vcpu *cpu)
 	if (player_no && player_no < MAX_PLAYERS + 1)
 	{
 		cpu->last_live[0] = cpu->tick;
+		cpu->last_alive[0] = player_no & 0xFF;
 		log_this("ins", 0, LIVE_OK, player_no);
 	}
 	else

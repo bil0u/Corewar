@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 11:43:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 12:16:27 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,15 +72,14 @@ void			kill_quiet_processes(t_cwdata *env)
 	curr_player = 0;
 	nb_lives = 0;
 	while (curr_player < env->nb_players)
-	{
 		nb_lives += check_pstatus(env->players + curr_player++, &env->control);
-	}
 	if (nb_lives >= NBR_LIVE || env->control.max_checks == MAX_CHECKS)
 	{
-		env->control.cycles_to_die -= CYCLE_DELTA;
+		env->control.to_die -= CYCLE_DELTA;
 		env->control.max_checks = 0;
 	}
 	else
 		++(env->control.max_checks);
+	env->control.nb_processes -= (env->control.nb_processes - nb_lives);
 	env->control.last_check = env->cpu.tick;
 }

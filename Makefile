@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/08 07:05:31 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/08 13:26:45 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@
 
 NAME =			corewar
 CC =			gcc
-CFLAGS =		-Wall -Werror -Wextra -g
+CFLAGS =		-Wall -Werror -Wextra
 CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR)
 DEPFLAGS =		-MMD
 

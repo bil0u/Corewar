@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 08:07:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/08 13:15:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ typedef struct		s_vcpu
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			*carry;
 	uint8_t			*memory;
+	uint8_t			*last_alive;
 	t_op			*curr_instruction;
 	uint8_t			op_bytecode;
 }					t_vcpu;
