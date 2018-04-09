@@ -6,13 +6,19 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/21 14:28:30 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 07:10:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 06:06:43 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CPU_VERBOSE_H
 # define CPU_VERBOSE_H
 
+/*
+** -- PRINTING STRUCTURE MACROS --
+*/
+
+# define P_SEPP		"--------------------"
+# define P_SEP		"{red}" P_SEPP P_SEPP P_SEPP "\n{eoc}"
 # define P_CURR_OP	"> Op {magenta}%d{eoc} '{yellow}%s{eoc}'{blue} @ PC %u\n"
 # define P_RNO		"{cyan}R%hhu{eoc}"
 # define P_PC		"(PC: {magenta}%u{eoc})"
@@ -27,6 +33,10 @@
 # define P_ARG_IND	P_ARG_PMPT "[{magenta}IND{eoc}] > " P_IND "\n"
 # define P_IND_MOD	"     %%IDX  > " P_IND "\n"
 # define P_ARG_DIR	P_ARG_PMPT "[{yellow}DIR{eoc}] > " P_HEX "\n"
+
+/*
+** -- INSTRUCTIONS TEXT --
+*/
 
 # define LIVE_OK	"{green}LIVE OK:{eoc} Player %u is alive !\n"
 # define LIVE_KO	"{red}LIVE KO:{eoc} Player %u does not exist\n"

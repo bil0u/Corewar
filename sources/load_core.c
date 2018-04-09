@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 12:19:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 08:29:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,39 +40,41 @@ int			load_binary(int fd, t_player *pbuff, uint8_t *mbuff)
 }
 
 /*
-** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS
+** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS IF YES
 */
 
-static int	check_opt_args(int argc, char **argv, t_cwdata *env, int *cur)
+static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
 {
-	char	opt;
+	char	*opt;
 
-	opt = argv[*cur][1];
-	if (ft_strchr(NUMERIC_OPT, opt))
+	opt = argv[*cur];
+	if (ft_strchr(NUMERIC_OPT, opt[1]))
 	{
 		if (is_numeric(argc, argv, *cur + 1) != TRUE)
 			return (FAILURE);
 		++(*cur);
-		opt == 'd' ? BSET(env->control.flags, CWF_DUMP) : (void)0;
-		opt == 's' ? BSET(env->control.flags, CWF_SDMP) : (void)0;
-		opt == 'v' ? BSET(env->control.flags, CWF_VERB) : (void)0;
-		opt == 'v' ? env->control.verb_level = ft_atoi(argv[*cur]) : (void)0;
-		if (BIS_SET(env->control.flags, CWF_SDMP | CWF_DUMP))
-			env->control.nb_cycles = ft_atoi(argv[*cur]);
-		opt == 'n' ? env->control.next_pno = ft_atoi(argv[*cur]) : (void)0;
-		if (opt == 'n' &&
-		(is_valid_pno(env->control.flags, env->control.next_pno) != TRUE
-		|| is_valid_file(argv[++(*cur)], env) != TRUE))
+		opt[1] == 'd' ? BSET(e->control.flags, CWF_DUMP) : (void)0;
+		opt[1] == 's' ? BSET(e->control.flags, CWF_SDMP) : (void)0;
+		opt[1] == 'v' ? BSET(e->control.flags, CWF_VERB) : (void)0;
+		opt[1] == 'v' ? e->control.verb_level = ft_atoi(argv[*cur]) : (void)0;
+		opt[1] == 'S' ? BSET(e->control.flags, CWF_SLOW) : (void)0;
+		opt[1] == 'S' ? e->control.sleep_us = 1000000 / ft_atoi(argv[*cur]) : (void)0;
+		if (e->control.flags & (CWF_SDMP | CWF_DUMP))
+			e->control.nb_cycles = ft_atoi(argv[*cur]);
+		opt[1] == 'n' ? e->control.next_pno = ft_atoi(argv[*cur]) : (void)0;
+		if (opt[1] == 'n' && (!is_valid_file(argv[++(*cur)], e)
+		|| is_valid_pno(e->control.flags, e->control.next_pno)))
 			return (FAILURE);
+		return (SUCCESS);
 	}
-	else
-	{
-		opt == 'V' ? BSET(env->control.flags, CWF_VISU) : (void)0;
-		opt == 'S' ? BSET(env->control.flags, CWF_SLOW) : (void)0;
-		opt == 'a' ? BSET(env->control.flags, CWF_AFFON) : (void)0;
-	}
+	opt[1] == 'V' ? BSET(e->control.flags, CWF_VISU) : (void)0;
+	opt[1] == 'a' ? BSET(e->control.flags, CWF_AFFON) : (void)0;
 	return (SUCCESS);
 }
+
+/*
+** - CHECK VALIDITY OF LOADED INPUT
+*/
 
 static int	check_validity(t_cwdata *env)
 {
@@ -112,31 +114,29 @@ int		 	check_argv(int argc, char **argv, t_cwdata *env)
 ** - LOAD GAME IN ARENA AND INITIALIZE THE REMAINING VALUES OF ENV
 */
 
-void		load_players(t_cwdata *env)
+void		load_players(t_cwdata *env, t_player *p)
 {
 	int			curr_player;
-	t_player	*p;
 	uint32_t	init_pos;
 	t_process	new;
 
+	log_this("chp", env->control.verb_level & (LF_BOTH), CW_LOADING);
 	curr_player = -1;
-	ft_printf(CW_LOADING);
-	log_this("chp", 0, CW_LOADING);
 	while (++curr_player < env->nb_players)
 	{
 		init_pos = (MEM_SIZE / env->nb_players) * curr_player;
-		p = env->players + curr_player;
-		ft_memcpy(env->arena + init_pos, env->players_binaries + curr_player,
-					p->header.prog_size);
+		++(p->nb_processes);
+		++(env->control.tot_processes);
 		ft_bzero(&new, sizeof(new));
+		new.pid = env->control.tot_processes;
 		new.registers[0] = REG_MAXVALUE - (p->player_no - 1);
 		new.pc = init_pos;
 		ft_lstadd(&p->processes, ft_lstnew(&new, sizeof(new)));
-		++(p->nb_processes);
 		p->pending = p->processes;
-		ft_printf(CW_PLAYER, p->player_no, p->header.prog_size,
+		ft_memcpy(env->arena + init_pos, env->players_binaries + curr_player,
+					p->header.prog_size);
+		log_this("chp", LF_BOTH, CW_PLAYER, p->player_no, p->header.prog_size,
 				p->header.prog_name, p->header.comment);
-		log_this("chp", 0, CW_PLAYER, p->player_no, p->header.prog_size,
-				p->header.prog_name, p->header.comment);
+		p++;
 	}
 }

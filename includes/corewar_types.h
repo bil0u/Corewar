@@ -6,24 +6,41 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 13:53:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 07:15:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COREWAR_TYPES_H
 # define COREWAR_TYPES_H
 
-# define MEM_SIZE				512				// TEST VALUE - TO BE MODIFIED
-# define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
-# define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
-# define MAX_PLAYERS			4
+/*
+** -- ENVIRONMENT SIZES -- /!\ WARNING /!\ --
+**    > MEM_SIZE must be a power of 2 (1 << X)
+**    > CHAMP_MAX_SIZE must be set at MEM_SIZE / MAX_PLAYERS maximum
+**      - ideally : (MEM_SIZE / 6)
+**    > IDX_MOD should be set at MEM_SIZE / MAX_PLAYERS maximum
+**      - ideally : (MEM_SIZE / 8)
+*/
 
-# define CYCLE_TO_DIE			10
-# define NBR_LIVE				5
-# define CYCLE_DELTA			2
-# define MAX_CHECKS				5
+# define MAX_PLAYERS			4
+# define MEM_SIZE				(1 << 9)		// TEST VALUE - TO BE MODIFIED
+# define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
+# define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
+
+/*
+** -- GAME PARAMETERS --
+*/
+
+# define CYCLE_TO_DIE			1536
+# define NBR_LIVE				21
+# define CYCLE_DELTA			50
+# define MAX_CHECKS				10
 
 # define PRINT_BUFF_SIZE		(MEM_SIZE << 4)
+
+/*
+** -- BINARY LOADING PARAMETERS --
+*/
 
 # define SPACING_LENGTH			4
 # define MAGIC_LENGTH			4
@@ -40,6 +57,10 @@ typedef struct		s_header
 	char			comment[COMMENT_LENGTH + 1];
 }					t_header;
 
+/*
+** -- PROCESS ELEMENTS --
+*/
+
 # define REG_NUMBER				16
 # define REG_SIZE				4
 # define REG_LEN				(REG_NUMBER * REG_SIZE)
@@ -47,12 +68,18 @@ typedef struct		s_header
 
 typedef struct		s_process
 {
+	uint32_t		pid;
 	uint32_t		registers[REG_NUMBER];
 	uint32_t		pc;
 	uint32_t		timer;
 	uint32_t		last_live;
 	uint8_t			carry;
+	t_op			*next_op;
 }					t_process;
+
+/*
+** -- PLAYER DATA --
+*/
 
 typedef struct		s_player
 {
@@ -63,30 +90,9 @@ typedef struct		s_player
 	t_list			*pending;
 }					t_player;
 
-typedef struct		s_pcontrol
-{
-	uint32_t		nb_processes;
-	uint32_t		nb_cycles;
-	uint32_t		last_check;
-	uint32_t		max_checks;
-	uint32_t		to_die;
-	uint16_t		flags;
-	uint16_t		verb_level;
-	uint8_t			winner;
-	uint8_t			next_pno;
-}					t_pcontrol;
-
-typedef struct		s_cwdata
-{
-	uint8_t			arena[MEM_SIZE];
-	uint8_t			players_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
-	t_player		players[MAX_PLAYERS];
-	t_vcpu			cpu;
-	t_pcontrol		control;
-	uint8_t			nb_players;
-}					t_cwdata;
-
-# define CWF_PNO(x)				(1 << (x - 1))
+/*
+** -- GLOBAL ENV & DATA STRUCTURE - WITH VERBOSE & GLOBAL FLAGS
+*/
 
 # define CWVL_ESS				(0 << 0)
 # define CWVL_LIVE				(1 << 0)
@@ -97,6 +103,22 @@ typedef struct		s_cwdata
 # define CWVL_DEBUG				(1 << 5)
 # define CWVL_BAD				(1 << 6)
 
+typedef struct		s_pcontrol
+{
+	uint32_t		nb_processes;
+	uint32_t		tot_processes;
+	uint32_t		nb_cycles;
+	uint32_t		last_check;
+	uint32_t		max_checks;
+	uint32_t		to_die;
+	uint16_t		flags;
+	uint16_t		verb_level;
+	useconds_t		sleep_us;
+	uint8_t			winner;
+	uint8_t			next_pno;
+}					t_pcontrol;
+
+# define CWF_PNO(x)				(1 << (x - 1))
 # define CWF_VERB				(1 << 4)
 # define CWF_DUMP				(1 << 5)
 # define CWF_SDMP				(1 << 6)
@@ -104,5 +126,15 @@ typedef struct		s_cwdata
 # define CWF_VISU				(1 << 8)
 # define CWF_AFFON				(1 << 9)
 # define CWF_SLOW				(1 << 10)
+
+typedef struct		s_cwdata
+{
+	uint8_t			arena[MEM_SIZE];
+	uint8_t			players_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
+	t_player		players[MAX_PLAYERS];
+	t_vcpu			cpu;
+	t_pcontrol		control;
+	uint8_t			nb_players;
+}					t_cwdata;
 
 #endif

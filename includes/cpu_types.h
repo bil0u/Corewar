@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 14:07:17 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 07:15:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,17 @@
 # include <stdint.h>
 
 /*
-**	-------- ARGUMENTS  ---------
+**	-- ARGUMENTS  --
 */
 
 # define ARGBC_SIZE	1
 # define MAX_ARGS	4
 # define NBR_TYPES	4
 
-# define T_REG		0b0001
-# define T_DIR		0b0010
-# define T_IND		0b0100
-# define T_LAB		0b1000
+# define T_REG		(1 << 0)
+# define T_DIR		(1 << 1)
+# define T_IND		(1 << 2)
+# define T_LAB		(1 << 3)
 
 # define ARG_REG	0b01
 # define ARG_DIR	0b10
@@ -39,10 +39,11 @@
 typedef uint8_t		t_argtypes;
 
 /*
-**	-------- INSTRUCTIONS ---------
+**	-- INSTRUCTIONS --
 */
 
 # define OPBC_SIZE	1
+# define NB_OPS		17
 
 typedef struct		s_vcpu t_vcpu;
 typedef struct		s_vcpudata t_vcpudata;
@@ -52,6 +53,7 @@ typedef struct		s_op
 {
 	char			*name;
 	t_instr			funct_ptr;
+	uint16_t		cost;
 	uint8_t			op_number;
 	uint8_t			nb_args;
 	uint8_t			has_bytecode;
@@ -60,20 +62,14 @@ typedef struct		s_op
 }					t_op;
 
 /*
-**	-------- VIRTUAL CPU ---------
-**
-**  pc					->	index (in memory) of next instruction to be exec.
-**  op_args				->	buffer where arguments are stored before exec.
-**  curr_instruction	->	points to the current t_op structure
-**  registers			->	points to the current process registers
-**  memory				->	points to the processes shared memory
-**  carry				->	flag modified by certains instructions
-**  op_bytecode			->	byte where the current op bytecode is stored
+**	-- VIRTUAL CPU --
 */
+
 typedef struct		s_vcpudata
 {
 	t_list			*child_process;
-	uint32_t		*timer;
+	uint32_t		*nb_processes;
+	uint32_t		*tot_processes;
 	uint32_t		*last_live;
 	uint8_t			*last_alive;
 	uint32_t		op_args[MAX_ARGS];
@@ -87,7 +83,7 @@ typedef struct		s_vcpu
 	uint32_t		*registers;
 	uint8_t			*carry;
 	uint8_t			*memory;
-	t_op			*curr_instruction;
+	t_op			*curr_op;
 	t_vcpudata		data;
 }					t_vcpu;
 

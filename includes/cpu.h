@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:22:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/05 19:30:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 06:06:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,13 +14,13 @@
 # define CPU_H
 
 /*
-** --------- CPU CORE ------------
+** -- CPU CORE --
 */
 
-void		exec_instruction(t_vcpu *cpu);
+void		exec_or_wait(t_vcpu *cpu, t_player *player, t_process *pending);
 
 /*
-** --------- CPU TOOLS ------------
+** -- CPU TOOLS --
 */
 
 uint32_t	jump_to(uint32_t pc, int jump_pos);

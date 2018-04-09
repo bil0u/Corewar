@@ -12,10 +12,10 @@ Quand tu bailleras on verra l'jour
 Pas de pitié, pas de tendresse
 Ce soir c'est Bagdad dans tes fesses"
 
-start:	ld	%1,r1
+start:	ld	%1,r2
 
-loop:	add	r1,r2,r2
-	and	%3,r2,r3
-	sub	r2,r2,r4
+loop:	add	r2,r3,r3
+	and	%3,r3,r3
+	sub	r3,r3,r4
 	sti	r2,%7,%3
 	zjmp	%:loop

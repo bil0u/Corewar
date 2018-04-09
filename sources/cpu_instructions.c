@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 14:08:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 07:27:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,10 +280,20 @@ int		sti_instr(t_vcpu *cpu, t_vcpudata *dat)
 
 int		fork_instr(t_vcpu *cpu, t_vcpudata *dat)
 {
-	// NEEDS TO BE COMPLETED
-	(void)cpu;
-	(void)dat;
-	return (ARG_DIRSZ);
+	t_process	child;
+
+	dat->nb_processes++;
+	dat->tot_processes++;
+	secure_fetch(cpu->pc[0] + OPBC_SIZE, cpu->memory, dat->op_args, ARG_INDSZ);
+	dat->op_args[0] = (uint32_t)(((int32_t)dat->op_args[0]) % IDX_MOD);
+	child.pc = jump_to(cpu->pc[0], (int32_t)dat->op_args[0]);
+	child.pid = dat->tot_processes[0];
+	child.timer = 0;
+	child.last_live = cpu->tick;
+	child.carry = cpu->carry[0];
+	ft_memcpy(child.registers, cpu->registers, REG_LEN);
+	dat->child_process = ft_lstnew(&child, sizeof(child));
+	return (ARG_INDSZ);
 }
 
 int		lld_instr(t_vcpu *cpu, t_vcpudata *dat)
@@ -343,10 +353,16 @@ int		lldi_instr(t_vcpu *cpu, t_vcpudata *dat)
 
 int		lfork_instr(t_vcpu *cpu, t_vcpudata *dat)
 {
-	// NEEDS TO BE COMPLETED
-	(void)cpu;
-	(void)dat;
-	return (ARG_DIRSZ);
+	t_process	child;
+
+	secure_fetch(cpu->pc[0] + OPBC_SIZE, cpu->memory, dat->op_args, ARG_INDSZ);
+	child.pc = jump_to(cpu->pc[0], (int32_t)dat->op_args[0]);
+	child.timer = 0;
+	child.last_live = cpu->tick;
+	child.carry = cpu->carry[0];
+	ft_memcpy(child.registers, cpu->registers, REG_LEN);
+	dat->child_process = ft_lstnew(&child, sizeof(child));
+	return (ARG_INDSZ);
 }
 
 int		aff_instr(t_vcpu *cpu, t_vcpudata *dat)

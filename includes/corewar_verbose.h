@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/08 13:25:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/09 01:54:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,7 @@
 */
 
 # define CW_SEPR		COLR("-------------------------------------\n")
+# define CW_SEPB		COLB("----------------------------------------------\n")
 # define CW_SEPG		COLG("-------------------------------------\n")
 
 # define CW_LOADING		COLY(">>> ") "Introducing contestants ...\n" CW_SEPR
@@ -104,9 +105,11 @@
 # define CW_PLAYERP3	COLB("* He's saying *") "\n%s\n"
 # define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 CW_PLAYERP3 CW_SEPR
 
-# define CW_RESTMSG1	COLG(" >> ")
-# define CW_RESTMSG2	"Memory at Cycle " COLY("%d") ", continuing in 3 secs\n"
-# define CW_RESTART		CW_SEPR CW_RESTMSG1 CW_RESTMSG2 CW_SEPR
+# define CW_STOP_MSG	COLG(" >> ") "Memory at cycle " COLY("%u")
+# define CW_DUMP_MSG	", exiting\n\n"
+# define CW_SDMP_MSG	", continuing in 3 secs.\n"
+# define CW_SDMPH		CW_SEPB CW_STOP_MSG CW_SDMP_MSG CW_SEPB
+# define CW_DUMPH		CW_STOP_MSG CW_DUMP_MSG
 
 # define CW_WIN_MSG1	COLY(">>> ") "Contestant " COLC("%hhu") " aka '"
 # define CW_WIN_MSG2	COLG("%s") "' has won !"
@@ -132,7 +135,7 @@
 */
 
 # define BPL			32
-# define MEM_VALUE		COLY("0x%4.4x\t\t")
+# define MEM_VALUE		COLB	("   ") COLY("0x%4.4x") " : "
 # define MEMSET_COLOR	COLC("%2.2hhx")
 # define MEMZERO_COLOR	COLW("%2.2hhx")
 
@@ -147,22 +150,22 @@
 # define REG_SEPC		COLB("+")
 # define REG_SEPH		COLB("|")
 # define REG_SEP2		COLB("-")
-# define REG_SEPL		REG_SEPC COLB("--------")
-# define REG_ENDL1	 	REG_SEPC "\n"
-# define REG_ENDL2		REG_SEPH "\n"
+# define REG_SEPL		COLB("--------") REG_SEPC
+# define REG_BEGL1	 	"\n" "   " REG_SEPC
+# define REG_BEGL2		"\n" "   " REG_SEPH
 # define REGNO_FSZ		COLM("R") REG_SEP2 COLM("%2.2d")
-# define REGN			REG_SEPC COLB("--") REGNO_FSZ COLB("--")
+# define REGN			COLB("--") REGNO_FSZ COLB("--") REG_SEPC
 
 # define MEM_HEADER1	"\tCycle " COLY("%u\t")
 # define MEM_HEADER		COLG(">> MEMORY <<") MEM_HEADER1 "\n\n"
-# define MEM_FOOTER1	"\n" REG_SEPH " CTD " COLC("%u ") REG_SEPH
+# define MEM_FOOTER1	"\n" REG_SEPH " Cycles to die " COLC("%u ") REG_SEPH
 # define MEM_FOOTER2	" Last check " COLC("%u ") REG_SEPH
 # define MEM_FOOTER3	" Max checks " COLC("%u ") REG_SEPH
 # define MEM_FOOTER4	" Nb processes " COLY("%u ") REG_SEPH
-# define MEM_FOOTER		MEM_FOOTER1 MEM_FOOTER2 MEM_FOOTER3 MEM_FOOTER4 "\n"
+# define MEM_FOOTER		MEM_FOOTER1 MEM_FOOTER2 MEM_FOOTER3 MEM_FOOTER4
 
 # define REG_HEADER1	"\tCarry " COLY("%u")
 # define REG_HEADER2	"\tTimer " COLY("%u")
-# define REG_HEADER		COLG(">> REGISTERS <<") REG_HEADER1 REG_HEADER2 "\n\n"
+# define REG_HEADER		COLG(">> REGISTERS <<") REG_HEADER1 REG_HEADER2 "\n"
 
 #endif
