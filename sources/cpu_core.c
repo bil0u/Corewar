@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 07:17:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 21:33:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,16 +149,13 @@ static void		exec_instruction(t_vcpu *cpu, t_vcpudata *data)
 
 	bytes_read = OPBC_SIZE;
 	op = cpu->curr_op;
-	if (op->op_number != 0 && op->op_number < NB_OPS)
-	{
-		log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
-			valid = TRUE;
-		if (op->has_bytecode)
-			fetch_arguments(cpu, &bytes_read, &valid);
-		if (valid)
-			bytes_read += op->funct_ptr(cpu, data);
-			log_this("ins", 0, P_SEP);
-	}
+	log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
+		valid = TRUE;
+	if (op->has_bytecode)
+		fetch_arguments(cpu, &bytes_read, &valid);
+	if (valid)
+		bytes_read += op->funct_ptr(cpu, data);
+	log_this("ins", 0, P_SEP);
 	cpu->pc[0] = jump_to(cpu->pc[0], bytes_read);
 }
 
@@ -166,23 +163,28 @@ static void		exec_instruction(t_vcpu *cpu, t_vcpudata *data)
 ** -- IF THE TIMER IS SET TO ZERO
 */
 
-void			exec_or_wait(t_vcpu *cpu, t_player *player, t_process *pending)
+void			exec_or_wait(t_vcpu *cpu, t_player *player, t_process *process)
 {
-	t_vcpudata	*data;
+	uint8_t		op_no;
 
-	if (pending->timer == 0)
+	if (process->next_op == NULL)
 	{
-		pending->next_op = &(g_op_set[cpu->memory[pending->pc]]);
-		pending->timer = pending->next_op->cost;
+		if ((op_no = cpu->memory[process->pc]) == 0 || op_no-- > NB_OPS)
+			process->pc = jump_to(process->pc, OPBC_SIZE);
+		else
+		{
+			process->next_op = &(g_op_set[op_no]);
+			process->timer = process->next_op->cost;
+		}
 	}
-	else if (pending->timer - 1 == 0)
+	if (process->next_op && --process->timer == 0)
 	{
-		data = &cpu->data;
-		load_process(pending, cpu);
-		exec_instruction(cpu, data);
-		ft_lstadd(&player->processes, data->child_process);
-		data->child_process ? player->nb_processes++ : (void)0;
+		load_process(process, cpu);
+		exec_instruction(cpu, &cpu->data);
+		if (cpu->data.child_process)
+			player->nb_processes++;
+		ft_lstadd(cpu->data.processes_stack, cpu->data.child_process);
+		process->next_op = NULL;
 	}
-	pending->timer--;
-	print_registers(pending, "reg");
+	print_registers(player, process, "reg");
 }

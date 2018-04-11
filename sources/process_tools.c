@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 05:39:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 21:48:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,48 +43,48 @@ void			load_process(t_process *p, t_vcpu *cpu)
 	cpu->curr_op = p->next_op;
 	cpu->data.child_process = NULL;
 	cpu->data.last_live = &(p->last_live);
+	cpu->data.curr_player = p->player_no;
 }
 
 /*
 ** -- DELETE A GIVEN PROCESS FROM A PLAYER'S PROCESSES LIST
 */
 
-static void		delete_process(t_player *pl, t_process **pr,
-												t_list **prev, t_list **curr)
+static void		delete_process(t_list **p_list, t_list **prev,
+									t_list **curr, t_process **p)
 {
+	t_list	*next;
+
+	next = (*curr)->next;
 	if (*prev != NULL)
-		(*prev)->next = (*curr)->next;
+		(*prev)->next = next;
 	else
-		pl->processes = (*curr)->next;
-	if (*curr == pl->pending)
-		pl->pending = pl->pending->next ? pl->pending->next : pl->processes;
-	ft_memdel((void **)pr);
+		*p_list = next;
 	ft_memdel((void **)curr);
-	*curr = *prev ? (*prev)->next : pl->processes;
-	--pl->nb_processes;
+	ft_memdel((void **)p);
+	*curr = next;
 }
 
 /*
-** -- SEARCH FOR DEAD PROCESSES FOR THE CURRENT PLAYER, AND DELETE THEM IF FOUND
+** -- REFRESH THE PROCESS LIST : DELETE QUIET PROCESSES IF FOUND AND COUNT
+**                               THE TOTAL NUMBER OF LIVES
 */
 
-static uint32_t	check_pstatus(t_player *player, t_pcontrol *ctrl)
+static uint32_t	update_process_list(t_cwdata *e, t_list **p_list, t_list *curr)
 {
 	uint32_t	nb_lives;
-	t_list		*curr;
+	t_process	*p;
 	t_list		*prev;
-	t_process	*process;
 
 	nb_lives = 0;
 	prev = NULL;
-	curr = player->processes;
 	while (curr != NULL)
 	{
-		process = (t_process *)curr->content;
-		if (process->last_live <= ctrl->last_check)
+		if ((p = (t_process *)curr->content)->last_live < e->control.last_check)
 		{
-			delete_process(player, &process, &prev, &curr);
-			ctrl->nb_processes--;
+			--(e->control.nb_processes);
+			--(e->players[e->p_indexes[p->player_no - 1]].nb_processes);
+			delete_process(p_list, &prev, &curr, &p);
 		}
 		else
 		{
@@ -100,15 +100,13 @@ static uint32_t	check_pstatus(t_player *player, t_pcontrol *ctrl)
 ** -- FIND ALL QUIET PROCESSES AND CONSIDER THEM AS DEAD >> DELETED
 */
 
-void			kill_quiet_processes(t_cwdata *env)
+void			refresh_process_status(t_cwdata *env)
 {
 	uint8_t		curr_player;
 	uint32_t	nb_lives;
 
 	curr_player = 0;
-	nb_lives = 0;
-	while (curr_player < env->nb_players)
-		nb_lives += check_pstatus(env->players + curr_player++, &env->control);
+	nb_lives = update_process_list(env, &env->processes, env->processes);
 	if (nb_lives >= NBR_LIVE || env->control.max_checks == MAX_CHECKS)
 	{
 		env->control.to_die -= CYCLE_DELTA;

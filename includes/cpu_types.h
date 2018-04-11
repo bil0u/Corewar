@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 07:15:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 21:27:01 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef uint8_t		t_argtypes;
 */
 
 # define OPBC_SIZE	1
-# define NB_OPS		17
+# define NB_OPS		16
 
 typedef struct		s_vcpu t_vcpu;
 typedef struct		s_vcpudata t_vcpudata;
@@ -67,6 +67,7 @@ typedef struct		s_op
 
 typedef struct		s_vcpudata
 {
+	t_list			**processes_stack;
 	t_list			*child_process;
 	uint32_t		*nb_processes;
 	uint32_t		*tot_processes;
@@ -74,6 +75,7 @@ typedef struct		s_vcpudata
 	uint8_t			*last_alive;
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			op_bytecode;
+	uint8_t			curr_player;
 }					t_vcpudata;
 
 typedef struct		s_vcpu

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:57:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 08:10:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 22:04:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,24 +55,23 @@ int		is_valid_file(char *opt, t_cwdata *env)
 {
 	int		fd;
 	int		ret;
-	uint8_t	cur_p;
-	uint8_t	player_no;
+	uint8_t	p_no;
 
 	if (!opt || opt[0] == '\0')
 		return (log_this(NULL, LF_ERR, CWE_NOFILE));
 	if ((fd = open(opt, O_RDONLY)) < 0)
 		return (log_this(NULL, LF_ERR, CWE_UNKNOWN, opt));
-	cur_p = env->nb_players;
-	ret = load_binary(fd, env->players + cur_p, env->players_binaries[cur_p]);
+	if ((p_no = env->control.next_pno) == 0)
+		p_no = get_nextpno(env->control.flags);
+	ret = load_binary(fd, env->players + p_no - 1, env->p_binaries[p_no - 1]);
 	close(fd);
 	if (ret == FAILURE)
 		return (log_this(NULL, LF_ERR, CWE_FILEKO, opt));
-	if ((player_no = env->control.next_pno) == 0)
-		player_no = get_nextpno(env->control.flags);
-	env->players[cur_p].player_no = player_no;
-	BSET(env->control.flags, CWF_PNO(player_no));
+	env->p_indexes[env->nb_players] = p_no - 1;
+	env->players[p_no - 1].player_no = p_no;
+	BSET(env->control.flags, CWF_PNO(p_no));
 	env->control.next_pno = 0;
-	++env->nb_players;
+	++(env->nb_players);
 	return (TRUE);
 }
 

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 05:19:46 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 21:15:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int		aff_instr(t_vcpu *cpu, t_vcpudata *dat);
 
 t_op    g_op_set[NB_OPS] =
 {
-	{"no_op",	NULL,			10,		0,	0,	0,	0,	{0}},
 	{"live",	&live_instr,	10,		1,	1,	0,	0,	{T_DIR}},
 	{"ld",		&ld_instr,		5,		2,	2,	1,	0,	{T_DIR|T_IND, T_REG}},
 	{"st",		&st_instr,		5,		3,	2,	1,	0,	{T_REG, T_IND|T_REG}},

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 08:29:25 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 22:04:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int			load_binary(int fd, t_player *pbuff, uint8_t *mbuff)
 }
 
 /*
-** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS IF YES
+** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS IF TRUE
 */
 
 static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
@@ -58,7 +58,7 @@ static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
 		opt[1] == 'v' ? BSET(e->control.flags, CWF_VERB) : (void)0;
 		opt[1] == 'v' ? e->control.verb_level = ft_atoi(argv[*cur]) : (void)0;
 		opt[1] == 'S' ? BSET(e->control.flags, CWF_SLOW) : (void)0;
-		opt[1] == 'S' ? e->control.sleep_us = 1000000 / ft_atoi(argv[*cur]) : (void)0;
+		opt[1] == 'S' ? e->control.sleep_us = ft_atoi(argv[*cur]) : (void)0;
 		if (e->control.flags & (CWF_SDMP | CWF_DUMP))
 			e->control.nb_cycles = ft_atoi(argv[*cur]);
 		opt[1] == 'n' ? e->control.next_pno = ft_atoi(argv[*cur]) : (void)0;
@@ -73,7 +73,7 @@ static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
 }
 
 /*
-** - CHECK VALIDITY OF LOADED INPUT
+** - FINAL CHECK OF LOADED VALUES BEFORE EXECUTION
 */
 
 static int	check_validity(t_cwdata *env)
@@ -114,29 +114,29 @@ int		 	check_argv(int argc, char **argv, t_cwdata *env)
 ** - LOAD GAME IN ARENA AND INITIALIZE THE REMAINING VALUES OF ENV
 */
 
-void		load_players(t_cwdata *env, t_player *p)
+void		load_players(t_cwdata *e, t_player *players)
 {
-	int			curr_player;
+	t_player	*p_data;
+	int			curr_p;
 	uint32_t	init_pos;
 	t_process	new;
 
-	log_this("chp", env->control.verb_level & (LF_BOTH), CW_LOADING);
-	curr_player = -1;
-	while (++curr_player < env->nb_players)
+	log_this("chp", e->control.verb_level & (LF_BOTH), CW_LOADING);
+	curr_p = -1;
+	while (++curr_p < e->nb_players)
 	{
-		init_pos = (MEM_SIZE / env->nb_players) * curr_player;
-		++(p->nb_processes);
-		++(env->control.tot_processes);
+		p_data = players + e->p_indexes[curr_p];
+		init_pos = (MEM_SIZE / e->nb_players) * e->p_indexes[curr_p];
+		++(p_data->nb_processes);
+		++(e->control.tot_processes);
 		ft_bzero(&new, sizeof(new));
-		new.pid = env->control.tot_processes;
-		new.registers[0] = REG_MAXVALUE - (p->player_no - 1);
+		new.pid = e->control.tot_processes;
+		new.player_no = p_data->player_no;
+		new.registers[0] = REG_MAXVALUE - (p_data->player_no - 1);
 		new.pc = init_pos;
-		ft_lstadd(&p->processes, ft_lstnew(&new, sizeof(new)));
-		p->pending = p->processes;
-		ft_memcpy(env->arena + init_pos, env->players_binaries + curr_player,
-					p->header.prog_size);
-		log_this("chp", LF_BOTH, CW_PLAYER, p->player_no, p->header.prog_size,
-				p->header.prog_name, p->header.comment);
-		p++;
+		ft_lstadd(&e->processes, ft_lstnew(&new, sizeof(new)));
+		ft_memcpy(e->arena + init_pos, e->p_binaries + e->p_indexes[curr_p], p_data->header.prog_size);
+		log_this("chp", LF_BOTH, CW_PLAYER, p_data->player_no, p_data->header.prog_size,
+				p_data->header.prog_name, p_data->header.comment);
 	}
 }

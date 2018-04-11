@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 07:28:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 17:47:40 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	load_players(t_cwdata *env, t_player *p);
 */
 
 void	load_process(t_process *p, t_vcpu *cpu);
-void	kill_quiet_processes(t_cwdata *env);
+void	refresh_process_status(t_cwdata *env);
 int		dump_stop(t_cwdata *env, uint16_t flags, uint64_t *breakpoint);
 
 /*
@@ -47,7 +47,7 @@ int		dump_stop(t_cwdata *env, uint16_t flags, uint64_t *breakpoint);
 */
 
 void	print_memory(t_cwdata *env, char *win);
-void	print_registers(t_process *p, char *win);
+void	print_registers(t_player *pl, t_process *pr, char *win);
 int		is_pc_val(uint32_t to_test, t_cwdata *env);
 int		err_msg(char *msg);
 

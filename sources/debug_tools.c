@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 07:43:31 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 22:08:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,16 @@
 
 int				is_pc_val(uint32_t to_test, t_cwdata *env)
 {
-	uint8_t		curr_player;
 	t_list		*curr_process;
+	t_process	*proc_data;
 
-	curr_player = 0;
-	while (curr_player < env->nb_players)
+	curr_process = env->processes;
+	while (curr_process != NULL)
 	{
-		curr_process = (env->players + curr_player)->processes;
-		while (curr_process != NULL)
-		{
-			if (((t_process *)(curr_process->content))->pc == to_test)
-				return ((env->players + curr_player)->player_no);
-			curr_process = curr_process->next;
-		}
-		++curr_player;
+		proc_data = (t_process *)curr_process->content;
+		if (proc_data->pc == to_test)
+			return (proc_data->player_no);
+		curr_process = curr_process->next;
 	}
 	return (FALSE);
 }

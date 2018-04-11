@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 08:35:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 22:06:26 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,13 +86,13 @@ static uint32_t	print_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
 			ret += ft_sprintf(dst + ret, REGN, s);
 	else if (mod == (1 << 1))
 		while (s++ < i)
-			ret += ft_sprintf(dst + ret, REG_SEPL);
+			ret += ft_sprintf(dst + ret, SEPL);
 	else if (mod == (1 << 2))
 		while (s++ < i)
 		{
 			ret += ft_sprintf(dst + ret, r[s - 1] ?
 								REGSET_COLOR : REGZERO_COLOR, r[s - 1]);
-			ret += ft_sprintf(dst + ret, REG_SEPH);
+			ret += ft_sprintf(dst + ret, SEPH);
 		}
 	return (ret);
 }
@@ -101,33 +101,24 @@ static uint32_t	print_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
 ** -- PRINT REGISTERS HEADER AND CONTENT (IN HEX)
 */
 
-void			print_registers(t_process *p, char *win)
+void			print_registers(t_player *pl, t_process *pr, char *win)
 {
 	char		buff[PRINT_BUFF_SIZE * 4];
 	uint32_t	ret;
 
 	win ? clear_window(win) : (void)ret;
-	if (p == NULL)
+	if (pr == NULL)
 	{
-		log_this(win, 0, REG_HEADER, 0, 0);
+		log_this(win, 0, REG_HEADER, 0, 0, 0, NULL, 0);
 		return ;
 	}
 	ret = 0;
-	ret += ft_sprintf(buff, REG_HEADER, p->carry, p->timer);
-	ret += print_nregs(buff + ret, p->registers, 0, (1 << 0));
-	ret += print_nregs(buff + ret, p->registers, 0, (1 << 2));
-	ret += print_nregs(buff + ret, p->registers, 0, (1 << 1));
-	ret += print_nregs(buff + ret, p->registers, (REG_NUMBER >> 1), (1 << 2));
-	ret += print_nregs(buff + ret, p->registers, (REG_NUMBER >> 1), (1 << 0));
+	ret += ft_sprintf(buff, REG_HEADER, pl->player_no, pr->pid, pr->carry,
+							pr->next_op ? pr->next_op->name : NULL, pr->timer);
+	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 0));
+	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 2));
+	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 1));
+	ret += print_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 2));
+	ret += print_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 0));
 	log_this(win, 0, buff);
 }
-
-// void			vm_log(char *win, char *msg, ...)
-// {
-// 	va_list	args;
-//
-// 	if (win)
-//
-// 	va_start(args, msg);
-// 	va_end(args);
-// }

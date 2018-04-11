@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/09 07:15:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/11 18:49:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ typedef struct		s_process
 	uint32_t		timer;
 	uint32_t		last_live;
 	uint8_t			carry;
+	uint8_t			player_no;
 	t_op			*next_op;
 }					t_process;
 
@@ -84,10 +85,8 @@ typedef struct		s_process
 typedef struct		s_player
 {
 	t_header		header;
-	uint32_t		player_no;
 	uint32_t		nb_processes;
-	t_list			*processes;
-	t_list			*pending;
+	uint8_t			player_no;
 }					t_player;
 
 /*
@@ -111,14 +110,16 @@ typedef struct		s_pcontrol
 	uint32_t		last_check;
 	uint32_t		max_checks;
 	uint32_t		to_die;
-	uint16_t		flags;
 	uint16_t		verb_level;
-	useconds_t		sleep_us;
+	uint16_t		flags;
+	uint8_t			l_flags;
 	uint8_t			winner;
 	uint8_t			next_pno;
+	useconds_t		sleep_us;
 }					t_pcontrol;
 
 # define CWF_PNO(x)				(1 << (x - 1))
+
 # define CWF_VERB				(1 << 4)
 # define CWF_DUMP				(1 << 5)
 # define CWF_SDMP				(1 << 6)
@@ -129,11 +130,13 @@ typedef struct		s_pcontrol
 
 typedef struct		s_cwdata
 {
-	uint8_t			arena[MEM_SIZE];
-	uint8_t			players_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
-	t_player		players[MAX_PLAYERS];
 	t_vcpu			cpu;
 	t_pcontrol		control;
+	uint8_t			arena[MEM_SIZE];
+	t_list			*processes;
+	t_player		players[MAX_PLAYERS];
+	uint8_t			p_indexes[MAX_PLAYERS];
+	uint8_t			p_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
 	uint8_t			nb_players;
 }					t_cwdata;
 
