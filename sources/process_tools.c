@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 21:48:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 06:48:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 int				dump_stop(t_cwdata *env, uint16_t flags, uint64_t *breakpoint)
 {
 	ft_printf((flags & CWF_DUMP ? CW_DUMPH : CW_SDMPH), env->cpu.tick);
-	print_memory(env, NULL);
+	print_memory(env->arena, env->processes, NULL);
 	if (flags & CWF_DUMP)
 		return (TRUE);
 	sleep(3);
@@ -66,53 +66,49 @@ static void		delete_process(t_list **p_list, t_list **prev,
 }
 
 /*
-** -- REFRESH THE PROCESS LIST : DELETE QUIET PROCESSES IF FOUND AND COUNT
-**                               THE TOTAL NUMBER OF LIVES
+** -- REFRESH THE PROCESS LIST : DELETE QUIET PROCESSES IF FOUND
 */
 
-static uint32_t	update_process_list(t_cwdata *e, t_list **p_list, t_list *curr)
+static void		update_process_list(t_cwdata *env, t_pcontrol *ctrl,
+										t_list **p_list, t_list *curr)
 {
-	uint32_t	nb_lives;
 	t_process	*p;
 	t_list		*prev;
 
-	nb_lives = 0;
 	prev = NULL;
 	while (curr != NULL)
 	{
-		if ((p = (t_process *)curr->content)->last_live < e->control.last_check)
+		if ((p = (t_process *)curr->content)->last_live < ctrl->last_check)
 		{
-			--(e->control.nb_processes);
-			--(e->players[e->p_indexes[p->player_no - 1]].nb_processes);
+			--(ctrl->nb_processes);
+			--(env->players[env->p_indexes[p->player_no - 1]].nb_processes);
 			delete_process(p_list, &prev, &curr, &p);
 		}
 		else
 		{
-			++nb_lives;
 			prev = curr;
 			curr = curr->next;
 		}
 	}
-	return (nb_lives);
 }
 
 /*
-** -- FIND ALL QUIET PROCESSES AND CONSIDER THEM AS DEAD >> DELETED
+** -- DELETE QUIET PROCESSES IF THERE'S ANY AND MODIFY GAME VARIABLES
 */
 
-void			refresh_process_status(t_cwdata *env)
+void			refresh_process_status(t_cwdata *env, t_pcontrol *ctrl)
 {
 	uint8_t		curr_player;
-	uint32_t	nb_lives;
 
 	curr_player = 0;
-	nb_lives = update_process_list(env, &env->processes, env->processes);
-	if (nb_lives >= NBR_LIVE || env->control.max_checks == MAX_CHECKS)
+	update_process_list(env, ctrl, &env->processes, env->processes);
+	if (ctrl->nb_lives >= NBR_LIVE || ctrl->nb_checks == MAX_CHECKS)
 	{
-		env->control.to_die -= CYCLE_DELTA;
-		env->control.max_checks = 0;
+		ctrl->to_die -= CYCLE_DELTA;
+		ctrl->nb_checks = 0;
 	}
 	else
-		++(env->control.max_checks);
-	env->control.last_check = env->cpu.tick;
+		++(ctrl->nb_checks);
+	ctrl->nb_lives = 0;
+	ctrl->last_check = env->cpu.tick;
 }

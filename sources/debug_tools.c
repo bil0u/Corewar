@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 22:08:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 05:48:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,10 @@
 ** -- RETURNS TRUE IF THE GIVEN VALUE IS A BUSY PROCESSES'S PC
 */
 
-int				is_pc_val(uint32_t to_test, t_cwdata *env)
+int				is_pc_val(uint32_t to_test, t_list *curr_process)
 {
-	t_list		*curr_process;
 	t_process	*proc_data;
 
-	curr_process = env->processes;
 	while (curr_process != NULL)
 	{
 		proc_data = (t_process *)curr_process->content;

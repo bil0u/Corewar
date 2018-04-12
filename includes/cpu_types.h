@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 21:27:01 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 06:26:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ typedef struct		s_vcpudata
 	uint32_t		*nb_processes;
 	uint32_t		*tot_processes;
 	uint32_t		*last_live;
+	uint32_t		*nb_lives;
 	uint8_t			*last_alive;
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			op_bytecode;

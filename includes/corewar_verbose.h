@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 22:09:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 07:11:08 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,13 +156,16 @@
 # define REGNO_FSZ		COLM("R") SEP2 COLM("%2.2d")
 # define REGN			COLB("--") REGNO_FSZ COLB("--") SEPC
 
-# define MEM_HEADER1	"\tCycle " COLY("%u\t")
-# define MEM_HEADER		COLG(">> MEMORY <<") MEM_HEADER1 "\n\n"
-# define MEM_FOOTER1	"\n" SEPH " Cycles to die " COLY("%u ") SEPH
-# define MEM_FOOTER2	" Last check " COLY("%u ") SEPH
-# define MEM_FOOTER3	" Max checks " COLY("%u ") SEPH
-# define MEM_FOOTER4	" Nb processes " COLG	("%u ") SEPH
-# define MEM_FOOTER		MEM_FOOTER1 MEM_FOOTER2 MEM_FOOTER3 MEM_FOOTER4
+# define INF_HEAD		COLG(">> INFO <<\n\n")
+# define INF_P1			"   Cycle " COLY("%-7u")
+# define INF_P2			"        " COLC("%5u") " processes"
+# define INF_P3			" >> " COLG("%5u") " Lives" "\n\n"
+# define INF_P4			"   To die " COLY("%4u ") " " SEPH " "
+# define INF_P5			" Last check " COLY("%7u ") " " SEPH " "
+# define INF_P6			COLY(" %.2u") "/" COLM("%.2u") " Checks"
+# define INF_MSG		INF_HEAD INF_P1 INF_P2 INF_P3 INF_P4 INF_P5 INF_P6 "\n"
+
+# define MEM_HEADER		COLG(">> MEMORY <<")"\n\n"
 
 # define REGHEAD1		"\t PID " COLY("%-4u") " <> Player " COLY("%u ")
 # define REGHEAD2		SEPH " Carry " COLY("%u ") SEPH

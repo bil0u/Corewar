@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 21:33:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 06:16:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,15 +38,16 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 
 	arg_buff = cpu->data.op_args + arg_no;
 	if (arg_type == ARG_REG && ((*arg_buff = *(cpu->memory + pc_tmp)) || 1))
-		log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
+		(void)0;
+		// log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
 	else if (arg_type == ARG_IND)
 	{
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
-		log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
+		// log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
 		if (cpu->curr_op->op_number < 13)
 		{
 			*arg_buff = (uint32_t)(((int32_t)*arg_buff) % IDX_MOD);
-			log_this("ins", 0, P_IND_MOD, *arg_buff);
+			// log_this("ins", 0, P_IND_MOD, *arg_buff);
 		}
 		*arg_buff = jump_to(cpu->pc[0], (int)*arg_buff);
 	}
@@ -55,7 +56,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
 		if (cpu->curr_op->ind_address)
 			arg_type = ARG_IND;
 		secure_fetch(pc_tmp, cpu->memory, arg_buff, get_argsize(arg_type));
-		log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff);
+		// log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff);
 	}
 	return (get_argsize(arg_type));
 }
@@ -115,7 +116,7 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 		cpu->data.op_bytecode = bytecode;
 		pc_tmp = jump_to(cpu->pc[0], OPBC_SIZE + ARGBC_SIZE);
 		arg_no = 0;
-		log_this("ins", 0, P_ARG_OK, cpu->curr_op->nb_args);
+		// log_this("ins", 0, P_ARG_OK, cpu->curr_op->nb_args);
 		while (arg_no < cpu->curr_op->nb_args)
 		{
 			arg_sz = (bytecode >> (6 - (arg_no << 1))) & 0x03;
@@ -124,8 +125,8 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 			++arg_no;
 		}
 	}
-	else
-		log_this("ins", 0, P_ARG_KO, *bytes_rd);
+	// else
+		// log_this("ins", 0, P_ARG_KO, *bytes_rd);
 }
 
 /*
@@ -149,13 +150,13 @@ static void		exec_instruction(t_vcpu *cpu, t_vcpudata *data)
 
 	bytes_read = OPBC_SIZE;
 	op = cpu->curr_op;
-	log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
+	// log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
 		valid = TRUE;
 	if (op->has_bytecode)
 		fetch_arguments(cpu, &bytes_read, &valid);
 	if (valid)
 		bytes_read += op->funct_ptr(cpu, data);
-	log_this("ins", 0, P_SEP);
+	// log_this("ins", 0, P_SEP);
 	cpu->pc[0] = jump_to(cpu->pc[0], bytes_read);
 }
 
@@ -170,14 +171,14 @@ void			exec_or_wait(t_vcpu *cpu, t_player *player, t_process *process)
 	if (process->next_op == NULL)
 	{
 		if ((op_no = cpu->memory[process->pc]) == 0 || op_no-- > NB_OPS)
-			process->pc = jump_to(process->pc, OPBC_SIZE);
-		else
 		{
-			process->next_op = &(g_op_set[op_no]);
-			process->timer = process->next_op->cost;
+			process->pc = jump_to(process->pc, OPBC_SIZE);
+			return ;
 		}
+		process->next_op = &(g_op_set[op_no]);
+		process->timer = process->next_op->cost;
 	}
-	if (process->next_op && --process->timer == 0)
+	if (--process->timer == 0)
 	{
 		load_process(process, cpu);
 		exec_instruction(cpu, &cpu->data);
@@ -185,6 +186,6 @@ void			exec_or_wait(t_vcpu *cpu, t_player *player, t_process *process)
 			player->nb_processes++;
 		ft_lstadd(cpu->data.processes_stack, cpu->data.child_process);
 		process->next_op = NULL;
+		print_memory(cpu->memory, *(cpu->data.processes_stack), "mem");
 	}
-	print_registers(player, process, "reg");
 }

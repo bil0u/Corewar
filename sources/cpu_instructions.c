@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 17:34:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 07:18:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,10 @@ int		live_instr(t_vcpu *cpu, t_vcpudata *dat)
 
 	secure_fetch(cpu->pc[0] + OPBC_SIZE, cpu->memory, dat->op_args, ARG_DIRSZ);
 	player_no = dat->op_args[0] - REG_MAXVALUE + 1;
-	log_this("ins", 0, P_ARG_DIR, 1, player_no);
+	// log_this("ins", 0, P_ARG_DIR, 1, player_no);
 	if (player_no && player_no < MAX_PLAYERS + 1)
 	{
+		++(dat->nb_lives[0]);
 		dat->last_live[0] = cpu->tick;
 		dat->last_alive[0] = player_no & 0xFF;
 		log_this("ins", 0, LIVE_OK, player_no);
@@ -216,8 +217,8 @@ int		zjmp_instr(t_vcpu *cpu, t_vcpudata *dat)
 										dat->op_args, ARG_INDSZ);
 		restricted = (int16_t)(dat->op_args[0] & 0xFFFF) % IDX_MOD;
 		cpu->pc[0] = jump_to(cpu->pc[0], restricted);
-		log_this("ins", 0, P_ARG_IND, 1, (int16_t)(dat->op_args[0] & 0xFFFF));
-		log_this("ins", 0, P_IND_MOD, restricted);
+		// log_this("ins", 0, P_ARG_IND, 1, (int16_t)(dat->op_args[0] & 0xFFFF));
+		// log_this("ins", 0, P_IND_MOD, restricted);
 		log_this("ins", 0, ZJMP_OK, restricted, cpu->pc[0]);
 		return (-OPBC_SIZE);
 	}

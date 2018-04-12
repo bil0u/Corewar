@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 22:06:26 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/12 05:48:23 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ uint32_t		print_cell(char *buff, uint8_t mem_cell, uint8_t player_no)
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
-void			print_memory(t_cwdata *env, char *win)
+void			print_memory(uint8_t *arena, t_list *processes, char *win)
 {
 	char		buff[PRINT_BUFF_SIZE];
 	uint32_t	i;
@@ -50,19 +50,16 @@ void			print_memory(t_cwdata *env, char *win)
 	i = 0;
 	ret = 0;
 	win != NULL ? clear_window(win) : (void)0;
-	win != NULL ? ret += ft_sprintf(buff, MEM_HEADER, env->cpu.tick) : (void)0;
+	win != NULL ? ret += ft_sprintf(buff, MEM_HEADER) : (void)0;
 	while (i < MEM_SIZE)
 	{
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, MEM_VALUE, ((i / BPL) * BPL));
-		ret += print_cell(buff + ret, env->arena[i], is_pc_val(i, env));
+		ret += print_cell(buff + ret, arena[i], is_pc_val(i, processes));
 		i++;
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
-	win != NULL ? ret += ft_sprintf(buff + ret, MEM_FOOTER,
-			env->control.to_die, env->control.last_check,
-			env->control.max_checks, env->control.nb_processes) : (void)0;
 	log_this(win, 0, buff);
 }
 
