@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/12 06:48:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 20:20:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define COREWAR_TYPES_H
 
 /*
-** -- ENVIRONMENT SIZES -- /!\ WARNING /!\ --
+** -- VIRTUAL MACHINE FIXED SIZES -- /!\ WARNING /!\ --
 **    > MEM_SIZE must be a power of 2 (1 << X)
 **    > CHAMP_MAX_SIZE must be set at MEM_SIZE / MAX_PLAYERS maximum
 **      - ideally : (MEM_SIZE / 6)
@@ -28,18 +28,13 @@
 # define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 
 /*
-** -- GAME PARAMETERS --
+** -- PRINT BUFF SIZES --
 */
-
-# define CYCLE_TO_DIE			1536
-# define NBR_LIVE				21
-# define CYCLE_DELTA			50
-# define MAX_CHECKS				10
 
 # define PRINT_BUFF_SIZE		(MEM_SIZE << 4)
 
 /*
-** -- BINARY LOADING PARAMETERS --
+** -- BINARY FILE SIZES --
 */
 
 # define SPACING_LENGTH			4
@@ -58,39 +53,99 @@ typedef struct		s_header
 }					t_header;
 
 /*
-** -- PROCESS ELEMENTS --
-*/
-
-# define REG_NUMBER				16
-# define REG_SIZE				4
-# define REG_LEN				(REG_NUMBER * REG_SIZE)
-# define REG_MAXVALUE			((1UL << (REG_SIZE * CHAR_BIT)) - 1)
-
-typedef struct		s_process
-{
-	uint32_t		pid;
-	uint32_t		registers[REG_NUMBER];
-	uint32_t		pc;
-	uint32_t		timer;
-	uint32_t		last_live;
-	uint8_t			carry;
-	uint8_t			player_no;
-	t_op			*next_op;
-}					t_process;
-
-/*
 ** -- PLAYER DATA --
 */
 
 typedef struct		s_player
 {
 	t_header		header;
+	uint8_t			binary[CHAMP_MAX_SIZE];
 	uint32_t		nb_processes;
+	uint32_t		nb_lives;
 	uint8_t			player_no;
+	char			aff_buff[0xFF];
+	uint8_t			aff_bytes;
 }					t_player;
 
 /*
-** -- GLOBAL ENV & DATA STRUCTURE - WITH VERBOSE & GLOBAL FLAGS
+** -- VM PARAMETERS DATA
+*/
+
+# define BATTLEBAR_LEN	(12 << 2)
+# define BATTLEBAR_SIZE	(BATTLEBAR_LEN + 25)
+
+typedef struct		s_vmverb
+{
+	char			curr_breakdown[BATTLEBAR_SIZE];
+	char			last_breakdown[BATTLEBAR_SIZE];
+	uint16_t		level;
+	uint8_t			log_flags;
+}					t_vmverb;
+
+/*
+** -- VM PARAMETERS DATA
+*/
+
+typedef struct		s_vmctrl
+{
+	uint32_t		dump_cycles;
+	useconds_t		sleep_time;
+	uint16_t		cycles_sec;
+	uint16_t		flags;
+	uint8_t			next_pno;
+	t_vmverb		verbose;
+}					t_vmctrl;
+
+/*
+** -- GAME PARAMETERS
+*/
+
+# define CYCLE_TO_DIE			1536
+# define NBR_LIVE				21
+# define CYCLE_DELTA			50
+# define MAX_CHECKS				10
+# define DUMP_WAIT				3
+
+typedef struct		s_gamectrl
+{
+	int32_t			to_die;
+	int32_t			last_check;
+	uint32_t		nb_lives;
+	uint8_t			nb_checks;
+	uint8_t			winner;
+}					t_gamectrl;
+
+/*
+** -- PROCESSES HANDLING DATA STRUCTURE
+*/
+
+typedef struct		s_jobctrl
+{
+	t_list			*p_stack;
+	uint32_t		nb_processes;
+	uint32_t		next_pid;
+}					t_jobctrl;
+
+/*
+** -- COREWAR VIRTUAL MACHINE ENVIRONMENT
+*/
+
+typedef struct		s_vcpu t_vcpu;
+
+typedef struct		s_cwvm
+{
+	t_vmctrl		ctrl;
+	t_jobctrl		jobs;
+	t_gamectrl		game;
+	t_vcpu			cpu;
+	uint8_t			arena[MEM_SIZE];
+	t_player		players[MAX_PLAYERS];
+	uint8_t			p_indexes[MAX_PLAYERS];
+	uint8_t			nb_players;
+}					t_cwvm;
+
+/*
+** -- VERBOSE FLAGS
 */
 
 # define CWVL_ESS				(0 << 0)
@@ -100,24 +155,11 @@ typedef struct		s_player
 # define CWVL_DIE				(1 << 3)
 # define CWVL_PC				(1 << 4)
 # define CWVL_DEBUG				(1 << 5)
-# define CWVL_BAD				(1 << 6)
+# define CWVL_MAX				((CWVL_DEBUG << 1) - 1)
 
-typedef struct		s_pcontrol
-{
-	uint32_t		nb_processes;
-	uint32_t		tot_processes;
-	uint32_t		nb_cycles;
-	uint32_t		last_check;
-	uint32_t		nb_checks;
-	uint32_t		to_die;
-	uint32_t		nb_lives;
-	uint16_t		verb_level;
-	uint16_t		flags;
-	uint8_t			l_flags;
-	uint8_t			winner;
-	uint8_t			next_pno;
-	useconds_t		sleep_us;
-}					t_pcontrol;
+/*
+** -- GLOBAL FLAGS
+*/
 
 # define CWF_PNO(x)				(1 << (x - 1))
 
@@ -129,16 +171,5 @@ typedef struct		s_pcontrol
 # define CWF_AFFON				(1 << 9)
 # define CWF_SLOW				(1 << 10)
 
-typedef struct		s_cwdata
-{
-	t_vcpu			cpu;
-	t_pcontrol		control;
-	uint8_t			arena[MEM_SIZE];
-	t_list			*processes;
-	t_player		players[MAX_PLAYERS];
-	uint8_t			p_indexes[MAX_PLAYERS];
-	uint8_t			p_binaries[MAX_PLAYERS][CHAMP_MAX_SIZE];
-	uint8_t			nb_players;
-}					t_cwdata;
 
 #endif

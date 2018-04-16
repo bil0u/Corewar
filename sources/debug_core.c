@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/12 05:48:23 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 14:17:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,13 +23,13 @@
 uint32_t		print_cell(char *buff, uint8_t mem_cell, uint8_t player_no)
 {
 	if (player_no == 1)
-		return (ft_sprintf(buff, PCCOLOR_P1, mem_cell));
+		return (ft_sprintf(buff, PCC_P1, mem_cell));
 	else if (player_no == 2)
-		return (ft_sprintf(buff, PCCOLOR_P2, mem_cell));
+		return (ft_sprintf(buff, PCC_P2, mem_cell));
 	else if (player_no == 3)
-		return (ft_sprintf(buff, PCCOLOR_P3, mem_cell));
+		return (ft_sprintf(buff, PCC_P3, mem_cell));
 	else if (player_no == 4)
-		return (ft_sprintf(buff, PCCOLOR_P4, mem_cell));
+		return (ft_sprintf(buff, PCC_P4, mem_cell));
 	else if (mem_cell != 0)
 		return (ft_sprintf(buff, MEMSET_COLOR, mem_cell));
 	else

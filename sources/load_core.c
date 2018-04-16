@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/12 05:09:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 20:06:21 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,23 @@
 ** - LOAD A BINARY FILE
 */
 
-int			load_binary(int fd, t_player *pbuff, uint8_t *mbuff)
+int			load_binary(int fd, t_player *p_dat)
 {
+	t_header	*info;
 	uint32_t	nbr_buff;
 
-	ft_bzero(pbuff, sizeof(*pbuff));
+	ft_bzero(p_dat, sizeof(*p_dat));
+	info = &p_dat->header;
 	if (read(fd, &nbr_buff, MAGIC_LENGTH) != MAGIC_LENGTH
-	|| (pbuff->header.magic = SWAP_UINT32(nbr_buff)) != COREWAR_EXEC_MAGIC
-	|| read(fd, pbuff->header.prog_name, PROG_NAME_LENGTH) != PROG_NAME_LENGTH
+	|| (info->magic = SWAP_UINT32(nbr_buff)) != COREWAR_EXEC_MAGIC
+	|| read(fd, info->prog_name, PROG_NAME_LENGTH) != PROG_NAME_LENGTH
 	|| lseek(fd, SPACING_LENGTH, SEEK_CUR) == -1
 	|| read(fd, &nbr_buff, PROG_SZ_LENGTH) != PROG_SZ_LENGTH
-	|| (pbuff->header.prog_size = SWAP_UINT32(nbr_buff)) == 0
-	|| pbuff->header.prog_size > CHAMP_MAX_SIZE
-	|| read(fd, pbuff->header.comment, COMMENT_LENGTH) != COMMENT_LENGTH
+	|| (info->prog_size = SWAP_UINT32(nbr_buff)) == 0
+	|| info->prog_size > CHAMP_MAX_SIZE
+	|| read(fd, info->comment, COMMENT_LENGTH) != COMMENT_LENGTH
 	|| lseek(fd, SPACING_LENGTH, SEEK_CUR) == -1
-	|| read(fd, mbuff, pbuff->header.prog_size + 1) != pbuff->header.prog_size)
+	|| read(fd, p_dat->binary, info->prog_size + 1) != info->prog_size)
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -43,7 +45,7 @@ int			load_binary(int fd, t_player *pbuff, uint8_t *mbuff)
 ** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS IF TRUE
 */
 
-static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
+static int	check_opt_args(int argc, char **argv, t_cwvm *vm, int *cur)
 {
 	char	*opt;
 
@@ -53,22 +55,22 @@ static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
 		if (is_numeric(argc, argv, *cur + 1) != TRUE)
 			return (FAILURE);
 		++(*cur);
-		opt[1] == 'd' ? BSET(e->control.flags, CWF_DUMP) : (void)0;
-		opt[1] == 's' ? BSET(e->control.flags, CWF_SDMP) : (void)0;
-		opt[1] == 'v' ? BSET(e->control.flags, CWF_VERB) : (void)0;
-		opt[1] == 'v' ? e->control.verb_level = ft_atoi(argv[*cur]) : (void)0;
-		opt[1] == 'S' ? BSET(e->control.flags, CWF_SLOW) : (void)0;
-		opt[1] == 'S' ? e->control.sleep_us = ft_atoi(argv[*cur]) : (void)0;
-		if (e->control.flags & (CWF_SDMP | CWF_DUMP))
-			e->control.nb_cycles = ft_atoi(argv[*cur]);
-		opt[1] == 'n' ? e->control.next_pno = ft_atoi(argv[*cur]) : (void)0;
-		if (opt[1] == 'n' && (!is_valid_file(argv[++(*cur)], e)
-		|| is_valid_pno(e->control.flags, e->control.next_pno)))
+		opt[1] == 'd' ? BSET(vm->ctrl.flags, CWF_DUMP) : (void)0;
+		opt[1] == 's' ? BSET(vm->ctrl.flags, CWF_SDMP) : (void)0;
+		opt[1] == 'v' ? BSET(vm->ctrl.flags, CWF_VERB) : (void)0;
+		opt[1] == 'v' ? vm->ctrl.verbose.level = ft_atoi(argv[*cur]) : (void)0;
+		opt[1] == 'S' ? BSET(vm->ctrl.flags, CWF_SLOW) : (void)0;
+		opt[1] == 'S' ? vm->ctrl.cycles_sec = ft_atoi(argv[*cur]) : (void)0;
+		if (vm->ctrl.flags & (CWF_SDMP | CWF_DUMP))
+			vm->ctrl.dump_cycles = ft_atoi(argv[*cur]);
+		opt[1] == 'n' ? vm->ctrl.next_pno = ft_atoi(argv[*cur]) : (void)0;
+		if (opt[1] == 'n' && (!is_valid_file(argv[++(*cur)], vm)
+		|| is_valid_pno(vm->ctrl.flags, vm->ctrl.next_pno)))
 			return (FAILURE);
 		return (SUCCESS);
 	}
-	opt[1] == 'V' ? BSET(e->control.flags, CWF_VISU) : (void)0;
-	opt[1] == 'a' ? BSET(e->control.flags, CWF_AFFON) : (void)0;
+	opt[1] == 'V' ? BSET(vm->ctrl.flags, CWF_VISU) : (void)0;
+	opt[1] == 'a' ? BSET(vm->ctrl.flags, CWF_AFFON) : (void)0;
 	return (SUCCESS);
 }
 
@@ -76,11 +78,11 @@ static int	check_opt_args(int argc, char **argv, t_cwdata *e, int *cur)
 ** - FINAL CHECK OF LOADED VALUES BEFORE EXECUTION
 */
 
-static int	check_validity(t_cwdata *env)
+static int	check_validity(t_cwvm *vm)
 {
-	if (env->control.verb_level >= CWVL_BAD)
-		return (log_this(NULL, LF_ERR, CWE_BADVERB, env->control.verb_level));
-	if (env->nb_players == 0)
+	if (vm->ctrl.verbose.level > CWVL_MAX)
+		return (log_this(NULL, LF_ERR, CWE_BADVERB, vm->ctrl.verbose.level));
+	if (vm->nb_players == 0)
 		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
 	return (SUCCESS);
 }
@@ -89,7 +91,7 @@ static int	check_validity(t_cwdata *env)
 ** - CHECK ALL ARGV ARGUMENTS
 */
 
-int		 	check_argv(int argc, char **argv, t_cwdata *env)
+int		 	check_argv(int argc, char **argv, t_cwvm *vm)
 {
 	int		valid;
 	int		curr_arg;
@@ -100,43 +102,44 @@ int		 	check_argv(int argc, char **argv, t_cwdata *env)
 	while (++curr_arg < argc)
 		if ((valid = is_valid_option(argv[curr_arg])) == TRUE)
 		{
-			if (check_opt_args(argc, argv, env, &curr_arg) != SUCCESS)
+			if (check_opt_args(argc, argv, vm, &curr_arg) != SUCCESS)
 				return (FAILURE);
 		}
-		else if ((valid = is_valid_file(argv[curr_arg], env)) != TRUE)
+		else if ((valid = is_valid_file(argv[curr_arg], vm)) != TRUE)
 			return (FAILURE);
 		if (valid != TRUE)
 			return (log_this(NULL, LF_ERR, CWE_BADOPT, argv[curr_arg]));
-	return (check_validity(env));
+	return (check_validity(vm));
 }
 
 /*
 ** - LOAD GAME IN ARENA AND INITIALIZE THE REMAINING VALUES OF ENV
 */
 
-void		load_players(t_cwdata *e, t_player *players)
+void		load_players(t_cwvm *vm)
 {
-	t_player	*p_data;
+	t_player	*dat;
 	int			curr_p;
-	uint32_t	init_pos;
+	uint32_t	init;
 	t_process	new;
 
-	log_this("chp", e->control.verb_level & (LF_BOTH), CW_LOADING);
+	log_this("chp", LF_BOTH, CW_LOADING);
 	curr_p = -1;
-	while (++curr_p < e->nb_players)
+	while (++curr_p < vm->nb_players)
 	{
-		p_data = players + e->p_indexes[curr_p];
-		init_pos = (MEM_SIZE / e->nb_players) * e->p_indexes[curr_p];
-		++(p_data->nb_processes);
-		++(e->control.tot_processes);
+		dat = vm->players + vm->p_indexes[curr_p];
+		init = (MEM_SIZE / vm->nb_players) * vm->p_indexes[curr_p];
+		++(dat->nb_processes);
+		++(vm->jobs.next_pid);
 		ft_bzero(&new, sizeof(new));
-		new.pid = e->control.tot_processes;
-		new.player_no = p_data->player_no;
-		new.registers[0] = REG_MAXVALUE - (p_data->player_no - 1);
-		new.pc = init_pos;
-		ft_lstadd(&e->processes, ft_lstnew(&new, sizeof(new)));
-		ft_memcpy(e->arena + init_pos, e->p_binaries + e->p_indexes[curr_p], p_data->header.prog_size);
-		log_this("chp", LF_BOTH, CW_PLAYER, p_data->player_no, p_data->header.prog_size,
-				p_data->header.prog_name, p_data->header.comment);
+		new.pid = vm->jobs.next_pid;
+		new.player_no = dat->player_no;
+		new.last_live = 1;
+		new.registers[0] = REG_MAXVALUE - (new.player_no - 1);
+		new.pc = init;
+		ft_lstadd(&vm->jobs.p_stack, ft_lstnew(&new, sizeof(new)));
+		ft_memcpy(vm->arena + init, dat->binary, dat->header.prog_size);
+		log_this("chp", LF_BOTH, CW_PLAYER, dat->player_no,
+			dat->header.prog_size, dat->header.prog_name, dat->header.comment);
 	}
 }

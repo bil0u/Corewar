@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/12 06:16:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 13:33:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,37 +28,42 @@
 ** -- FETCH THE N_TH ARGUMENT
 **    > Securely fetch (circular buffer proof) the n_th argument, and return
 **      the number of bytes read;
-**    > Convert
+**    > Apply the IDX MOD for indirect args if the op is restricted
+**    > Fetch directs on 2 bytes if the op ind_address's flag is set
 */
 
-static uint8_t	fetch_nextarg(t_vcpu *cpu, uint32_t pc_tmp,
-								uint8_t arg_no, uint8_t arg_type)
+static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
+								uint8_t arg_no, uint8_t type)
 {
+	t_op		*next_op;
 	uint32_t	*arg_buff;
 
-	arg_buff = cpu->data.op_args + arg_no;
-	if (arg_type == ARG_REG && ((*arg_buff = *(cpu->memory + pc_tmp)) || 1))
-		(void)0;
-		// log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
-	else if (arg_type == ARG_IND)
+	arg_buff = cpu->op_args + arg_no;
+	next_op = pending->next_op;
+	if (type == ARG_REG)
 	{
-		secure_fetch(pc_tmp, cpu->memory, arg_buff, ARG_INDSZ);
+		*arg_buff = *(cpu->memory + cpu->pc_copy);
+		// log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
+	}
+	else if (type == ARG_IND)
+	{
+		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, ARG_INDSZ);
 		// log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
-		if (cpu->curr_op->op_number < 13)
+		if (next_op->op_number < 13)
 		{
 			*arg_buff = (uint32_t)(((int32_t)*arg_buff) % IDX_MOD);
 			// log_this("ins", 0, P_IND_MOD, *arg_buff);
 		}
-		*arg_buff = jump_to(cpu->pc[0], (int)*arg_buff);
+		*arg_buff = jump_to(pending->pc, (int)*arg_buff);
 	}
-	else if (arg_type == ARG_DIR)
+	else if (type == ARG_DIR)
 	{
-		if (cpu->curr_op->ind_address)
-			arg_type = ARG_IND;
-		secure_fetch(pc_tmp, cpu->memory, arg_buff, get_argsize(arg_type));
+		if (next_op->ind_address)
+			type = ARG_IND;
+		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, get_argsize(type));
 		// log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff);
 	}
-	return (get_argsize(arg_type));
+	return (get_argsize(type));
 }
 
 /*
@@ -96,37 +101,28 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 
 /*
 ** -- FETCH THE ARGUMENTS
-**    > Fetch the arguments bytecode on ARGBC_SIZE bytes
-**    > If the sanity check is successful :
-**      > Decode each argument one by one and store them in the vcpu->op_args
-**    > Otherwise :
 */
 
-static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
+static uint8_t	fetch_arguments(t_vcpu *cpu, t_process *pending, uint8_t opbc)
 {
-	uint32_t	pc_tmp;
-	uint8_t		bytecode;
+	uint8_t		nb_args;
+	uint8_t		bytes_read;
 	uint8_t		arg_no;
-	uint8_t		arg_sz;
+	uint8_t		type;
 
-	bytecode = *(cpu->memory + jump_to(cpu->pc[0], OPBC_SIZE));
-	if ((*valid = sanity_check(cpu->curr_op, bytecode, bytes_rd)) != 0)
+	cpu->op_bytecode = opbc;
+	cpu->pc_copy = jump_to(pending->pc, OPBC_SIZE + ARGBC_SIZE);
+	nb_args = pending->next_op->nb_args;
+	arg_no = 0;
+	// log_this("ins", 0, P_ARG_OK, nb_args);
+	while (arg_no < nb_args)
 	{
-		*bytes_rd += ARGBC_SIZE;
-		cpu->data.op_bytecode = bytecode;
-		pc_tmp = jump_to(cpu->pc[0], OPBC_SIZE + ARGBC_SIZE);
-		arg_no = 0;
-		// log_this("ins", 0, P_ARG_OK, cpu->curr_op->nb_args);
-		while (arg_no < cpu->curr_op->nb_args)
-		{
-			arg_sz = (bytecode >> (6 - (arg_no << 1))) & 0x03;
-			arg_sz = fetch_nextarg(cpu, pc_tmp, arg_no, arg_sz);
-			pc_tmp = jump_to(pc_tmp, arg_sz);
-			++arg_no;
-		}
+		type = (opbc >> (6 - (arg_no << 1))) & 0x03;
+		bytes_read = fetch_nextarg(cpu, pending, arg_no, type);
+		cpu->pc_copy = jump_to(cpu->pc_copy, bytes_read);
+		++arg_no;
 	}
-	// else
-		// log_this("ins", 0, P_ARG_KO, *bytes_rd);
+	return (ARGBC_SIZE);
 }
 
 /*
@@ -135,57 +131,67 @@ static void		fetch_arguments(t_vcpu *cpu, uint8_t *bytes_rd, uint8_t *valid)
 **    > Fetch the instruction on OPBC_SIZE bytes
 **     (just before this function call for implementation reasons)
 **    > If the op_code is valid :
-**       > Fetch & decode arguments if there is an ocp
-**       > Execute the instruction
+**       > Fetch & decode arguments if there is an ocp and ocp is valid
+**       > Execute the instruction (unless ocp, if there is one, is invalid)
 **    > Moves the PC to the next instruction
-**     (bytes_read equals the number of bytes described by the op_bytecode,
-**      even if not valid. If there's no opbc, then bytes_read equals OPBC_SIZE)
+**     (bytes_read equals the number of bytes described by the
+**      op_bytecode, even if not valid.
+**      If there's no opbc, then bytes_read equals OPBC_SIZE)
 */
 
-static void		exec_instruction(t_vcpu *cpu, t_vcpudata *data)
+static void		exec_op(t_vcpu *cpu, t_process *pending,
+							t_player *player, t_gamectrl *game)
 {
-	t_op		*op;
-	uint8_t		bytes_read;
+	uint8_t		opbc;
+	uint8_t		b_read;
 	uint8_t		valid;
 
-	bytes_read = OPBC_SIZE;
-	op = cpu->curr_op;
-	// log_this("ins", 0, P_CURR_OP, op->op_number, op->name, cpu->pc[0]);
-		valid = TRUE;
-	if (op->has_bytecode)
-		fetch_arguments(cpu, &bytes_read, &valid);
+	b_read = OPBC_SIZE;
+	// log_this("ins", 0, P_CURR_OP, op->op_number, op->name, pending->pc);
+	valid = TRUE;
+	if (pending->next_op->has_bytecode)
+	{
+		opbc = *(cpu->memory + jump_to(pending->pc, OPBC_SIZE));
+		if ((valid = sanity_check(pending->next_op, opbc, &b_read)))
+			b_read += fetch_arguments(cpu, pending, opbc);
+		// else
+			// log_this("ins", 0, P_ARG_KO, *bytes_rd);
+	}
 	if (valid)
-		bytes_read += op->funct_ptr(cpu, data);
+		b_read += pending->next_op->funct_ptr(cpu, pending, player, game);
 	// log_this("ins", 0, P_SEP);
-	cpu->pc[0] = jump_to(cpu->pc[0], bytes_read);
+	pending->pc = jump_to(pending->pc, b_read);
 }
 
 /*
-** -- IF THE TIMER IS SET TO ZERO
+** -- PERFORMS A EXECUTION STEP FOR THE GIVEN PROCESS
+** -- If current process's next_op is set to NULL :
+**    > Fetch the instruction on OPBC_SIZE bytes from PC pos in arena
+**    > Set the timer to fetched instruction's cycles costs value
+** -- Decrements the timer
+** -- If decremented timer equals zero :
+**    > Launch the intruction execution, and set next_op to NULL
 */
 
-void			exec_or_wait(t_vcpu *cpu, t_player *player, t_process *process)
+void			exec_or_wait(t_vcpu *cpu, t_process *pending,
+								t_player *player, t_gamectrl *game)
 {
 	uint8_t		op_no;
 
-	if (process->next_op == NULL)
+	if (pending->next_op == NULL)
 	{
-		if ((op_no = cpu->memory[process->pc]) == 0 || op_no-- > NB_OPS)
+		if ((op_no = cpu->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
 		{
-			process->pc = jump_to(process->pc, OPBC_SIZE);
+			pending->pc = jump_to(pending->pc, OPBC_SIZE);
 			return ;
 		}
-		process->next_op = &(g_op_set[op_no]);
-		process->timer = process->next_op->cost;
+		pending->next_op = &(g_op_set[op_no]);
+		pending->timer = pending->next_op->cost;
 	}
-	if (--process->timer == 0)
+	if (--pending->timer == 0)
 	{
-		load_process(process, cpu);
-		exec_instruction(cpu, &cpu->data);
-		if (cpu->data.child_process)
-			player->nb_processes++;
-		ft_lstadd(cpu->data.processes_stack, cpu->data.child_process);
-		process->next_op = NULL;
-		print_memory(cpu->memory, *(cpu->data.processes_stack), "mem");
+		exec_op(cpu, pending, player, game);
+		pending->next_op = NULL;
+		print_memory(cpu->memory, cpu->jobs->p_stack, "mem");
 	}
 }

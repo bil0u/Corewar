@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/11 21:15:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 10:10:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,22 +17,22 @@
 **	-- SUPPORTED VCPU INSTRUCTIONS --
 */
 
-int		live_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		ld_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		st_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		add_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		sub_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		and_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		or_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		xor_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		zjmp_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		ldi_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		sti_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		fork_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		lld_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		lldi_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		lfork_instr(t_vcpu *cpu, t_vcpudata *dat);
-int		aff_instr(t_vcpu *cpu, t_vcpudata *dat);
+int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *game);
+int		ld_instr(t_vcpu *cpu, t_process *p);
+int		st_instr(t_vcpu *cpu, t_process *p);
+int		add_instr(t_vcpu *cpu, t_process *p);
+int		sub_instr(t_vcpu *cpu, t_process *p);
+int		and_instr(t_vcpu *cpu, t_process *p);
+int		or_instr(t_vcpu *cpu, t_process *p);
+int		xor_instr(t_vcpu *cpu, t_process *p);
+int		zjmp_instr(t_vcpu *cpu, t_process *p);
+int		ldi_instr(t_vcpu *cpu, t_process *p);
+int		sti_instr(t_vcpu *cpu, t_process *p);
+int		fork_instr(t_vcpu *cpu, t_process *p, t_player *pl);
+int		lld_instr(t_vcpu *cpu, t_process *p);
+int		lldi_instr(t_vcpu *cpu, t_process *p);
+int		lfork_instr(t_vcpu *cpu, t_process *p, t_player *pl);
+int		aff_instr(t_vcpu *cpu, t_process *p, t_player *pl);
 
 /*
 ** > OP NAME    FCT_PTR        TIME    NO  NBA OCP INDEX ARG(S)_TYPE

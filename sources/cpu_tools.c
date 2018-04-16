@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/03/30 23:46:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 08:28:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,11 +83,12 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 **    > Returns an error if the arg is a non valid register
 */
 
-int			decode_arg(t_vcpu *cpu, uint8_t arg_type, uint32_t *arg_buff)
+int			decode_arg(t_vcpu *cpu, t_process *process,
+						uint8_t arg_type, uint32_t *arg_buff)
 {
 	if (arg_type == ARG_REG)
 		if (*arg_buff != 0 && *arg_buff - 1 < REG_NUMBER)
-			*arg_buff = cpu->registers[*arg_buff - 1];
+			*arg_buff = process->registers[*arg_buff - 1];
 		else
 			return (FAILURE);
 	else if (arg_type == ARG_IND)

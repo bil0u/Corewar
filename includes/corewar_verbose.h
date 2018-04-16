@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/12 07:11:08 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/16 20:26:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,10 +139,15 @@
 # define MEMSET_COLOR	COLC("%2.2hhx")
 # define MEMZERO_COLOR	COLW("%2.2hhx")
 
-# define PCCOLOR_P1		"{black}{b_green}%2.2hhx{eoc}"
-# define PCCOLOR_P2		"{white}{b_blue}%2.2hhx{eoc}"
-# define PCCOLOR_P3		"{black}{b_yellow}%2.2hhx{eoc}"
-# define PCCOLOR_P4		"{white}{b_red}%2.2hhx{eoc}"
+# define BARC_P1	"{b_green}"
+# define BARC_P2	"{b_blue}"
+# define BARC_P3	"{b_yellow}"
+# define BARC_P4	"{b_red}"
+
+# define PCC_P1		"{black}{b_green}%2.2hhx{eoc}"
+# define PCC_P2		"{white}{b_blue}%2.2hhx{eoc}"
+# define PCC_P3		"{black}{b_yellow}%2.2hhx{eoc}"
+# define PCC_P4		"{white}{b_red}%2.2hhx{eoc}"
 
 # define REGSET_COLOR	COLY("%8.8x")
 # define REGZERO_COLOR	COLW("%8.8x")
@@ -157,13 +162,16 @@
 # define REGN			COLB("--") REGNO_FSZ COLB("--") SEPC
 
 # define INF_HEAD		COLG(">> INFO <<\n\n")
-# define INF_P1			"   Cycle " COLY("%-7u")
+# define INF_P1			"   Cycle " COLY("%-7d")
 # define INF_P2			"        " COLC("%5u") " processes"
 # define INF_P3			" >> " COLG("%5u") " Lives" "\n\n"
-# define INF_P4			"   To die " COLY("%4u ") " " SEPH " "
-# define INF_P5			" Last check " COLY("%7u ") " " SEPH " "
-# define INF_P6			COLY(" %.2u") "/" COLM("%.2u") " Checks"
-# define INF_MSG		INF_HEAD INF_P1 INF_P2 INF_P3 INF_P4 INF_P5 INF_P6 "\n"
+# define INF_P4			"   To die " COLY("%4d ") " " SEPH " "
+# define INF_P5			" Last check " COLY("%7d ") " " SEPH " "
+# define INF_P6			COLY(" %2u") " / " COLM("%.2u") " Checks" "\n\n"
+# define INF_P7			"   Last period    > %s{eoc}\n\n"
+# define INF_P8			"   Current period > %s{eoc}"
+# define INF_MSG1		INF_P1 INF_P2 INF_P3 INF_P4 INF_P5 INF_P6 INF_P7 INF_P8
+# define INF_MSG		INF_HEAD INF_MSG1
 
 # define MEM_HEADER		COLG(">> MEMORY <<")"\n\n"
 
