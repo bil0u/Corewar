@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpu_types.h                                        :+:      :+:    :+:   */
+/*   vcpu_types.h                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 16:13:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/18 23:31:21 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CPU_TYPES_H
-# define CPU_TYPES_H
+#ifndef VCPU_TYPES_H
+# define VCPU_TYPES_H
 
 # include <stddef.h>
 # include <stdint.h>

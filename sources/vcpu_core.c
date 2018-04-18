@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cpu_core.c                                         :+:      :+:    :+:   */
+/*   vcpu_core.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 13:33:37 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/18 23:32:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 #include <stdio.h>
 
 #include "libft.h"
-#include "cpu_types.h"
+#include "vcpu_types.h"
 #include "corewar_types.h"
-#include "cpu.h"
+#include "vcpu.h"
 #include "corewar.h"
-#include "cpu_verbose.h"
-#include "instructions.h"
+#include "vcpu_instructions.h"
+#include "vcpu_verbose.h"
 
 /*
 ** -- FETCH THE N_TH ARGUMENT

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 20:20:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 00:58:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,18 +14,21 @@
 # define COREWAR_TYPES_H
 
 /*
-** -- VIRTUAL MACHINE FIXED SIZES -- /!\ WARNING /!\ --
+** -- VIRTUAL MACHINE FIXED VARIABLES -- /!\ WARNING /!\ --
 **    > MEM_SIZE must be a power of 2 (1 << X)
 **    > CHAMP_MAX_SIZE must be set at MEM_SIZE / MAX_PLAYERS maximum
 **      - ideally : (MEM_SIZE / 6)
 **    > IDX_MOD should be set at MEM_SIZE / MAX_PLAYERS maximum
 **      - ideally : (MEM_SIZE / 8)
+**    > CPS_DEFAULT is the cycles per second limit in visu or debug mode
+1**      - ideally : 50
 */
 
 # define MAX_PLAYERS			4
 # define MEM_SIZE				(1 << 9)		// TEST VALUE - TO BE MODIFIED
 # define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 # define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
+# define CPS_DEFAULT			50
 
 /*
 ** -- PRINT BUFF SIZES --
@@ -62,6 +65,7 @@ typedef struct		s_player
 	uint8_t			binary[CHAMP_MAX_SIZE];
 	uint32_t		nb_processes;
 	uint32_t		nb_lives;
+	int32_t			last_live;
 	uint8_t			player_no;
 	char			aff_buff[0xFF];
 	uint8_t			aff_bytes;
@@ -71,13 +75,17 @@ typedef struct		s_player
 ** -- VM PARAMETERS DATA
 */
 
+# define CW_VBUFF_SIZE	((1 << 16) - 1)
 # define BATTLEBAR_LEN	(12 << 2)
 # define BATTLEBAR_SIZE	(BATTLEBAR_LEN + 25)
 
 typedef struct		s_vmverb
 {
+	char			color_buff[4][32];
+	char			buff[CW_VBUFF_SIZE + 1];
 	char			curr_breakdown[BATTLEBAR_SIZE];
 	char			last_breakdown[BATTLEBAR_SIZE];
+	uint16_t		bytes_used;
 	uint16_t		level;
 	uint8_t			log_flags;
 }					t_vmverb;
@@ -161,15 +169,16 @@ typedef struct		s_cwvm
 ** -- GLOBAL FLAGS
 */
 
-# define CWF_PNO(x)				(1 << (x - 1))
+# define NB_OPTIONS				6
+# define VALID_OPT				"aSvdsV"
+# define NUMERIC_OPT			"Svds"
 
-# define CWF_VERB				(1 << 4)
-# define CWF_DUMP				(1 << 5)
-# define CWF_SDMP				(1 << 6)
-# define CWF_NCUR				(1 << 7)
-# define CWF_VISU				(1 << 8)
-# define CWF_AFFON				(1 << 9)
-# define CWF_SLOW				(1 << 10)
+# define CWF_AFFON				(1 << 0)
+# define CWF_VERB				(1 << 1)
+# define CWF_DUMP				(1 << 2)
+# define CWF_SDMP				(1 << 3)
+# define CWF_VISU				(1 << 4)
 
+# define CWF_PNO(x)				(1 << (NB_OPTIONS + (x - 1)))
 
 #endif

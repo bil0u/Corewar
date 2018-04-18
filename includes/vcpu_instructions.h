@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   instructions.h                                     :+:      :+:    :+:   */
+/*   vcpu_instructions.h                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 10:10:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/18 23:31:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef INSTRUCTIONS_H
-# define INSTRUCTIONS_H
+#ifndef VCPU_INSTRUCTIONS_H
+# define VCPU_INSTRUCTIONS_H
 
 /*
 **	-- SUPPORTED VCPU INSTRUCTIONS --

@@ -6,21 +6,23 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 20:06:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 00:58:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "cpu_types.h"
+#include "vcpu_types.h"
 #include "corewar_types.h"
 #include "corewar.h"
+#include "load_verbose.h"
 #include "corewar_verbose.h"
+
 
 /*
 ** - LOAD A BINARY FILE
 */
 
-int			load_binary(int fd, t_player *p_dat)
+static int	load_binary(int fd, t_player *p_dat)
 {
 	t_header	*info;
 	uint32_t	nbr_buff;
@@ -45,45 +47,56 @@ int			load_binary(int fd, t_player *p_dat)
 ** - CHECK IF AN ARG IS VALID AND SETS THE ASSOCIATED MODIFICATIONS IF TRUE
 */
 
-static int	check_opt_args(int argc, char **argv, t_cwvm *vm, int *cur)
+static int	parse_option(t_vmctrl *c, int ac, char **av, int *i)
 {
-	char	*opt;
+	uint16_t	invalid;
+	char		*opt;
 
-	opt = argv[*cur];
-	if (ft_strchr(NUMERIC_OPT, opt[1]))
-	{
-		if (is_numeric(argc, argv, *cur + 1) != TRUE)
-			return (FAILURE);
-		++(*cur);
-		opt[1] == 'd' ? BSET(vm->ctrl.flags, CWF_DUMP) : (void)0;
-		opt[1] == 's' ? BSET(vm->ctrl.flags, CWF_SDMP) : (void)0;
-		opt[1] == 'v' ? BSET(vm->ctrl.flags, CWF_VERB) : (void)0;
-		opt[1] == 'v' ? vm->ctrl.verbose.level = ft_atoi(argv[*cur]) : (void)0;
-		opt[1] == 'S' ? BSET(vm->ctrl.flags, CWF_SLOW) : (void)0;
-		opt[1] == 'S' ? vm->ctrl.cycles_sec = ft_atoi(argv[*cur]) : (void)0;
-		if (vm->ctrl.flags & (CWF_SDMP | CWF_DUMP))
-			vm->ctrl.dump_cycles = ft_atoi(argv[*cur]);
-		opt[1] == 'n' ? vm->ctrl.next_pno = ft_atoi(argv[*cur]) : (void)0;
-		if (opt[1] == 'n' && (!is_valid_file(argv[++(*cur)], vm)
-		|| is_valid_pno(vm->ctrl.flags, vm->ctrl.next_pno)))
-			return (FAILURE);
-		return (SUCCESS);
-	}
-	opt[1] == 'V' ? BSET(vm->ctrl.flags, CWF_VISU) : (void)0;
-	opt[1] == 'a' ? BSET(vm->ctrl.flags, CWF_AFFON) : (void)0;
+	opt = av[*i];
+	invalid = 0;
+	if (ft_strchr(NUMERIC_OPT, opt[1]) && is_numeric(ac, av, ++(*i)) != TRUE)
+		return (FAILURE);
+	opt[1] == 'a' ? BSET(c->flags, CWF_AFFON) : ++invalid;
+	opt[1] == 'v' ? BSET(c->flags, CWF_VERB) : ++invalid;
+	opt[1] == 'd' ? BSET(c->flags, CWF_DUMP) : ++invalid;
+	opt[1] == 'V' ? BSET(c->flags, CWF_VISU) : ++invalid;
+	opt[1] == 's' ? BSET(c->flags, CWF_DUMP | CWF_SDMP) : ++invalid;
+	opt[1] == 'S' ? c->cycles_sec = ft_atoi(av[*i]) : ++invalid;
+	opt[1] == 'v' ? c->verbose.level = ft_atoi(av[*i]) : (void)0;
+	c->flags & CWF_DUMP ? c->dump_cycles = ft_atoi(av[*i]) : (void)0;
+	if (invalid == NB_OPTIONS)
+		return (log_this(NULL, LF_ERR, CWE_BADOPT, opt));
 	return (SUCCESS);
 }
 
 /*
-** - FINAL CHECK OF LOADED VALUES BEFORE EXECUTION
+** - PARSE PLAYER FILE - RETURNS TRUE UPON SUCCESS
 */
 
-static int	check_validity(t_cwvm *vm)
+static int	parse_player(t_cwvm *v, int ac, char **av, int *i)
 {
-	if (vm->ctrl.verbose.level > CWVL_MAX)
-		return (log_this(NULL, LF_ERR, CWE_BADVERB, vm->ctrl.verbose.level));
-	if (vm->nb_players == 0)
-		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
+	int		fd;
+	int		ret;
+	uint8_t	p;
+
+	if (av[*i][0] == '-')
+	{
+		if (av[*i][1] != 'n' || av[*i][2] != '\0')
+			return (log_this(NULL, LF_ERR, CWE_BADOPT, av[*i]));
+		else if (is_valid_pno(&v->ctrl, ac, av, i) != TRUE)
+			return (FAILURE);
+	}
+	if ((fd = open(av[*i], O_RDONLY)) < 0)
+		return (log_this(NULL, LF_ERR, CWE_UNKNOWN, av[*i]));
+	p = (v->ctrl.next_pno != 0 ? v->ctrl.next_pno : get_nextpno(v->ctrl.flags));
+	ret = load_binary(fd, v->players + p - 1);
+	close(fd);
+	if (ret == FAILURE)
+		return (log_this(NULL, LF_ERR, CWE_FILEKO, av[*i]));
+	v->p_indexes[v->nb_players++] = p - 1;
+	v->players[p - 1].player_no = p;
+	BSET(v->ctrl.flags, CWF_PNO(p));
+	v->ctrl.next_pno = 0;
 	return (SUCCESS);
 }
 
@@ -91,25 +104,30 @@ static int	check_validity(t_cwvm *vm)
 ** - CHECK ALL ARGV ARGUMENTS
 */
 
-int		 	check_argv(int argc, char **argv, t_cwvm *vm)
+int		 	check_argv(int ac, char **av, t_cwvm *vm)
 {
-	int		valid;
 	int		curr_arg;
 
-	if (argc == 1 || ft_strequ(argv[1], "-h"))
+	if (ac == 1 || ft_strequ(av[1], "-h"))
 		return (err_msg(CW_USAGE));
 	curr_arg = 0;
-	while (++curr_arg < argc)
-		if ((valid = is_valid_option(argv[curr_arg])) == TRUE)
+	while (++curr_arg < ac)
+	{
+		if (av[curr_arg][0] == '\0')
+			continue ;
+		if (is_option(av[curr_arg]) == TRUE)
 		{
-			if (check_opt_args(argc, argv, vm, &curr_arg) != SUCCESS)
+			if (parse_option(&vm->ctrl, ac, av, &curr_arg) != SUCCESS)
 				return (FAILURE);
 		}
-		else if ((valid = is_valid_file(argv[curr_arg], vm)) != TRUE)
+		else if (parse_player(vm, ac, av, &curr_arg) != SUCCESS)
 			return (FAILURE);
-		if (valid != TRUE)
-			return (log_this(NULL, LF_ERR, CWE_BADOPT, argv[curr_arg]));
-	return (check_validity(vm));
+	}
+	if (vm->ctrl.verbose.level > CWVL_MAX)
+		return (log_this(NULL, LF_ERR, CWE_BADVERB, vm->ctrl.verbose.level));
+	if (vm->nb_players == 0)
+		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
+	return (SUCCESS);
 }
 
 /*
@@ -128,7 +146,7 @@ void		load_players(t_cwvm *vm)
 	while (++curr_p < vm->nb_players)
 	{
 		dat = vm->players + vm->p_indexes[curr_p];
-		init = (MEM_SIZE / vm->nb_players) * vm->p_indexes[curr_p];
+		init = (MEM_SIZE / vm->nb_players) * curr_p;
 		++(dat->nb_processes);
 		++(vm->jobs.next_pid);
 		ft_bzero(&new, sizeof(new));

@@ -1,40 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   debug_core.c                                       :+:      :+:    :+:   */
+/*   debug_memory.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/16 14:17:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/18 23:32:24 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "cpu_types.h"
+#include "vcpu_types.h"
 #include "corewar_types.h"
-#include "corewar_verbose.h"
 #include "corewar.h"
-
-/*
-** -- PRINTS THE GIVEN MEMORY CELL IN THE RIGHT COLOR
-*/
-
-uint32_t		print_cell(char *buff, uint8_t mem_cell, uint8_t player_no)
-{
-	if (player_no == 1)
-		return (ft_sprintf(buff, PCC_P1, mem_cell));
-	else if (player_no == 2)
-		return (ft_sprintf(buff, PCC_P2, mem_cell));
-	else if (player_no == 3)
-		return (ft_sprintf(buff, PCC_P3, mem_cell));
-	else if (player_no == 4)
-		return (ft_sprintf(buff, PCC_P4, mem_cell));
-	else if (mem_cell != 0)
-		return (ft_sprintf(buff, MEMSET_COLOR, mem_cell));
-	else
-		return (ft_sprintf(buff, MEMZERO_COLOR, mem_cell));
-}
+#include "memory_verbose.h"
 
 /*
 ** -- PRINT MEMORY CONTENT (IN HEX)
@@ -46,6 +26,7 @@ void			print_memory(uint8_t *arena, t_list *processes, char *win)
 	char		buff[PRINT_BUFF_SIZE];
 	uint32_t	i;
 	uint32_t	ret;
+	uint8_t		p_no;
 
 	i = 0;
 	ret = 0;
@@ -55,9 +36,13 @@ void			print_memory(uint8_t *arena, t_list *processes, char *win)
 	{
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, MEM_VALUE, ((i / BPL) * BPL));
-		ret += print_cell(buff + ret, arena[i], is_pc_val(i, processes));
-		i++;
-		if ((i & (BPL - 1)) == 0)
+		if ((p_no = is_pc_val(i, processes)) > 0)
+			ret += ft_sprintf(buff + ret, get_p_pccolor(p_no), arena[i]);
+		else if (arena[i] != 0)
+			ret += ft_sprintf(buff + ret, MEMSET_COLOR, arena[i]);
+		else
+			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, arena[i]);
+		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
 	log_this(win, 0, buff);
