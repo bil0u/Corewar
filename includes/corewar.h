@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 08:39:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 06:07:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int		is_numeric(int ac, char **av, int a);
 ** -- DEBUG_ UTILS --
 */
 
-void 	print_game_infos(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *game);
+void 	print_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
 void	print_memory(uint8_t *arena, t_list *p_stack, char *win);
 void	print_registers(t_player *pl, t_process *pending, char *win);
 

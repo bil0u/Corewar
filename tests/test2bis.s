@@ -17,5 +17,6 @@ start:	ld	%1,r1
 loop:	add	r1,r2,r2
 	and	%3,r2,r3
 	sub	r2,r2,r4
-	sti	r2,%7,%3
+	sti	r1,%9,%1
+	live	%1
 	zjmp	%:loop

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 02:08:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 16:37:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@
 */
 
 # define MAX_PLAYERS			4
-# define MEM_SIZE				(1 << 10)		// TEST VALUE - TO BE MODIFIED
-# define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
-# define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
+# define PLAYER_RANGE			512
+# define MEM_SIZE				(MAX_PLAYERS * PLAYER_RANGE)
+# define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
+# define IDX_MOD				(MEM_SIZE / 8)
 # define CPS_DEFAULT			50
 
 /*
@@ -44,8 +45,8 @@
 typedef struct		s_header
 {
 	uint32_t		magic;
-	char			prog_name[PROG_NAME_LENGTH + 1];
-	uint32_t		prog_size;
+	char			pname[PROG_NAME_LENGTH + 1];
+	uint32_t		psize;
 	char			comment[COMMENT_LENGTH + 1];
 }					t_header;
 
@@ -69,19 +70,23 @@ typedef struct		s_player
 ** -- VM PARAMETERS DATA
 */
 
-# define CW_VBUFF_SIZE	((1 << 16) - 1)
-# define BATTLEBAR_LEN	(12 << 2)
-# define BATTLEBAR_SIZE	(BATTLEBAR_LEN + 25)
+# define BAR_BUFF_SIZE	(BAR_LEN << 1)
+# define BAR_LEN		50
+# define BAR_CROP		26
+# define CROP_SPEED		2
 
 typedef struct		s_vmverb
 {
 	char			color_buff[4][32];
-	char			buff[CW_VBUFF_SIZE + 1];
-	char			curr_breakdown[BATTLEBAR_SIZE];
-	char			last_breakdown[BATTLEBAR_SIZE];
+	char			stats[BAR_BUFF_SIZE * (MAX_PLAYERS << 1)];
+	char			comment[BAR_BUFF_SIZE];
+	char			cbreakdown[BAR_BUFF_SIZE];
+	char			lbreakdown[BAR_BUFF_SIZE];
+	float			verb_carry;
 	uint16_t		bytes_used;
 	uint16_t		level;
 	uint8_t			log_flags;
+	uint8_t			bar_crop;
 }					t_vmverb;
 
 /*
@@ -110,11 +115,12 @@ typedef struct		s_vmctrl
 
 typedef struct		s_gamectrl
 {
+	uint32_t		nb_lives;
 	int32_t			to_die;
 	int32_t			last_check;
-	uint32_t		nb_lives;
 	uint8_t			nb_checks;
 	uint8_t			winner;
+	uint8_t			alpha;
 }					t_gamectrl;
 
 /*

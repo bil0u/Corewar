@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 00:59:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 16:36:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,6 @@ static int	init_vm(int argc, char **argv, t_cwvm *vm)
 	ft_bzero(vm, sizeof(*vm));
 	if (check_argv(argc, argv, vm) != SUCCESS)
 		return (FAILURE);
-	new_logwindow("inf", WF_KEEP | WF_CLOSE);
-	new_logwindow("mem", WF_KEEP | WF_CLOSE);
-	// new_logwindow("reg", WF_KEEP | WF_CLOSE);
-	new_logwindow("ins", WF_KEEP | WF_CLOSE);
 	// new_logwindow("chp", WF_KEEP | WF_CLOSE);
 	return (SUCCESS);
 }
@@ -57,8 +53,13 @@ static void	init_data(t_cwvm *vm)
 	vm->cpu.ctrl = ctrl;
 	ctrl->cycles_sec == 0 ? ctrl->cycles_sec = CPS_DEFAULT : (void)0;
 	ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
-	ret = ft_sprintf(ctrl->verbose.last_breakdown, "{b_black}");
-	ft_memset(ctrl->verbose.last_breakdown + ret, ' ', BATTLEBAR_LEN);
+	ctrl->verbose.bar_crop = BAR_CROP;
+	ret = ft_sprintf(ctrl->verbose.lbreakdown, "{b_black}");
+	ft_memset(ctrl->verbose.lbreakdown + ret, ' ', BAR_LEN);
+	new_logwindow("inf", WF_KEEP | WF_CLOSE);
+	new_logwindow("mem", WF_KEEP | WF_CLOSE);
+	// new_logwindow("reg", WF_KEEP | WF_CLOSE);
+	new_logwindow("ins", WF_KEEP | WF_CLOSE);
 	print_memory(vm->arena, jobs->p_stack, "mem");
 	// print_registers(NULL, NULL, "reg");
 	sleep(1);
@@ -75,13 +76,14 @@ static void	end_game(t_cwvm *vm)
 	int			i;
 
 	print_memory(vm->arena, vm->jobs.p_stack, "mem");
+	print_game_infos(vm, &vm->cpu, &vm->game, &vm->ctrl.verbose);
 	i = -1;
 	winner = vm->game.winner;
 	name = NULL;
 	while (++i < vm->nb_players)
 		if (vm->players[vm->p_indexes[i]].player_no == winner)
 		{
-			name = vm->players[vm->p_indexes[i]].header.prog_name;
+			name = vm->players[vm->p_indexes[i]].header.pname;
 			break ;
 		}
 	ft_lstdel(&vm->jobs.p_stack, &ft_delcontent);
@@ -106,7 +108,7 @@ static void	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *game, t_jobctrl *jobs)
 	while (jobs->nb_processes > 0 && game->to_die > 0)
 	{
 		++cpu->tick;
-		print_game_infos(vm, cpu, game);
+		print_game_infos(vm, cpu, &vm->game, &vm->ctrl.verbose);
 		if (cpu->tick == game->last_check + game->to_die)
 			check_gamestatus(vm);
 		pending = jobs->p_stack;

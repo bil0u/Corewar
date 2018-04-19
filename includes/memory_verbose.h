@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 23:03:51 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 01:41:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 16:09:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define MEM_HEADER		COLG(">> MEMORY <<")"\n\n"
 
-# define BPL			32
+# define BPL			64
 
 # define MEM_VALUE		COLB("   ") COLY("0x%4.4x") "   "
 

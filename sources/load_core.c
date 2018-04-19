@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 00:58:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 07:53:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ static int	load_binary(int fd, t_player *p_dat)
 	info = &p_dat->header;
 	if (read(fd, &nbr_buff, MAGIC_LENGTH) != MAGIC_LENGTH
 	|| (info->magic = SWAP_UINT32(nbr_buff)) != COREWAR_EXEC_MAGIC
-	|| read(fd, info->prog_name, PROG_NAME_LENGTH) != PROG_NAME_LENGTH
+	|| read(fd, info->pname, PROG_NAME_LENGTH) != PROG_NAME_LENGTH
 	|| lseek(fd, SPACING_LENGTH, SEEK_CUR) == -1
 	|| read(fd, &nbr_buff, PROG_SZ_LENGTH) != PROG_SZ_LENGTH
-	|| (info->prog_size = SWAP_UINT32(nbr_buff)) == 0
-	|| info->prog_size > CHAMP_MAX_SIZE
+	|| (info->psize = SWAP_UINT32(nbr_buff)) == 0
+	|| info->psize > CHAMP_MAX_SIZE
 	|| read(fd, info->comment, COMMENT_LENGTH) != COMMENT_LENGTH
 	|| lseek(fd, SPACING_LENGTH, SEEK_CUR) == -1
-	|| read(fd, p_dat->binary, info->prog_size + 1) != info->prog_size)
+	|| read(fd, p_dat->binary, info->psize + 1) != info->psize)
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -156,8 +156,8 @@ void		load_players(t_cwvm *vm)
 		new.registers[0] = REG_MAXVALUE - (new.player_no - 1);
 		new.pc = init;
 		ft_lstadd(&vm->jobs.p_stack, ft_lstnew(&new, sizeof(new)));
-		ft_memcpy(vm->arena + init, dat->binary, dat->header.prog_size);
+		ft_memcpy(vm->arena + init, dat->binary, dat->header.psize);
 		log_this("chp", LF_BOTH, CW_PLAYER, dat->player_no,
-			dat->header.prog_size, dat->header.prog_name, dat->header.comment);
+			dat->header.psize, dat->header.pname, dat->header.comment);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 23:32:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 17:15:47 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 		// log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
 		if (next_op->op_number < 13)
 		{
-			*arg_buff = (uint32_t)(((int32_t)*arg_buff) % IDX_MOD);
+			*arg_buff = (uint32_t)(*((uint16_t *)arg_buff) & (IDX_MOD - 1));
 			// log_this("ins", 0, P_IND_MOD, *arg_buff);
 		}
 		*arg_buff = jump_to(pending->pc, (int)*arg_buff);
@@ -182,6 +182,7 @@ void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 	{
 		if ((op_no = cpu->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
 		{
+			print_memory(cpu->memory, cpu->jobs->p_stack, "mem");
 			pending->pc = jump_to(pending->pc, OPBC_SIZE);
 			return ;
 		}

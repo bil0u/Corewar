@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 02:57:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 04:10:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,12 +37,14 @@
 # define P_DIR		DIRCOL("0x%.2x")
 # define P_NUM		NUMCOL("%+d")
 
-# define P_CYCLE	COLB("CYCLE ") COLC("%-5d")
-# define P_PLID		COLR("P%hhu ")
-# define P_PID		COLB("PID ") COLY("%-5u")
-# define P_PCVAL	COLB("PC ") COLM("%-4u")
-# define P_ID		COLBBK(" ") " " P_CYCLE P_SV P_PCVAL P_SV P_PLID P_PID P_SV
-# define P_OP		"%-5s"
+# define P_CYCLE	COLBBK(" ") COLB(" CYCLE ") COLC("%6d")
+# define P_PLID		COLR("P%hhu")
+# define P_PID		COLB("PID ") COLY("%u")
+# define P_PIDS		COLB("PID ") COLY("%5u")
+# define P_PCVAL	COLB("PC ") COLM("%4u")
+# define P_ID		P_CYCLE P_SV P_PCVAL P_SV P_PLID P_SV P_PIDS P_SV
+# define IDARGS		cpu->tick, p->pc, p->player_no, p->pid, p->next_op->name
+# define P_OP		"%5s"
 
 # define P_ARG_PMPT	COLB(" #%hhu: ")
 # define P_ARG_REG	P_ARG_PMPT REGCOL("[REG]") " > " P_RNO "\n"
@@ -102,7 +104,7 @@
 # define STI_OK		P_ID STI_OK1 " <-> " P_PC " = " P_DIR "\n"
 # define STI_KO		P_ID KOCOL(P_OP) P_SV P_RNO " does not exists\n"
 
-# define FORK_OK1	OKCOL(P_OP) P_SV "Child (" P_PID ") set at PC"
+# define FORK_OK1	OKCOL(P_OP) P_SV "Child > " P_PID " set at PC"
 # define FORK_OK	P_ID FORK_OK1 " " P_IND " >> " P_PC "\n"
 
 # define LLD_IND	P_ID OKCOL(P_OP) P_SV P_PC " >> " P_RNO " = " P_DIR "\n"
@@ -113,7 +115,7 @@
 # define LLDI_OK	P_ID LLDI_OK1 " >> " P_RNO " = " P_DIR "\n"
 # define LLDI_KO	P_ID KOCOL(P_OP) P_SV P_RNO " does not exists\n"
 
-# define LFORK_OK1	OKCOL(P_OP) P_SV "Child (" P_PID ") set at PC"
+# define LFORK_OK1	OKCOL(P_OP) P_SV "Child > " P_PID " set at PC"
 # define LFORK_OK	P_ID LFORK_OK1 " " P_IND " >> " P_PC "\n"
 
 # define AFF_OK1	OKCOL(P_OP) P_SV "Printed '{yellow}%c{eoc}' <> " P_RNO

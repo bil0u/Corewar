@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 00:59:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 16:41:11 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@
 
 int			dump_stop(t_cwvm *vm, int32_t *breakpoint)
 {
-	ft_printf((vm->ctrl.flags & CWF_DUMP ? CW_DUMPH : CW_SDMPH), vm->cpu.tick);
+	ft_printf((vm->ctrl.flags & CWF_SDMP ? CW_SDMPH : CW_DUMPH), vm->cpu.tick);
 	print_memory(vm->arena, vm->jobs.p_stack, NULL);
-	if (vm->ctrl.flags & CWF_DUMP)
-		return (TRUE);
-	sleep(DUMP_WAIT);
-	*breakpoint += vm->ctrl.dump_cycles;
-	return (FALSE);
+	if (vm->ctrl.flags & CWF_SDMP)
+	{
+		sleep(DUMP_WAIT);
+		*breakpoint += vm->ctrl.dump_cycles;
+		return (FALSE);
+	}
+	return (TRUE);
 }
 
 /*
@@ -104,6 +106,7 @@ void		check_gamestatus(t_cwvm *vm)
 	game->nb_lives = 0;
 	game->last_check = vm->cpu.tick;
 	ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
-	ft_memcpy(ctrl->verbose.last_breakdown, ctrl->verbose.curr_breakdown,
-			BATTLEBAR_SIZE);
+	ctrl->verbose.bar_crop = BAR_CROP;
+	ft_memcpy(ctrl->verbose.lbreakdown, ctrl->verbose.cbreakdown,
+			BAR_BUFF_SIZE);
 }
