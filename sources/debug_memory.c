@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 23:32:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 02:07:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 
 void			print_memory(uint8_t *arena, t_list *processes, char *win)
 {
-	char		buff[PRINT_BUFF_SIZE];
+	char		buff[LOG_BUFF_SIZE];
 	uint32_t	i;
 	uint32_t	ret;
 	uint8_t		p_no;
@@ -85,7 +85,7 @@ static uint32_t	print_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
 
 void			print_registers(t_player *pl, t_process *pr, char *win)
 {
-	char		buff[PRINT_BUFF_SIZE * 4];
+	char		buff[LOG_BUFF_SIZE];
 	uint32_t	ret;
 
 	win ? clear_window(win) : (void)ret;

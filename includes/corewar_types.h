@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 00:58:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 02:08:11 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,10 @@
 */
 
 # define MAX_PLAYERS			4
-# define MEM_SIZE				(1 << 9)		// TEST VALUE - TO BE MODIFIED
+# define MEM_SIZE				(1 << 10)		// TEST VALUE - TO BE MODIFIED
 # define CHAMP_MAX_SIZE			(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 # define IDX_MOD				(MEM_SIZE)		// TEST VALUE - TO BE MODIFIED
 # define CPS_DEFAULT			50
-
-/*
-** -- PRINT BUFF SIZES --
-*/
-
-# define PRINT_BUFF_SIZE		(MEM_SIZE << 4)
 
 /*
 ** -- BINARY FILE SIZES --

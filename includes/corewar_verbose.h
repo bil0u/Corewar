@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 01:33:43 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 01:48:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,8 @@
 # define INF_NBLIVE		"Lives " COLG("%-3u")
 
 # define INF_M1P1		"   " "Cycle " COLC("%-7d")
-# define INF_M1P2		"%17s" "Processes " COLM("%-4u") "   " INF_NBLIVE
-# define INF_M1P3		"   " "Winning >  " INF_PSQC
+# define INF_M1P2		"%15s" "Processes " COLM("%-4u") "   " INF_NBLIVE
+# define INF_M1P3		"   " "Last live  " INF_PSQC
 # define INF_MSG1		INF_M1P1 INF_M1P2 INF_M1P3 "\n\n"
 
 # define INF_PSTAT1		"    " INF_PSQC "  "
@@ -65,8 +65,8 @@
 # define INF_PSTAT22	"   " INF_NBLIVE
 # define INF_PSTAT23	"   " "Last live  " COLC("%u")
 # define INF_PSTAT2		INF_PSTAT21 INF_PSTAT22 INF_PSTAT23 "\n\n"
-# define INF_PNAME		"%s%-24s{eoc}"
-# define INF_PNAMEL		"%s%-.21s...{eoc}"
+# define INF_PNAME		"%s%-22s{eoc}"
+# define INF_PNAMEL		"%s%-.19s...{eoc}"
 # define INF_BUFFSTAT	"%s\n"
 
 # define INF_BAR1		"   " "Current period    >      %s{eoc}\n\n"

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 01:32:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/19 01:48:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void	buff_players_stats(t_cwvm *vm, t_vmverb *vb)
 		vb->bytes_used += ft_sprintf(vb->buff + vb->bytes_used, INF_PSTAT1,
 			vb->color_buff[0], p->player_no);
 		vb->bytes_used += ft_sprintf(vb->buff + vb->bytes_used,
-			p_len > 24 ? INF_PNAMEL : INF_PNAME, vb->color_buff[1],
+			p_len > 22 ? INF_PNAMEL : INF_PNAME, vb->color_buff[1],
 			p->header.prog_name);
 		vb->bytes_used += ft_sprintf(vb->buff + vb->bytes_used, INF_PSTAT2,
 			p->nb_processes, p->nb_lives, p->last_live);
