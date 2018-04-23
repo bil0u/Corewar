@@ -6,15 +6,15 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:57:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 23:32:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "corewar.h"
-#include "load_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "vm.h"
+#include "vm_verbose.h"
 
 /*
 ** - RETURNS NEXT PLAYER NUMBER AVAILABLE
@@ -73,7 +73,7 @@ int		is_option(char *opt)
 **   c	->	current arg position
 */
 
-int			is_numeric(int ac, char **av, int i)
+int		is_numeric(int ac, char **av, int i)
 {
 	if (i < ac && av[i][0] != '\0' && is_option(av[i]) == FALSE)
 	{

@@ -1,55 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar_verbose.h                                  :+:      :+:    :+:   */
+/*   vm_debug.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 09:21:16 by upopee           ###   ########.fr       */
+/*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
+/*   Updated: 2018/04/23 03:07:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COREWAR_VERBOSE_H
-# define COREWAR_VERBOSE_H
+#ifndef VM_DEBUG_H
+# define VM_DEBUG_H
 
 /*
-** -- SEPARATORS --
+** -- USEFUL MACROS --
 */
 
-# define SEPL1			"+---------------------------+----------------------+"
-# define SEPL2			"-------------------------------------"
-# define SEPB			COLB(SEPL1) "\n"
-# define SEPR			COLR(SEPL2) "\n"
-# define SEPG			COLG(SEPL2) "\n"
+# define INF_DEB		(cpu->ctrl->d_level & CWDL_INF)
+# define INF_WIN		"inf"
+# define MEM_DEB		(cp->ctrl->d_level & CWDL_MEM)
+# define MEM_WIN		"mem"
+# define REG_DEB		(cpu->ctrl->d_level & CWDL_REG)
+# define REG_WIN		"reg"
 
 /*
-** -- COREWAR VM GAME INTRO & OUTRO --
-*/
-
-# define CW_LOADING		COLY(">>> ") "Introducing competitors ...\n" SEPR
-
-# define CW_PLAYERP1	COLY("* ") "Player " COLC("%hhu") ", weighing "
-# define CW_PLAYERP2	COLM("%u") " bytes, known as '" COLG("%s") "'\n"
-# define CW_PLAYERP3	COLB("* He's saying *") "\n%s\n"
-# define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 CW_PLAYERP3 SEPR
-
-# define CW_WIN_MSG1	COLY(">>> ") "Competitors " COLC("%hhu") " aka '"
-# define CW_WIN_MSG2	COLG("%s") "' has won !"
-# define CW_WINNER_IS	SEPG CW_WIN_MSG1 CW_WIN_MSG2 "\n" SEPG
-
-/*
-** -- COREWAR VM DUMP & SDUMP HEADERS --
-*/
-
-# define CW_STOP_MSG	COLG(" >> ") "Memory at cycle " COLY("%-6u") COLB(" | ")
-# define CW_DUMP_MSG	"Exiting\n\n"
-# define CW_SDMP_MSG	"Paused for 3 seconds" COLB(" |") "\n"
-# define CW_SDMPH		SEPB COLB("|") CW_STOP_MSG CW_SDMP_MSG SEPB
-# define CW_DUMPH		CW_STOP_MSG CW_DUMP_MSG
-
-/*
-** -- COREWAR VM INFO STYLE --
+** -- VM INFO STYLE --
 */
 
 # define INF_HEAD		COLG(">> INFO <<\n\n")
@@ -88,5 +64,58 @@
 # define INF_MSG2		INF_M2P1 INF_M2P2 INF_M2P3 INF_M2P4 "\n"
 
 # define INF_MSG		INF_HEAD INF_MSG1 INF_BUFFSTAT INF_BARS INF_MSG2
+
+/*
+** -- VM ARENA STYLE --
+*/
+
+# define MEM_HEADER		COLG(">> MEMORY <<")"\n\n"
+
+# define BPL			64
+
+# define MEM_VALUE		COLB("   ") COLY("0x%4.4x") "   "
+
+# define MEMSET_COLOR	COLC("%2.2hhx")
+# define MEMZERO_COLOR	COLW("%2.2hhx")
+
+# define COL_P0		"{white}"
+# define BCOL_P0	"{b_black}"
+# define COL_P1		"{blue}"
+# define BCOL_P1	"{b_blue}"
+# define COL_P2		"{yellow}"
+# define BCOL_P2	"{b_yellow}"
+# define COL_P3		"{red}"
+# define BCOL_P3	"{b_red}"
+# define COL_P4		"{green}"
+# define BCOL_P4	"{b_green}"
+
+# define PCC_P0		COLW("%2.2hhx")
+# define PCC_P1		BCOL_P1 COLBK("%2.2hhx")
+# define PCC_P2		BCOL_P2 COLBK("%2.2hhx")
+# define PCC_P3		BCOL_P3 COLBK("%2.2hhx")
+# define PCC_P4		BCOL_P4 COLBK("%2.2hhx")
+
+/*
+** -- VM REGISTERS STYLE --
+*/
+
+# define SEPV			COLB("|")
+# define SEPC			COLB("+")
+# define SEPL			COLB("--------") SEPC
+# define SEPH			COLB("-")
+
+# define REG_H1			"\t PID " COLY("%-4u") " <> Player " COLY("%u ")
+# define REG_H2			SEPV " Carry " COLY("%u ") SEPV
+# define REG_H3			" Pending > " COLG("%-6s") " - Timer " COLY("%4u")
+# define REG_HEADER		COLG(">> REGISTERS <<") REG_H1 REG_H2 REG_H3 "\n"
+
+# define REGSET_COLOR	COLY("%8.8x")
+# define REGZERO_COLOR	COLW("%8.8x")
+
+# define REG_BEGL1	 	"\n" "   " SEPC
+# define REG_BEGL2		"\n" "   " SEPV
+# define REGNO_FSZ		COLM("R") SEPH COLM("%2.2d")
+# define REGN			COLB("--") REGNO_FSZ COLB("--") SEPC
+
 
 #endif

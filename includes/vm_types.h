@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar_types.h                                    :+:      :+:    :+:   */
+/*   vm_types.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 16:37:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:07:32 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COREWAR_TYPES_H
-# define COREWAR_TYPES_H
+#ifndef VM_TYPES_H
+# define VM_TYPES_H
 
 /*
 ** -- VIRTUAL MACHINE FIXED VARIABLES -- /!\ WARNING /!\ --
@@ -25,7 +25,7 @@
 */
 
 # define MAX_PLAYERS			4
-# define PLAYER_RANGE			512
+# define PLAYER_RANGE			1024
 # define MEM_SIZE				(MAX_PLAYERS * PLAYER_RANGE)
 # define CHAMP_MAX_SIZE			(MEM_SIZE / 6)
 # define IDX_MOD				(MEM_SIZE / 8)
@@ -67,7 +67,7 @@ typedef struct		s_player
 }					t_player;
 
 /*
-** -- VM PARAMETERS DATA
+** -- VERBOSE STRUCTURE
 */
 
 # define BAR_BUFF_SIZE	(BAR_LEN << 1)
@@ -84,8 +84,6 @@ typedef struct		s_vmverb
 	char			lbreakdown[BAR_BUFF_SIZE];
 	float			verb_carry;
 	uint16_t		bytes_used;
-	uint16_t		level;
-	uint8_t			log_flags;
 	uint8_t			bar_crop;
 }					t_vmverb;
 
@@ -96,15 +94,17 @@ typedef struct		s_vmverb
 typedef struct		s_vmctrl
 {
 	uint32_t		dump_cycles;
+	uint32_t		cycles_sec;
 	useconds_t		sleep_time;
-	uint16_t		cycles_sec;
 	uint16_t		flags;
+	uint8_t			d_level;
+	uint8_t			v_level;
 	uint8_t			next_pno;
 	t_vmverb		verbose;
 }					t_vmctrl;
 
 /*
-** -- GAME PARAMETERS
+** -- GAME RULES
 */
 
 # define CYCLE_TO_DIE			1536
@@ -124,7 +124,7 @@ typedef struct		s_gamectrl
 }					t_gamectrl;
 
 /*
-** -- PROCESSES HANDLING DATA STRUCTURE
+** -- PROCESSES HANDLING
 */
 
 typedef struct		s_jobctrl
@@ -153,31 +153,40 @@ typedef struct		s_cwvm
 }					t_cwvm;
 
 /*
-** -- VERBOSE FLAGS
+** -- VERBOSE & DEBUG LEVELS
 */
 
-# define CWVL_ESS				(0 << 0)
+# define CWVL_ESS				(0)
 # define CWVL_LIVE				(1 << 0)
 # define CWVL_CYCL				(1 << 1)
 # define CWVL_ARG				(1 << 2)
 # define CWVL_DIE				(1 << 3)
 # define CWVL_PC				(1 << 4)
-# define CWVL_DEBUG				(1 << 5)
-# define CWVL_MAX				((CWVL_DEBUG << 1) - 1)
+# define CWVL_MAX				((CWVL_PC << 1) - 1)
+
+# define CWDL_NONE				(0)
+# define CWDL_INF				(1 << 0)
+# define CWDL_MEM				(1 << 1)
+# define CWDL_INS				(1 << 2)
+# define CWDL_ARG				(1 << 3)
+# define CWDL_REG				(1 << 4)
+# define CWDL_MAX				((CWDL_REG << 1) - 1)
 
 /*
 ** -- GLOBAL FLAGS
 */
 
-# define NB_OPTIONS				6
-# define VALID_OPT				"aSvdsV"
-# define NUMERIC_OPT			"Svds"
+# define NB_OPTIONS				7
+# define VALID_OPT				"avDdsVS"
+# define NUMERIC_OPT			"vDdsS"
 
 # define CWF_AFFON				(1 << 0)
 # define CWF_VERB				(1 << 1)
-# define CWF_DUMP				(1 << 2)
-# define CWF_SDMP				(1 << 3)
-# define CWF_VISU				(1 << 4)
+# define CWF_DEBUG				(1 << 2)
+# define CWF_DUMP				(1 << 3)
+# define CWF_SDMP				(1 << 4)
+# define CWF_VISU				(1 << 5)
+# define CWF_SLOW				(1 << 6)
 
 # define CWF_PNO(x)				(1 << (NB_OPTIONS + (x - 1)))
 

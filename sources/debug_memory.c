@@ -6,22 +6,22 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 02:07:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "corewar.h"
-#include "memory_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "vm.h"
+#include "vm_debug.h"
 
 /*
 ** -- PRINT MEMORY CONTENT (IN HEX)
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
-void			print_memory(uint8_t *arena, t_list *processes, char *win)
+void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 {
 	char		buff[LOG_BUFF_SIZE];
 	uint32_t	i;
@@ -55,7 +55,7 @@ void			print_memory(uint8_t *arena, t_list *processes, char *win)
 **    > mod = 4 : Prints the registers content spaced by separators
 */
 
-static uint32_t	print_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
+static uint32_t	debug_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
 {
 	uint8_t		i;
 	uint32_t	ret;
@@ -83,7 +83,7 @@ static uint32_t	print_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
 ** -- PRINT REGISTERS HEADER AND CONTENT (IN HEX)
 */
 
-void			print_registers(t_player *pl, t_process *pr, char *win)
+void			debug_processes(t_player *pl, t_process *pr, char *win)
 {
 	char		buff[LOG_BUFF_SIZE];
 	uint32_t	ret;
@@ -97,10 +97,10 @@ void			print_registers(t_player *pl, t_process *pr, char *win)
 	ret = 0;
 	ret += ft_sprintf(buff, REG_HEADER, pl->player_no, pr->pid, pr->carry,
 							pr->next_op ? pr->next_op->name : NULL, pr->timer);
-	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 0));
-	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 2));
-	ret += print_nregs(buff + ret, pr->registers, 0, (1 << 1));
-	ret += print_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 2));
-	ret += print_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 0));
+	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 0));
+	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 2));
+	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 1));
+	ret += debug_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 2));
+	ret += debug_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 0));
 	log_this(win, 0, buff);
 }

@@ -1,17 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vcpu_verbose.h                                     :+:      :+:    :+:   */
+/*   cpu_debug.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 04:10:10 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:07:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VCPU_VERBOSE_H
-# define VCPU_VERBOSE_H
+#ifndef CPU_DEBUG_H
+# define CPU_DEBUG_H
+
+/*
+** -- USEFUL MACROS --
+*/
+
+# define INS_DEB		(cpu->ctrl->d_level & CWDL_INS)
+# define INS_WIN		"ins"
+# define IDW			INS_WIN, 0
+# define IDA			cpu->tick, p->pc, p->player_no, p->pid, p->next_op->name
+
+# define ARG_DEB		(cpu->ctrl->d_level & CWDL_ARG)
+# define ARG_WIN		"arg"
+# define ADW			ARG_WIN, 0
 
 /*
 ** -- COREWAR VM CPU OPS VERBOSE STYLE --
@@ -25,11 +38,13 @@
 # define OKCOL(s)	COLG(s)
 # define KOCOL(s)	COLR(s)
 
+# define P_OPI		COLB(" PID ") COLY("%-4u") COLB(" CYCLE ") COLC("%-4u") "\n"
+# define P_CURROP	COLR("P%hhu: ") COLG("%-5s") COLB(" PC ") COLM("%-4u") P_OPI
+
 # define P_SEP1		"--------------------"
 # define P_SEP		COLR(P_SEP1 P_SEP1 P_SEP1) "\n"
 # define P_SV		" " COLBBK(" ") " "
 
-# define P_CURR_OP	"> Op " COLM("%d") " '" COLY("%s") "' " COLB("@ PC %u") "\n"
 # define P_PC		COLM("PC %u")
 
 # define P_RNO		REGCOL("R%hhu")
@@ -43,7 +58,6 @@
 # define P_PIDS		COLB("PID ") COLY("%5u")
 # define P_PCVAL	COLB("PC ") COLM("%4u")
 # define P_ID		P_CYCLE P_SV P_PCVAL P_SV P_PLID P_SV P_PIDS P_SV
-# define IDARGS		cpu->tick, p->pc, p->player_no, p->pid, p->next_op->name
 # define P_OP		"%5s"
 
 # define P_ARG_PMPT	COLB(" #%hhu: ")
@@ -56,13 +70,13 @@
 ** -- COREWAR VM CPU OPS VERBOSE MESSAGES --
 */
 
-# define OPBC_OK1	" - fetching " NUMCOL("%hhu") " args\n"
-# define OPBC_OK	OKCOL("Bytecode OK") P_SV OPBC_OK1
-# define OPBC_KO1	\" - PC >> " NUMCOL("+%hhu") "\n"
-# define OPBC_KO	KOCOL("Bytecode KO") P_SV OPBC_KO1
+# define OPBC_OK1	" -> " NUMCOL("%hhu") " args\n"
+# define OPBC_OK	"Bytecode " OKCOL("OK") OPBC_OK1
+# define OPBC_KO1	" -> Move PC of " NUMCOL("+%hhu") "\n"
+# define OPBC_KO	"Bytecode " KOCOL("KO") OPBC_KO1
 
-# define LIVE_OK	P_ID OKCOL(P_OP) P_SV "Player %u is alive !\n"
-# define LIVE_KO	P_ID KOCOL(P_OP) P_SV "Player %u does not exist\n"
+# define LIVE_OK	P_ID OKCOL(P_OP) P_SV "Player %d is alive !\n"
+# define LIVE_KO	P_ID KOCOL(P_OP) P_SV "Player %d does not exist\n"
 
 # define LD_IND		P_ID OKCOL(P_OP) P_SV P_PC " = " P_DIR " >> " P_RNO "\n"
 # define LD_DIR		P_ID OKCOL(P_OP) P_SV P_DIR " >> " P_RNO "\n"
@@ -94,7 +108,8 @@
 
 # define ZJMP_OK1	OKCOL(P_OP) P_SV "Carry 1 > moving PC of " P_IND
 # define ZJMP_OK	P_ID ZJMP_OK1 " >> " P_PC "\n"
-# define ZJMP_KO	P_ID KOCOL(P_OP) P_SV "Carry 0 > continuing to next op\n"
+# define ZJMP_KO1	KOCOL(P_OP) P_SV "Carry 0 > Jump was " P_IND
+# define ZJMP_KO	P_ID ZJMP_KO1 " but continuing to next op\n"
 
 # define LDI_OK1	OKCOL(P_OP) P_SV P_IND " + " P_IND " <-> " P_PC
 # define LDI_OK		P_ID LDI_OK1 " >> " P_RNO " = " P_DIR "\n"

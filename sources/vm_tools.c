@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar_tools.c                                    :+:      :+:    :+:   */
+/*   vm_tools.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 16:41:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:10:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "corewar.h"
-#include "corewar_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "vm.h"
+#include "vm_verbose.h"
 
 /*
 ** -- PRINTS MEMORY ON STD
@@ -23,7 +23,8 @@
 int			dump_stop(t_cwvm *vm, int32_t *breakpoint)
 {
 	ft_printf((vm->ctrl.flags & CWF_SDMP ? CW_SDMPH : CW_DUMPH), vm->cpu.tick);
-	print_memory(vm->arena, vm->jobs.p_stack, NULL);
+	if (vm->ctrl.d_level & CWDL_MEM)
+		debug_memory(vm->arena, vm->jobs.p_stack, NULL);
 	if (vm->ctrl.flags & CWF_SDMP)
 	{
 		sleep(DUMP_WAIT);
@@ -105,7 +106,8 @@ void		check_gamestatus(t_cwvm *vm)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;
 	game->nb_lives = 0;
 	game->last_check = vm->cpu.tick;
-	ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
+	if (ctrl->flags & CWF_SLOW && jobs->nb_processes > 0)
+		ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
 	ctrl->verbose.bar_crop = BAR_CROP;
 	ft_memcpy(ctrl->verbose.lbreakdown, ctrl->verbose.cbreakdown,
 			BAR_BUFF_SIZE);

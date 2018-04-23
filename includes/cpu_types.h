@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vcpu_types.h                                       :+:      :+:    :+:   */
+/*   cpu_types.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 23:31:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:07:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VCPU_TYPES_H
-# define VCPU_TYPES_H
+#ifndef CPU_TYPES_H
+# define CPU_TYPES_H
 
 # include <stddef.h>
 # include <stdint.h>
@@ -43,7 +43,6 @@ typedef uint8_t		t_argtypes;
 */
 
 # define OPBC_SIZE		1
-# define NB_OPS			16
 
 typedef int			(*t_instr)();
 
@@ -83,6 +82,10 @@ typedef struct			s_process
 /*
 **	-- VIRTUAL CPU --
 */
+
+# define CPU_ARG		cpu->op_args
+# define CPU_OPBC		cpu->op_bytecode
+# define CPU_MEM		cpu->memory
 
 typedef struct		s_vmctrl t_vmctrl;
 typedef struct		s_jobctrl t_jobctrl;

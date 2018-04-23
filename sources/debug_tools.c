@@ -6,14 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/18 23:32:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "memory_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "vm_debug.h"
 
 /*
 ** -- RETURNS TRUE IF THE GIVEN VALUE IS A BUSY PROCESSES'S PC

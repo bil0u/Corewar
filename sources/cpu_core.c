@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vcpu_core.c                                        :+:      :+:    :+:   */
+/*   cpu_core.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 17:15:47 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:01 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,14 @@
 #include <stdio.h>
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "vcpu.h"
-#include "corewar.h"
-#include "vcpu_instructions.h"
-#include "vcpu_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "cpu.h"
+#include "vm.h"
+#include "cpu_instructions.h"
+#include "cpu_verbose.h"
+#include "cpu_debug.h"
+#include "vm_debug.h"
 
 /*
 ** -- FETCH THE N_TH ARGUMENT
@@ -43,16 +45,16 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 	if (type == ARG_REG)
 	{
 		*arg_buff = *(cpu->memory + cpu->pc_copy);
-		// log_this("ins", 0, P_ARG_REG, arg_no + 1, *arg_buff);
+		ARG_DEB ? log_this(ADW, P_ARG_REG, arg_no + 1, *arg_buff) : 0;
 	}
 	else if (type == ARG_IND)
 	{
 		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, ARG_INDSZ);
-		// log_this("ins", 0, P_ARG_IND, arg_no + 1, *arg_buff);
+		ARG_DEB ? log_this(ADW, P_ARG_IND, arg_no + 1, *arg_buff) : 0;
 		if (next_op->op_number < 13)
 		{
-			*arg_buff = (uint32_t)(*((uint16_t *)arg_buff) & (IDX_MOD - 1));
-			// log_this("ins", 0, P_IND_MOD, *arg_buff);
+			*arg_buff = (uint32_t)(((int32_t)*arg_buff) % IDX_MOD);
+			ARG_DEB ? log_this(ADW, P_IND_MOD, *arg_buff) : 0;
 		}
 		*arg_buff = jump_to(pending->pc, (int)*arg_buff);
 	}
@@ -61,7 +63,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 		if (next_op->ind_address)
 			type = ARG_IND;
 		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, get_argsize(type));
-		// log_this("ins", 0, P_ARG_DIR, arg_no + 1, *arg_buff);
+		ARG_DEB ? log_this(ADW, P_ARG_DIR, arg_no + 1, *arg_buff) : 0;
 	}
 	return (get_argsize(type));
 }
@@ -113,8 +115,8 @@ static uint8_t	fetch_arguments(t_vcpu *cpu, t_process *pending, uint8_t opbc)
 	cpu->op_bytecode = opbc;
 	cpu->pc_copy = jump_to(pending->pc, OPBC_SIZE + ARGBC_SIZE);
 	nb_args = pending->next_op->nb_args;
+	ARG_DEB ? log_this(ADW, OPBC_OK, nb_args) : 0;
 	arg_no = 0;
-	// log_this("ins", 0, P_ARG_OK, nb_args);
 	while (arg_no < nb_args)
 	{
 		type = (opbc >> (6 - (arg_no << 1))) & 0x03;
@@ -142,25 +144,29 @@ static uint8_t	fetch_arguments(t_vcpu *cpu, t_process *pending, uint8_t opbc)
 static void		exec_op(t_vcpu *cpu, t_process *pending,
 							t_player *player, t_gamectrl *game)
 {
+	t_op		*op;
 	uint8_t		opbc;
 	uint8_t		b_read;
 	uint8_t		valid;
 
+	op = pending->next_op;
+	ARG_DEB ? log_this(ADW, P_CURROP, pending->player_no, op->name,
+		 					pending->pc, pending->pid, cpu->tick) : 0;
 	b_read = OPBC_SIZE;
-	// log_this("ins", 0, P_CURR_OP, op->op_number, op->name, pending->pc);
 	valid = TRUE;
-	if (pending->next_op->has_bytecode)
+	if (op->has_bytecode)
 	{
 		opbc = *(cpu->memory + jump_to(pending->pc, OPBC_SIZE));
-		if ((valid = sanity_check(pending->next_op, opbc, &b_read)))
+		if ((valid = sanity_check(op, opbc, &b_read)))
 			b_read += fetch_arguments(cpu, pending, opbc);
-		// else
-			// log_this("ins", 0, P_ARG_KO, *bytes_rd);
+		else if (ARG_DEB)
+			log_this(ADW, OPBC_KO, b_read);
 	}
 	if (valid)
-		b_read += pending->next_op->funct_ptr(cpu, pending, player, game);
-	// log_this("ins", 0, P_SEP);
-	pending->pc = jump_to(pending->pc, b_read);
+		b_read += op->funct_ptr(cpu, pending, player, game);
+	if (b_read != 0)
+		pending->pc = jump_to(pending->pc, b_read);
+	ARG_DEB ? log_this(ADW, P_SEP) : 0;
 }
 
 /*
@@ -173,16 +179,16 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 **    > Launch the intruction execution, and set next_op to NULL
 */
 
-void			exec_or_wait(t_vcpu *cpu, t_process *pending,
+void			exec_or_wait(t_vcpu *cp, t_process *pending,
 								t_player *player, t_gamectrl *game)
 {
 	uint8_t		op_no;
 
 	if (pending->next_op == NULL)
 	{
-		if ((op_no = cpu->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
+		if ((op_no = cp->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
 		{
-			print_memory(cpu->memory, cpu->jobs->p_stack, "mem");
+			MEM_DEB ? debug_memory(cp->memory, cp->jobs->p_stack, MEM_WIN) : 0;
 			pending->pc = jump_to(pending->pc, OPBC_SIZE);
 			return ;
 		}
@@ -191,8 +197,8 @@ void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 	}
 	if (--pending->timer == 0)
 	{
-		exec_op(cpu, pending, player, game);
+		exec_op(cp, pending, player, game);
 		pending->next_op = NULL;
-		print_memory(cpu->memory, cpu->jobs->p_stack, "mem");
+		MEM_DEB ? debug_memory(cp->memory, cp->jobs->p_stack, MEM_WIN) : 0;
 	}
 }

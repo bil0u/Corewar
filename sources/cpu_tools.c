@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vcpu_tools.c                                       :+:      :+:    :+:   */
+/*   cpu_tools.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 17:47:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
+#include "cpu_types.h"
+#include "vm_types.h"
 
 /*
 ** -- JUMP TO
@@ -73,7 +73,7 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 		while (sz--)
 		{
 			*(tmp + sz) = *(memory + pc);
-			pc = (pc + 1) & (MEM_SIZE - 1);
+			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
 	}
 }
@@ -92,10 +92,7 @@ int			decode_arg(t_vcpu *cpu, t_process *process,
 		else
 			return (FAILURE);
 	else if (arg_type == ARG_IND)
-	{
 		secure_fetch(*arg_buff, cpu->memory, arg_buff, REG_SIZE);
-		*arg_buff = (uint32_t)*((uint16_t *)cpu->op_args);
-	}
 	return (SUCCESS);
 }
 
@@ -123,7 +120,7 @@ void		secure_store(uint32_t pc, uint8_t *memory, uint32_t src, size_t sz)
 		while (sz--)
 		{
 			*(memory + pc) = *(tmp + sz);
-			pc = (pc + 1) & (MEM_SIZE - 1);
+			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
 	}
 }

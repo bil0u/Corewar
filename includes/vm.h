@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   corewar.h                                          :+:      :+:    :+:   */
+/*   vm.h                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 06:07:10 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:03:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef COREWAR_H
-# define COREWAR_H
+#ifndef VM_H
+# define VM_H
 
 
 /*
@@ -41,9 +41,9 @@ int		is_numeric(int ac, char **av, int a);
 ** -- DEBUG_ UTILS --
 */
 
-void 	print_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
-void	print_memory(uint8_t *arena, t_list *p_stack, char *win);
-void	print_registers(t_player *pl, t_process *pending, char *win);
+void 	debug_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
+void	debug_memory(uint8_t *arena, t_list *p_stack, char *win);
+void	debug_processes(t_player *pl, t_process *pending, char *win);
 
 int		is_pc_val(uint32_t to_test, t_list *p_stack);
 int		err_msg(char *msg);

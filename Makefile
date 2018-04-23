@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/18 23:30:18 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/23 03:08:42 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,16 +40,16 @@ OBJ_DIR =		.objects
 
 # -- PROJECT FILES --
 
-FILES =			corewar_main \
-				corewar_tools \
+FILES =			vm_main \
+				vm_tools \
 				debug_gameinfo \
 				debug_memory \
 				debug_tools \
 				load_core \
 				load_tools \
-				vcpu_core \
-				vcpu_instructions \
-				vcpu_tools \
+				cpu_core \
+				cpu_instructions \
+				cpu_tools \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 

@@ -6,16 +6,15 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 07:53:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:09:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include "vcpu_types.h"
-#include "corewar_types.h"
-#include "corewar.h"
-#include "load_verbose.h"
-#include "corewar_verbose.h"
+#include "cpu_types.h"
+#include "vm_types.h"
+#include "vm.h"
+#include "vm_verbose.h"
 
 
 /*
@@ -58,12 +57,15 @@ static int	parse_option(t_vmctrl *c, int ac, char **av, int *i)
 		return (FAILURE);
 	opt[1] == 'a' ? BSET(c->flags, CWF_AFFON) : ++invalid;
 	opt[1] == 'v' ? BSET(c->flags, CWF_VERB) : ++invalid;
+	opt[1] == 'D' ? BSET(c->flags, CWF_DEBUG) : ++invalid;
 	opt[1] == 'd' ? BSET(c->flags, CWF_DUMP) : ++invalid;
-	opt[1] == 'V' ? BSET(c->flags, CWF_VISU) : ++invalid;
 	opt[1] == 's' ? BSET(c->flags, CWF_DUMP | CWF_SDMP) : ++invalid;
-	opt[1] == 'S' ? c->cycles_sec = ft_atoi(av[*i]) : ++invalid;
-	opt[1] == 'v' ? c->verbose.level = ft_atoi(av[*i]) : (void)0;
-	c->flags & CWF_DUMP ? c->dump_cycles = ft_atoi(av[*i]) : (void)0;
+	opt[1] == 'V' ? BSET(c->flags, CWF_VISU) : ++invalid;
+	opt[1] == 'S' ? BSET(c->flags, CWF_SLOW) : ++invalid;
+	opt[1] == 'v' ? c->v_level = ft_atoi(av[*i]) : 0;
+	opt[1] == 'D' ? c->d_level = ft_atoi(av[*i]) : 0;
+	opt[1] == 'S' ? c->cycles_sec = ft_atoi(av[*i]) : 0;
+	opt[1] == 'd' || opt[1] == 's' ? c->dump_cycles = ft_atoi(av[*i]) : 0;
 	if (invalid == NB_OPTIONS)
 		return (log_this(NULL, LF_ERR, CWE_BADOPT, opt));
 	return (SUCCESS);
@@ -108,8 +110,6 @@ int		 	check_argv(int ac, char **av, t_cwvm *vm)
 {
 	int		curr_arg;
 
-	if (ac == 1 || ft_strequ(av[1], "-h"))
-		return (err_msg(CW_USAGE));
 	curr_arg = 0;
 	while (++curr_arg < ac)
 	{
@@ -123,15 +123,17 @@ int		 	check_argv(int ac, char **av, t_cwvm *vm)
 		else if (parse_player(vm, ac, av, &curr_arg) != SUCCESS)
 			return (FAILURE);
 	}
-	if (vm->ctrl.verbose.level > CWVL_MAX)
-		return (log_this(NULL, LF_ERR, CWE_BADVERB, vm->ctrl.verbose.level));
+	if (vm->ctrl.v_level > CWVL_MAX)
+		return (log_this(NULL, LF_ERR, CWE_BADVL, vm->ctrl.v_level, CWVL_MAX));
+	if (vm->ctrl.d_level > CWDL_MAX)
+		return (log_this(NULL, LF_ERR, CWE_BADDL, vm->ctrl.d_level, CWDL_MAX));
 	if (vm->nb_players == 0)
 		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
 	return (SUCCESS);
 }
 
 /*
-** - LOAD GAME IN ARENA AND INITIALIZE THE REMAINING VALUES OF ENV
+** - LOAD THE PLAYERS BINARIES IN ARENA AND INITIALIZE ASSOCIATED PARAMETERS
 */
 
 void		load_players(t_cwvm *vm)
@@ -141,7 +143,7 @@ void		load_players(t_cwvm *vm)
 	uint32_t	init;
 	t_process	new;
 
-	log_this("chp", LF_BOTH, CW_LOADING);
+	ft_printf(CW_LOADING);
 	curr_p = -1;
 	while (++curr_p < vm->nb_players)
 	{
@@ -157,7 +159,7 @@ void		load_players(t_cwvm *vm)
 		new.pc = init;
 		ft_lstadd(&vm->jobs.p_stack, ft_lstnew(&new, sizeof(new)));
 		ft_memcpy(vm->arena + init, dat->binary, dat->header.psize);
-		log_this("chp", LF_BOTH, CW_PLAYER, dat->player_no,
+		ft_printf(CW_PLAYER, dat->player_no,
 			dat->header.psize, dat->header.pname, dat->header.comment);
 	}
 }

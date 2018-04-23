@@ -1,21 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vcpu_instructions.h                                :+:      :+:    :+:   */
+/*   cpu_instructions.h                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/19 16:19:27 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:08:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef VCPU_INSTRUCTIONS_H
-# define VCPU_INSTRUCTIONS_H
+#ifndef CPU_INSTRUCTIONS_H
+# define CPU_INSTRUCTIONS_H
 
 /*
 **	-- SUPPORTED VCPU INSTRUCTIONS --
 */
+
+# define NB_OPS			16
 
 int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *game);
 int		ld_instr(t_vcpu *cpu, t_process *p);
