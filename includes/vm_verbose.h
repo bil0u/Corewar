@@ -6,12 +6,20 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:29 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 04:22:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef VM_VERBOSE_H
 # define VM_VERBOSE_H
+
+/*
+** -- VERBOSE STRINGS --
+*/
+
+# define V_CYCLE		"It is now cycle %u\n"
+# define V_KILL			"Process %u hasn't lived for %u cycles (CTD %u)\n"
+# define V_SINCE		(vm->cpu.tick - p->last_live)
 
 /*
 ** -- SEPARATORS --

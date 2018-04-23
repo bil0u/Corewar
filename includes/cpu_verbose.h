@@ -6,23 +6,24 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:34:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CPU_VERBOSE_H
 # define CPU_VERBOSE_H
 
-# define INS_VERB		(cpu->ctrl->v_level & CWVL_ARG)
+# define LIV_VERB	(cpu->ctrl->v_level & CWVL_LIVE)
+# define V_ALIVE	"Player %hhu (%s) is said to be alive\n"
+# define PC_VERB	(cpu->ctrl->v_level & CWVL_PC)
+# define V_PC		"ADV %hhu (0x%.4hx -> 0x%.4hx)"
+# define V_CELL		" %.2hhx"
 
 /*
 ** -- COREWAR VM CPU OPS VERBOSE MESSAGES (ZAZ_VERSION) --
 */
 
-# define V_ALIVE	"Player %d is alive !"
-# define V_CYCLE	"It is now cycle %u"
-# define V_KILL		"Process %u hasn't lived for %u cycles (CTD %u)"
-
+# define INS_VERB	(cpu->ctrl->v_level & CWVL_INS)
 # define IVA		p->pid, p->next_op->name
 # define IVPMPT		"P %4u | %s "
 # define IVIM(str)	"       | -> " str " %d + %d = %d (with pc and mod %u)\n"

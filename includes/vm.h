@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:03:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:25:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,6 @@ void	load_players(t_cwvm *vm);
 */
 
 void	check_gamestatus(t_cwvm *vm);
-int		dump_stop(t_cwvm *vm, int32_t *breakpoint);
 
 /*
 ** -- ARGV UTILS --
@@ -38,7 +37,15 @@ int		is_option(char *opt);
 int		is_numeric(int ac, char **av, int a);
 
 /*
-** -- DEBUG_ UTILS --
+** -- VERBOSE --
+*/
+
+int		err_msg(char *msg);
+int		dump_stop(t_cwvm *vm, uint32_t *breakpoint);
+void	print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
+
+/*
+** -- DEBUG --
 */
 
 void 	debug_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
@@ -46,7 +53,6 @@ void	debug_memory(uint8_t *arena, t_list *p_stack, char *win);
 void	debug_processes(t_player *pl, t_process *pending, char *win);
 
 int		is_pc_val(uint32_t to_test, t_list *p_stack);
-int		err_msg(char *msg);
 
 char	*get_p_color(uint8_t player_no);
 char	*get_p_bgcolor(uint8_t player_no);

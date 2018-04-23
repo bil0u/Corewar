@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:13:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,6 @@ int				is_pc_val(uint32_t to_test, t_list *curr_process)
 		curr_process = curr_process->next;
 	}
 	return (FALSE);
-}
-
-/*
-** -- PRINT THE MSG PARAM AND RETURNS A FAILURE STATUS
-*/
-
-int				err_msg(char *msg)
-{
-	ft_printf(msg);
-	return (FAILURE);
 }
 
 /*

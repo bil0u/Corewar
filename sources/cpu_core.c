@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:01 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:42:27 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,31 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 }
 
 /*
+** -- FETCH THE ARGUMENTS
+*/
+
+static void		fetch_arguments(t_vcpu *cpu, t_process *pending, uint8_t opbc)
+{
+	uint8_t		nb_args;
+	uint8_t		arg_size;
+	uint8_t		arg_no;
+	uint8_t		type;
+
+	cpu->op_bytecode = opbc;
+	cpu->pc_copy = jump_to(pending->pc, OPBC_SIZE + ARGBC_SIZE);
+	nb_args = pending->next_op->nb_args;
+	ARG_DEB ? log_this(ADW, OPBC_OK, nb_args) : 0;
+	arg_no = 0;
+	while (arg_no < nb_args)
+	{
+		type = (opbc >> (6 - (arg_no << 1))) & 0x03;
+		arg_size = fetch_nextarg(cpu, pending, arg_no, type);
+		cpu->pc_copy = jump_to(cpu->pc_copy, arg_size);
+		++arg_no;
+	}
+}
+
+/*
 ** -- CHECK THE SANITY OF ARGS BYTECODE
 **    > Check if the given bytecode is valid for the current instruction
 **    > Increment the value pointed by 'bytes_read' pointer of total args size
@@ -81,6 +106,7 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 	uint8_t		valid_types;
 	uint8_t		valid_args;
 
+	*bytes_read += ARGBC_SIZE;
 	if (bytecode == 0)
 		return (0);
 	valid_args = 0;
@@ -102,33 +128,7 @@ static uint8_t	sanity_check(t_op *op, uint8_t bytecode, uint8_t *bytes_read)
 }
 
 /*
-** -- FETCH THE ARGUMENTS
-*/
-
-static uint8_t	fetch_arguments(t_vcpu *cpu, t_process *pending, uint8_t opbc)
-{
-	uint8_t		nb_args;
-	uint8_t		bytes_read;
-	uint8_t		arg_no;
-	uint8_t		type;
-
-	cpu->op_bytecode = opbc;
-	cpu->pc_copy = jump_to(pending->pc, OPBC_SIZE + ARGBC_SIZE);
-	nb_args = pending->next_op->nb_args;
-	ARG_DEB ? log_this(ADW, OPBC_OK, nb_args) : 0;
-	arg_no = 0;
-	while (arg_no < nb_args)
-	{
-		type = (opbc >> (6 - (arg_no << 1))) & 0x03;
-		bytes_read = fetch_nextarg(cpu, pending, arg_no, type);
-		cpu->pc_copy = jump_to(cpu->pc_copy, bytes_read);
-		++arg_no;
-	}
-	return (ARGBC_SIZE);
-}
-
-/*
-** -- EXECUTE THE PENDING INSTRUCTION FOR THE PREVIOUSLY LOADED PROCESS
+** -- EXECUTE THE PENDING INSTRUCTION FOR A GIVEN PROCESS
 ** -- Steps of an instruction cycle :
 **    > Fetch the instruction on OPBC_SIZE bytes
 **     (just before this function call for implementation reasons)
@@ -146,26 +146,26 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 {
 	t_op		*op;
 	uint8_t		opbc;
-	uint8_t		b_read;
 	uint8_t		valid;
 
 	op = pending->next_op;
-	ARG_DEB ? log_this(ADW, P_CURROP, pending->player_no, op->name,
-		 					pending->pc, pending->pid, cpu->tick) : 0;
-	b_read = OPBC_SIZE;
+	ARG_DEB ? log_this(ADW, P_CURROP, ADA) : 0;
+	cpu->b_read = OPBC_SIZE;
 	valid = TRUE;
 	if (op->has_bytecode)
 	{
 		opbc = *(cpu->memory + jump_to(pending->pc, OPBC_SIZE));
-		if ((valid = sanity_check(op, opbc, &b_read)))
-			b_read += fetch_arguments(cpu, pending, opbc);
+		if ((valid = sanity_check(op, opbc, &cpu->b_read)))
+			fetch_arguments(cpu, pending, opbc);
 		else if (ARG_DEB)
-			log_this(ADW, OPBC_KO, b_read);
+			log_this(ADW, OPBC_KO, cpu->b_read);
 	}
-	if (valid)
-		b_read += op->funct_ptr(cpu, pending, player, game);
-	if (b_read != 0)
-		pending->pc = jump_to(pending->pc, b_read);
+	valid ? cpu->b_read += op->funct_ptr(cpu, pending, player, game) : 0;
+	if (cpu->b_read)
+	{
+		PC_VERB ? print_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
+		pending->pc = jump_to(pending->pc, cpu->b_read);
+	}
 	ARG_DEB ? log_this(ADW, P_SEP) : 0;
 }
 
@@ -179,17 +179,17 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 **    > Launch the intruction execution, and set next_op to NULL
 */
 
-void			exec_or_wait(t_vcpu *cp, t_process *pending,
+void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 								t_player *player, t_gamectrl *game)
 {
 	uint8_t		op_no;
 
 	if (pending->next_op == NULL)
 	{
-		if ((op_no = cp->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
+		if ((op_no = cpu->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
 		{
-			MEM_DEB ? debug_memory(cp->memory, cp->jobs->p_stack, MEM_WIN) : 0;
 			pending->pc = jump_to(pending->pc, OPBC_SIZE);
+			MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 			return ;
 		}
 		pending->next_op = &(g_op_set[op_no]);
@@ -197,8 +197,8 @@ void			exec_or_wait(t_vcpu *cp, t_process *pending,
 	}
 	if (--pending->timer == 0)
 	{
-		exec_op(cp, pending, player, game);
+		exec_op(cpu, pending, player, game);
+		MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 		pending->next_op = NULL;
-		MEM_DEB ? debug_memory(cp->memory, cp->jobs->p_stack, MEM_WIN) : 0;
 	}
 }

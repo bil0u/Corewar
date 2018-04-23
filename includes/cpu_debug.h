@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:12:08 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,10 @@
 # define ARG_DEB		(cpu->ctrl->d_level & CWDL_ARG)
 # define ARG_WIN		"arg"
 # define ADW			ARG_WIN, 0
+# define ADA			pending->player_no, op->name, pending->pc, \
+						pending->pid, cpu->tick
+
+# define MDA			cpu->memory, cpu->jobs->p_stack
 
 /*
 ** -- COREWAR VM CPU OPS VERBOSE STYLE --
@@ -60,7 +64,7 @@
 # define P_ID		P_CYCLE P_SV P_PCVAL P_SV P_PLID P_SV P_PIDS P_SV
 # define P_OP		"%5s"
 
-# define P_ARG_PMPT	COLB(" #%hhu: ")
+# define P_ARG_PMPT	COLB("#%hhu: ")
 # define P_ARG_REG	P_ARG_PMPT REGCOL("[REG]") " > " P_RNO "\n"
 # define P_ARG_IND	P_ARG_PMPT INDCOL("[IND]") " > " P_IND "\n"
 # define P_IND_MOD	"     %%IDX  > " P_IND "\n"

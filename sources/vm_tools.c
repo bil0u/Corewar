@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:10:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:13:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,24 +15,6 @@
 #include "vm_types.h"
 #include "vm.h"
 #include "vm_verbose.h"
-
-/*
-** -- PRINTS MEMORY ON STD
-*/
-
-int			dump_stop(t_cwvm *vm, int32_t *breakpoint)
-{
-	ft_printf((vm->ctrl.flags & CWF_SDMP ? CW_SDMPH : CW_DUMPH), vm->cpu.tick);
-	if (vm->ctrl.d_level & CWDL_MEM)
-		debug_memory(vm->arena, vm->jobs.p_stack, NULL);
-	if (vm->ctrl.flags & CWF_SDMP)
-	{
-		sleep(DUMP_WAIT);
-		*breakpoint += vm->ctrl.dump_cycles;
-		return (FALSE);
-	}
-	return (TRUE);
-}
 
 /*
 ** -- DELETE A GIVEN PROCESS FROM A PLAYER'S PROCESSES LIST
@@ -70,6 +52,8 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 		{
 			--(jobs->nb_processes);
 			--(vm->players[p->player_no - 1].nb_processes);
+			if (vm->ctrl.v_level & CWVL_KILL)
+				ft_printf(V_KILL, p->pid, V_SINCE, game->to_die);
 			delete_process(&jobs->p_stack, &prev, &curr, &p);
 		}
 		else

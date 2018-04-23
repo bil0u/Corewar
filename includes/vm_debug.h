@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:17:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 
 # define INF_DEB		(cpu->ctrl->d_level & CWDL_INF)
 # define INF_WIN		"inf"
-# define MEM_DEB		(cp->ctrl->d_level & CWDL_MEM)
+# define MEM_DEB		(cpu->ctrl->d_level & CWDL_MEM)
 # define MEM_WIN		"mem"
 # define REG_DEB		(cpu->ctrl->d_level & CWDL_REG)
 # define REG_WIN		"reg"

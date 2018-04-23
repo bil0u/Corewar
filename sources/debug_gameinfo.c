@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:10:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:14:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "vm.h"
 #include "vm_debug.h"
 
-static void	buff_players_stats(t_cwvm *vm, t_vmverb *v)
+static void		buff_players_stats(t_cwvm *vm, t_vmverb *v)
 {
 	uint8_t		curr_player;
 	uint8_t		p_len;
@@ -95,7 +95,8 @@ static void		fill_curr_bar(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 			vm->players[vm->game.alpha - 1].header.pname);
 }
 
-void 		debug_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v)
+void 			debug_game_infos(t_cwvm *vm, t_vcpu *c,
+											t_gamectrl *g, t_vmverb *v)
 {
 	char		*curr_break;
 	char		*last_break;

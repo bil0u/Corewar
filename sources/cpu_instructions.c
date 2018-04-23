@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 01:49:45 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 03:56:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *g)
 
 	secure_fetch(p->pc + OPBC_SIZE, CPU_MEM, CPU_ARG, ARG_DIRSZ);
 	alive = (REG_MAXVALUE - (int)CPU_ARG[0] + 1) & 0xFF;
+	INS_VERB ? ft_printf(V_LIVE, IVA, CPU_ARG[0]) : 0;
 	if (alive > 0 && alive < MAX_PLAYERS + 1)
 	{
 		p_buff = pl - pl->player_no + 1;
@@ -38,10 +39,10 @@ int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *g)
 		else if (g->alpha - 1 != alive && nbl == p_buff[g->alpha - 1].nb_lives)
 			g->alpha = 0;
 		INS_DEB ? log_this(IDW, LIVE_OK, IDA, alive + 1) : 0;
+		LIV_VERB ? ft_printf(V_ALIVE, alive + 1, pl->header.pname) : 0;
 	}
 	else
 		INS_DEB ? log_this(IDW, LIVE_KO, IDA, alive - 1) : 0;
-	INS_VERB ? ft_printf(V_LIVE, IVA, CPU_ARG[0]) : 0;
 	return (ARG_DIRSZ);
 }
 

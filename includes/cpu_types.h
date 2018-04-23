@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 05:12:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ typedef struct			s_process
 	uint32_t		registers[REG_NUMBER];
 	uint32_t		pc;
 	uint32_t		timer;
-	int32_t			last_live;
+	uint32_t		last_live;
 	uint8_t			carry;
 	uint8_t			player_no;
 	t_op			*next_op;
@@ -92,11 +92,12 @@ typedef struct		s_jobctrl t_jobctrl;
 
 typedef struct		s_vcpu
 {
-	int32_t			tick;
+	uint32_t		tick;
 	uint32_t		pc_copy;
 	uint8_t			*memory;
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			op_bytecode;
+	uint8_t			b_read;
 	t_jobctrl		*jobs;
 	t_vmctrl		*ctrl;
 }					t_vcpu;

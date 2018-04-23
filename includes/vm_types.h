@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:07:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 04:30:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ typedef struct		s_player
 	uint8_t			binary[CHAMP_MAX_SIZE];
 	uint32_t		nb_processes;
 	uint32_t		nb_lives;
-	int32_t			last_live;
+	uint32_t		last_live;
 	uint8_t			player_no;
 	char			aff_buff[0xFF];
 	uint8_t			aff_bytes;
@@ -116,8 +116,8 @@ typedef struct		s_vmctrl
 typedef struct		s_gamectrl
 {
 	uint32_t		nb_lives;
+	uint32_t		last_check;
 	int32_t			to_die;
-	int32_t			last_check;
 	uint8_t			nb_checks;
 	uint8_t			winner;
 	uint8_t			alpha;
@@ -159,8 +159,8 @@ typedef struct		s_cwvm
 # define CWVL_ESS				(0)
 # define CWVL_LIVE				(1 << 0)
 # define CWVL_CYCL				(1 << 1)
-# define CWVL_ARG				(1 << 2)
-# define CWVL_DIE				(1 << 3)
+# define CWVL_INS				(1 << 2)
+# define CWVL_KILL				(1 << 3)
 # define CWVL_PC				(1 << 4)
 # define CWVL_MAX				((CWVL_PC << 1) - 1)
 

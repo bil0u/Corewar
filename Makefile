@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/23 03:08:42 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/23 05:16:41 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,6 +45,7 @@ FILES =			vm_main \
 				debug_gameinfo \
 				debug_memory \
 				debug_tools \
+				verbose_tools \
 				load_core \
 				load_tools \
 				cpu_core \

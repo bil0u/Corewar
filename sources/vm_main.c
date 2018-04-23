@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:10:08 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 04:29:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,24 +108,25 @@ static void	end_game(t_cwvm *vm, t_vmctrl *c, t_gamectrl *g, t_jobctrl *j)
 
 static void	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 {
-	int32_t		breakpoint;
+	uint32_t	breakpoint;
 	t_list		*pending;
 	t_process	*p;
+	t_vmctrl	*c;
 
+	c = &vm->ctrl;
 	breakpoint = vm->ctrl.dump_cycles;
 	while (j->nb_processes > 0 && g->to_die > 0)
 	{
 		++cpu->tick;
-		if (vm->ctrl.d_level & CWDL_INF)
-			debug_game_infos(vm, cpu, g, &vm->ctrl.verbose);
-		if (cpu->tick == g->last_check + g->to_die)
-			check_gamestatus(vm);
+		c->v_level & CWVL_CYCL ? ft_printf(V_CYCLE, cpu->tick) : 0;
+		c->d_level & CWDL_INF ? debug_game_infos(vm, cpu, g, &c->verbose) : 0;
+		cpu->tick == g->last_check + g->to_die ? check_gamestatus(vm) : 0;
 		pending = j->p_stack;
 		while (pending != NULL)
 		{
 			p = (t_process *)pending->content;
 			exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-			vm->ctrl.flags & CWF_SLOW ? usleep(vm->ctrl.sleep_time) : 0;
+			c->flags & CWF_SLOW ? usleep(c->sleep_time) : 0;
 			pending = pending->next;
 		}
 		if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
