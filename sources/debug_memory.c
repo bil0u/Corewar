@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 15:07:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 18:07:04 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,34 +63,54 @@ static char		*get_timercolor(uint16_t timer)
 		return (TIMECOL_FAR);
 }
 
-void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j, uint32_t r)
+void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j)
 {
-	t_vmverb	*v;
 	char		buff[LOG_BUFF_SIZE];
+	t_vmverb	*v;
 	t_process	*pr;
-	// uint8_t		reg;
+	uint32_t	r;
 
+	clear_window(PROC_WIN);
 	v = &vm->ctrl.verbose;
-	r = ft_sprintf(buff + r, PROC_HEADER, j->nb_processes);
-	while (p != NULL && p->content != NULL)
+	r = ft_sprintf(buff, PROC_HEADER, j->nb_processes);
+	while (p != NULL)
 	{
-		ft_sprintf(SET_PCOLOR);
 		pr = (t_process *)p->content;
-		ft_sprintf(SET_TCOLOR);
+		ft_sprintf(v->color_buff[0], get_p_color(pr->player_no));
+		ft_sprintf(v->color_buff[1], get_timercolor(pr->timer));
 		r += ft_sprintf(buff + r, PROC_INFOS, PIA);
-		// reg = 0;
-		// while (reg < REG_NUMBER)
-		// {
-		// 	if (reg == 0)
-		// 		r += ft_sprintf(buff + r, PREGONE, pr->registers[reg]);
-		// 	else
-		// 		r += ft_sprintf(buff + r, (pr->registers[reg] ? PREGSET : \
-		// 			PREGZERO), pr->registers[reg]);
-		// 	++reg;
-		// }
-		r += ft_sprintf(buff + r, "\n");
 		p = p->next;
 	}
-	clear_window(PROC_WIN);
 	log_this(PWA, buff);
 }
+
+// void			debug_registers(t_jobctrl *j)
+// {
+// 	// uint8_t		reg;
+//
+//
+//
+// 	char		buff[LOG_BUFF_SIZE];
+// 	t_process	*pr;
+// 	uint32_t	r;
+//
+// 	clear_window(PROC_WIN);
+// 	r = ft_sprintf(buff, REG_HEADER);
+// 	while (p != NULL && p->content != NULL)
+// 	{
+// 		pr = (t_process *)p->content;
+// 		reg = 0;
+// 		while (reg < REG_NUMBER)
+// 		{
+// 			if (reg == 0)
+// 				r += ft_sprintf(buff + r, PREGONE, pr->registers[reg]);
+// 			else
+// 				r += ft_sprintf(buff + r, (pr->registers[reg] ? PREGSET : \
+// 					PREGZERO), pr->registers[reg]);
+// 			++reg;
+// 		}
+// 		r += ft_sprintf(buff + r, "\n");
+// 		p = p->next;
+// 	}
+// 	log_this(RWA, buff);
+// }

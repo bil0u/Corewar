@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 20:38:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 17:02:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,6 +199,7 @@ void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 	}
 	if (--pending->timer == 0)
 	{
+		ft_sprintf(cpu->ctrl->verbose.color_buff[0], get_p_color(pending->player_no));
 		exec_op(cpu, pending, player, game);
 		MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 		pending->next_op = NULL;

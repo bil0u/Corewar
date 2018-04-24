@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 18:54:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 17:56:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,17 +109,18 @@
 # define CWU_L16		OPTN_TXT(" 2", "Show the arena memory zone")
 # define CWU_L17		OPTN_TXT(" 4", "Show instructions history")
 # define CWU_L18		OPTN_TXT(" 8", "Show instructions details")
-# define CWU_L19		OPTN_TXT("16", "Show processes details & registers")
+# define CWU_L19		OPTN_TXT("16", "Show processes details")
+# define CWU_L20		OPTN_TXT("32", "Show processes registers")
 
-# define CWU_L20		CAT("DUMP MODE")
-# define CWU_L21		OPTX_TXT("-d", "Dumps memory after N cycles then exits")
-# define CWU_L22		OPTX_TXT("-s", "Runs N cycles, dumps, pauses, repeat")
+# define CWU_L21		CAT("DUMP MODE")
+# define CWU_L22		OPTX_TXT("-d", "Dumps memory after N cycles then exits")
+# define CWU_L23		OPTX_TXT("-s", "Runs N cycles, dumps, pauses, repeat")
 
-# define CWU_L23		CAT("VISUALIZER")
-# define CWU_L24		OPT_TXT("-V", "SDL output mode")
-# define CWU_L25P1		"Hides the real contents of the memory"
-# define CWU_L25		OPTA_TXT("--stealth", CWU_L25P1)
-# define CWU_L26		OPTA_TXT("--mute", "   Disable sounds")
+# define CWU_L24		CAT("VISUALIZER")
+# define CWU_L25		OPT_TXT("-V", "SDL output mode")
+# define CWU_L26P1		"Hides the real contents of the memory"
+# define CWU_L26		OPTA_TXT("--stealth", CWU_L26P1)
+# define CWU_L27		OPTA_TXT("--mute", "   Disable sounds")
 
 # define CWU_LEND1		"\n {red}jrobin, {yellow}glictevoux, {green}upopee, "
 # define CWU_LEND2		"{blue}susivagn {magenta}© 2018 @ 42{eoc}\n\n"
@@ -128,7 +129,7 @@
 # define CW_USAGE1		CWU_L1 CWU_L2 CWU_L3 CWU_L4 CWU_L5 CWU_L6 CWU_L7 CWU_L8
 # define CW_USAGE2		CWU_L9 CWU_L10 CWU_L11 CWU_L13 CWU_L14 CWU_L15
 # define CW_USAGE3		CWU_L16 CWU_L17 CWU_L18 CWU_L19 CWU_L20 CWU_L21 CWU_L22
-# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_LEND
+# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_L27 CWU_LEND
 # define CW_USAGE		CW_USAGE1 CW_USAGE2 CW_USAGE3 CW_USAGE4
 
 /*

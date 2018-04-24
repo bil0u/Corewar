@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 20:57:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 17:59:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void		print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
 
 void 		debug_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
 void		debug_memory(uint8_t *arena, t_list *p_stack, char *win);
-void		debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j, uint32_t r);
+void		debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j);
 
 int			is_pc_val(uint32_t to_test, t_list *p_stack);
 

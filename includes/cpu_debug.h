@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 20:50:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 17:04:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,12 +58,12 @@
 # define P_PCMOD	"PC" P_IND " [%%] = " P_PC
 
 # define P_CYCLE	COLBBK(" ") COLB(" CYCLE ") COLC("%6d")
-# define P_PNO		COLR("%sP%hhu{eoc}")
+# define P_PNO		"%sP%hhu{eoc}"
 # define P_PID		COLB("PID ") COLY("%hu")
-# define P_PIDS		COLB("PID ") COLY("%-3hu")
+# define P_PIDS		COLB("PID ") COLY("%3hu")
 # define P_PCVAL	COLB("PC ") COLM("%4u")
 # define P_OP		"%5s"
-# define P_ID1		P_CYCLE P_SV P_PCVAL P_SV P_PNO P_SV P_PIDS P_SV
+# define P_ID1		P_CYCLE P_SV P_PCVAL P_SV P_PNO " " P_PIDS P_SV
 # define P_IDOK		P_ID1 OKCOL(P_OP) P_SV
 # define P_IDKO		P_ID1 KOCOL(P_OP) P_SV
 # define P_CARRY	" > Carry set to " COLY("%hhu")

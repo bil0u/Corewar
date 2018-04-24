@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 15:06:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 17:59:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	c->d_level & CWDL_ARG ? new_logwindow(ARG_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_MEM ? new_logwindow(MEM_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_PROC ? new_logwindow(PROC_WIN, WF_KEEP | WF_CLOSE) : 0;
-	c->d_level & CWDL_PROC ? debug_process(vm, j->p_stack, j, 0) : 0;
+	c->d_level & CWDL_PROC ? debug_process(vm, j->p_stack, j) : 0;
 	c->d_level & CWDL_MEM ? debug_memory(vm->arena, j->p_stack, MEM_WIN) : 0;
 }
 
@@ -127,7 +127,7 @@ static void	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 		{
 			p = (t_process *)curr->content;
 			exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-			PROC_DEB ? debug_process(vm, j->p_stack, j, 0) : 0;
+			PROC_DEB ? debug_process(vm, j->p_stack, j) : 0;
 			RUN_SLOW ? usleep(c->sleep_time) : 0;
 			curr = curr->next;
 		}

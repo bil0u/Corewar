@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 19:09:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 18:06:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,7 +175,8 @@ typedef struct		s_cwvm
 # define CWDL_INS				(1 << 2)
 # define CWDL_ARG				(1 << 3)
 # define CWDL_PROC				(1 << 4)
-# define CWDL_MAX				((CWDL_PROC << 1) - 1)
+# define CWDL_REG				(1 << 5)
+# define CWDL_MAX				((CWDL_REG << 1) - 1)
 
 /*
 ** -- GLOBAL FLAGS

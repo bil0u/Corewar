@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 15:07:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 18:04:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,35 +98,33 @@
 # define PCC_P4			BCOL_P4 COLBK("%2.2hhx")
 
 /*
-** -- PROCESSES INFO & REGISTERS --
+** -- PROCESSES INFO --
 */
 
 # define PROC_WIN		"proc"
 # define PROC_DEB		(c->d_level & CWDL_PROC)
 # define PWA			PROC_WIN, 0
-# define SET_PCOLOR		v->color_buff[0], "%s", \
-						get_p_color(pr->player_no)
-# define SET_TCOLOR		v->color_buff[1], "%s", get_timercolor(pr->timer)
-# define PIA			v->color_buff[0], pr->player_no, pr->pid/*, \
+# define PIA			v->color_buff[0], pr->player_no, pr->pid, \
 						pr->birth, pr->last_live, \
-						(p-r>next_op ? pr->next_op->name : " "), \
-						v->color_buff[1], pr->timer, pr->pc, pr->carry */
+						(pr->next_op ? pr->next_op->name : COLR("     ")), \
+						v->color_buff[1], pr->timer, pr->pc, \
+						(pr->carry ? COLG("1") : COLY("0"))
 
-# define PTIMER			"%s%hu{eoc}"
-# define PCYCLE			COLC(" %6u ")
-# define POPNAME		COLG(" %5s ")
-# define PPC			COLG(" %4hu ")
+# define PTIMER			"%s%5hu{eoc}"
+# define PCYCLE			COLC("%6u")
+# define POPNAME		COLG("  %5s")
+# define PPC			COLM("  %4hu")
 # define PPID			COLB("PID ") COLY("%3hu")
-# define PCARRY			COLG("%1hhu")
+# define PCARRY			COLY("%s")
 
 # define PH1			COLY("%4u") " processes" "\n\n"
 # define PH2			COLC("IDENTIFIERS") SEPVB COLB("BIRTH C.") SEPVB
 # define PH3			COLB("L. LIVE") SEPVB COLB("PENDING") SEPVB
 # define PH4			COLB("TIMER") SEPVB COLB("PC VAL") SEPVB COLB("C") SEPVB
-# define PROC_HEADER	COLG(">> PROCESSES MONITOR <<\t\t") PH1 PH2 PH3 PH4 "\n"
-# define PROC_I1		" " P_PNO " " PPID SEPVB /*PCYCLE SEPVB PCYCLE SEPVB
-# define PROC_I2		POPNAME SEPVB PTIMER SEPVB PPC SEPVB PCARRY SEPVB*/
-# define PROC_INFOS		PROC_I1 /*PROC_I2*/
+# define PROC_HEADER	COLG(">> PROCESSES <<\t\t") PH1 PH2 PH3 PH4 "\n"
+# define PROC_I1		" " P_PNO " " PPID SEPVB " " PCYCLE " " SEPVB " " PCYCLE
+# define PROC_I2		SEPVB POPNAME SEPVB PTIMER SEPVB PPC SEPVB PCARRY SEPVB
+# define PROC_INFOS		PROC_I1 PROC_I2 "\n"
 
 # define TIMECOL_FAR	"{red}"
 # define FAR_LIMIT		51
@@ -137,6 +135,13 @@
 # define TIMECOL_IMM	"{yellow}"
 # define IMM_LIMIT		4
 # define TIMECOL_NOW	"{green}"
+
+/*
+** -- REGISTERS --
+*/
+
+# define REG_WIN		"reg"
+# define RWA			REG_WIN, 0
 
 # define PREGONE		COLC(" %8.8x ") SEPV
 # define PREGSET		COLY(" %8.8x ") SEPV
