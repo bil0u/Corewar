@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:29 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 15:07:58 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,9 @@
 #include "cpu_types.h"
 #include "vm_types.h"
 #include "vm.h"
+#include "cpu_verbose.h"
 #include "vm_debug.h"
+#include "cpu_debug.h"
 
 /*
 ** -- PRINT MEMORY CONTENT (IN HEX)
@@ -29,9 +31,8 @@ void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 	uint8_t		p_no;
 
 	i = 0;
-	ret = 0;
 	win != NULL ? clear_window(win) : (void)0;
-	win != NULL ? ret += ft_sprintf(buff, MEM_HEADER) : (void)0;
+	ret = (win != NULL ? ft_sprintf(buff, MEM_HEADER) : 0);
 	while (i < MEM_SIZE)
 	{
 		if ((i & (BPL - 1)) == 0)
@@ -48,59 +49,48 @@ void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 	log_this(win, 0, buff);
 }
 
-/*
-** -- PRINTS THE N ARGS FROM GIVEN START
-**    > mod = 1 : Prints the reg numbers line
-**    > mod = 2 : Prints the separator line
-**    > mod = 4 : Prints the registers content spaced by separators
-*/
-
-static uint32_t	debug_nregs(char *dst, uint32_t *r, uint8_t s, uint8_t mod)
+static char		*get_timercolor(uint16_t timer)
 {
-	uint8_t		i;
-	uint32_t	ret;
-
-	ret = 0;
-	ret += ft_sprintf(dst + ret, mod & 3 ? REG_BEGL1 : REG_BEGL2);
-	i = s + (REG_NUMBER >> 1);
-	if (mod == (1 << 0))
-		while (s++ < i)
-			ret += ft_sprintf(dst + ret, REGN, s);
-	else if (mod == (1 << 1))
-		while (s++ < i)
-			ret += ft_sprintf(dst + ret, SEPL);
-	else if (mod == (1 << 2))
-		while (s++ < i)
-		{
-			ret += ft_sprintf(dst + ret, r[s - 1] ?
-								REGSET_COLOR : REGZERO_COLOR, r[s - 1]);
-			ret += ft_sprintf(dst + ret, SEPH);
-		}
-	return (ret);
+	if (timer == 0)
+		return (TIMECOL_NOW);
+	else if (timer < IMM_LIMIT)
+		return (TIMECOL_IMM);
+	else if (timer < VNEAR_LIMIT)
+		return (TIMECOL_VNEAR);
+	else if (timer < NEAR_LIMIT)
+		return (TIMECOL_FAR);
+	else
+		return (TIMECOL_FAR);
 }
 
-/*
-** -- PRINT REGISTERS HEADER AND CONTENT (IN HEX)
-*/
-
-void			debug_processes(t_player *pl, t_process *pr, char *win)
+void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j, uint32_t r)
 {
+	t_vmverb	*v;
 	char		buff[LOG_BUFF_SIZE];
-	uint32_t	ret;
+	t_process	*pr;
+	// uint8_t		reg;
 
-	win ? clear_window(win) : (void)ret;
-	if (pr == NULL)
+	v = &vm->ctrl.verbose;
+	r = ft_sprintf(buff + r, PROC_HEADER, j->nb_processes);
+	while (p != NULL && p->content != NULL)
 	{
-		log_this(win, 0, REG_HEADER, 0, 0, 0, NULL, 0);
-		return ;
+		ft_sprintf(SET_PCOLOR);
+		pr = (t_process *)p->content;
+		ft_sprintf(SET_TCOLOR);
+		r += ft_sprintf(buff + r, PROC_INFOS, PIA);
+		// reg = 0;
+		// while (reg < REG_NUMBER)
+		// {
+		// 	if (reg == 0)
+		// 		r += ft_sprintf(buff + r, PREGONE, pr->registers[reg]);
+		// 	else
+		// 		r += ft_sprintf(buff + r, (pr->registers[reg] ? PREGSET : \
+		// 			PREGZERO), pr->registers[reg]);
+		// 	++reg;
+		// }
+		r += ft_sprintf(buff + r, "\n");
+		p = p->next;
 	}
-	ret = 0;
-	ret += ft_sprintf(buff, REG_HEADER, pl->player_no, pr->pid, pr->carry,
-							pr->next_op ? pr->next_op->name : NULL, pr->timer);
-	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 0));
-	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 2));
-	ret += debug_nregs(buff + ret, pr->registers, 0, (1 << 1));
-	ret += debug_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 2));
-	ret += debug_nregs(buff + ret, pr->registers, (REG_NUMBER >> 1), (1 << 0));
-	log_this(win, 0, buff);
+	clear_window(PROC_WIN);
+	log_this(PWA, buff);
 }

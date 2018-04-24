@@ -6,13 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 04:16:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 18:12:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
 #include "vm_types.h"
+#include "cpu.h"
 #include "vm.h"
 #include "vm_verbose.h"
 
@@ -138,28 +139,20 @@ int		 	check_argv(int ac, char **av, t_cwvm *vm)
 
 void		load_players(t_cwvm *vm)
 {
-	t_player	*dat;
-	int			curr_p;
-	uint32_t	init;
-	t_process	new;
+	t_player	*p_data;
+	uint8_t		curr_player;
+	uint16_t	init;
 
 	ft_printf(CW_LOADING);
-	curr_p = -1;
-	while (++curr_p < vm->nb_players)
+	curr_player = 0;
+	while (curr_player < vm->nb_players)
 	{
-		dat = vm->players + vm->p_indexes[curr_p];
-		init = (MEM_SIZE / vm->nb_players) * curr_p;
-		++(dat->nb_processes);
-		++(vm->jobs.next_pid);
-		ft_bzero(&new, sizeof(new));
-		new.pid = vm->jobs.next_pid;
-		new.player_no = dat->player_no;
-		new.last_live = 1;
-		new.registers[0] = REG_MAXVALUE - (new.player_no - 1);
-		new.pc = init;
-		ft_lstadd(&vm->jobs.p_stack, ft_lstnew(&new, sizeof(new)));
-		ft_memcpy(vm->arena + init, dat->binary, dat->header.psize);
-		ft_printf(CW_PLAYER, dat->player_no,
-			dat->header.psize, dat->header.pname, dat->header.comment);
+		p_data = vm->players + vm->p_indexes[curr_player];
+		init = (MEM_SIZE / vm->nb_players) * curr_player;
+		dup_process(&vm->cpu, p_data, NULL, init);
+		ft_memcpy(vm->arena + init, p_data->binary, p_data->header.psize);
+		ft_printf(CW_PLAYER, p_data->player_no,
+			p_data->header.psize, p_data->header.pname, p_data->header.comment);
+		++curr_player;
 	}
 }

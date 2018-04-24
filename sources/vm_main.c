@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 04:29:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/24 15:06:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,9 @@ static int	init_vm(int argc, char **argv, t_cwvm *vm)
 	ft_bzero(vm, sizeof(*vm));
 	if (check_argv(argc, argv, vm) != SUCCESS)
 		return (FAILURE);
-	// new_logwindow("chp", WF_KEEP | WF_CLOSE);
+	vm->cpu.memory = vm->arena;
+	vm->cpu.jobs = &vm->jobs;
+	vm->cpu.ctrl = &vm->ctrl;
 	return (SUCCESS);
 }
 
@@ -51,9 +53,9 @@ static void	init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	c->d_level & CWDL_INF ? new_logwindow(INF_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_INS ? new_logwindow(INS_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_ARG ? new_logwindow(ARG_WIN, WF_KEEP | WF_CLOSE) : 0;
-	c->d_level & CWDL_REG ? new_logwindow(REG_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_MEM ? new_logwindow(MEM_WIN, WF_KEEP | WF_CLOSE) : 0;
-	c->d_level & CWDL_REG ? debug_processes(NULL, NULL, REG_WIN) : 0;
+	c->d_level & CWDL_PROC ? new_logwindow(PROC_WIN, WF_KEEP | WF_CLOSE) : 0;
+	c->d_level & CWDL_PROC ? debug_process(vm, j->p_stack, j, 0) : 0;
 	c->d_level & CWDL_MEM ? debug_memory(vm->arena, j->p_stack, MEM_WIN) : 0;
 }
 
@@ -66,12 +68,12 @@ static void	init_data(t_cwvm *vm)
 	c = &vm->ctrl;
 	j = &vm->jobs;
 	g = &vm->game;
+	g->nb_players = vm->nb_players;
+	g->p_indexes = vm->p_indexes;
+	g->players = vm->players;
 	g->to_die = CYCLE_TO_DIE;
-	g->winner = vm->p_indexes[vm->nb_players - 1] + 1;
+	g->winner = g->p_indexes[g->nb_players - 1] + 1;
 	j->nb_processes = j->next_pid;
-	vm->cpu.memory = vm->arena;
-	vm->cpu.jobs = j;
-	vm->cpu.ctrl = c;
 	init_parameters(vm, c, j);
 	sleep(1);
 }
@@ -109,25 +111,25 @@ static void	end_game(t_cwvm *vm, t_vmctrl *c, t_gamectrl *g, t_jobctrl *j)
 static void	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 {
 	uint32_t	breakpoint;
-	t_list		*pending;
+	t_list		*curr;
 	t_process	*p;
 	t_vmctrl	*c;
 
 	c = &vm->ctrl;
 	breakpoint = vm->ctrl.dump_cycles;
-	while (j->nb_processes > 0 && g->to_die > 0)
+	while (j->nb_processes && g->to_die && ++cpu->tick && (curr = j->p_stack))
 	{
-		++cpu->tick;
-		c->v_level & CWVL_CYCL ? ft_printf(V_CYCLE, cpu->tick) : 0;
-		c->d_level & CWDL_INF ? debug_game_infos(vm, cpu, g, &c->verbose) : 0;
+		CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
+		INF_DEB ? debug_game_infos(vm, cpu, g, &c->verbose) : 0;
 		cpu->tick == g->last_check + g->to_die ? check_gamestatus(vm) : 0;
-		pending = j->p_stack;
-		while (pending != NULL)
+		curr = j->p_stack;
+		while (curr != NULL)
 		{
-			p = (t_process *)pending->content;
+			p = (t_process *)curr->content;
 			exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-			c->flags & CWF_SLOW ? usleep(c->sleep_time) : 0;
-			pending = pending->next;
+			PROC_DEB ? debug_process(vm, j->p_stack, j, 0) : 0;
+			RUN_SLOW ? usleep(c->sleep_time) : 0;
+			curr = curr->next;
 		}
 		if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
 			break ;

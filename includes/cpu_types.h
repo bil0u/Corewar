@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 05:12:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 18:16:26 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@
 # define T_DIR			(1 << 1)
 # define T_IND			(1 << 2)
 # define T_LAB			(1 << 3)
+
+# define TOU8(x)		(uint8_t)((x) & 0xFF)
+# define TOU16(x)		(uint16_t)((x) & 0xFFFF)
+# define TOI16(x)		(int16_t)((x) & 0xFFFF)
+# define TOU32(x)		(uint32_t)(x)
+# define TOI32(x)		(int32_t)(x)
 
 # define ARG_REG		0b01
 # define ARG_DIR		0b10
@@ -66,14 +72,16 @@ typedef struct		s_op
 # define REG_SIZE		4
 # define REG_LEN		(REG_NUMBER * REG_SIZE)
 # define REG_MAXVALUE	((1UL << (REG_SIZE * CHAR_BIT)) - 1)
+# define REG_READ		cpu->memory[jump_to(cpu->pc_copy, *b_read)]
 
 typedef struct			s_process
 {
-	uint32_t		pid;
 	uint32_t		registers[REG_NUMBER];
 	uint32_t		pc;
-	uint32_t		timer;
+	uint32_t		birth;
 	uint32_t		last_live;
+	uint16_t		pid;
+	uint16_t		timer;
 	uint8_t			carry;
 	uint8_t			player_no;
 	t_op			*next_op;

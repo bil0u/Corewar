@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 04:22:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 18:54:06 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,9 @@
 ** -- VERBOSE STRINGS --
 */
 
+# define CYCL_VERB		(c->v_level & CWVL_CYCL)
 # define V_CYCLE		"It is now cycle %u\n"
+# define KILL_VERB		(vm->ctrl.v_level & CWVL_KILL)
 # define V_KILL			"Process %u hasn't lived for %u cycles (CTD %u)\n"
 # define V_SINCE		(vm->cpu.tick - p->last_live)
 

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 04:30:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 19:09:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct		s_player
 typedef struct		s_vmverb
 {
 	char			color_buff[4][32];
-	char			stats[BAR_BUFF_SIZE * (MAX_PLAYERS << 1)];
+	char			buff[LOG_BUFF_SIZE];
 	char			comment[BAR_BUFF_SIZE];
 	char			cbreakdown[BAR_BUFF_SIZE];
 	char			lbreakdown[BAR_BUFF_SIZE];
@@ -90,6 +90,8 @@ typedef struct		s_vmverb
 /*
 ** -- VM PARAMETERS DATA
 */
+
+# define RUN_SLOW		(c->flags & CWF_SLOW)
 
 typedef struct		s_vmctrl
 {
@@ -115,9 +117,12 @@ typedef struct		s_vmctrl
 
 typedef struct		s_gamectrl
 {
+	uint8_t			*p_indexes;
+	t_player		*players;
 	uint32_t		nb_lives;
 	uint32_t		last_check;
 	int32_t			to_die;
+	uint8_t			nb_players;
 	uint8_t			nb_checks;
 	uint8_t			winner;
 	uint8_t			alpha;
@@ -169,8 +174,8 @@ typedef struct		s_cwvm
 # define CWDL_MEM				(1 << 1)
 # define CWDL_INS				(1 << 2)
 # define CWDL_ARG				(1 << 3)
-# define CWDL_REG				(1 << 4)
-# define CWDL_MAX				((CWDL_REG << 1) - 1)
+# define CWDL_PROC				(1 << 4)
+# define CWDL_MAX				((CWDL_PROC << 1) - 1)
 
 /*
 ** -- GLOBAL FLAGS

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 05:14:36 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 19:42:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include "vm.h"
 #include "vm_debug.h"
 
-static void		buff_players_stats(t_cwvm *vm, t_vmverb *v)
+static void		buff_players_buff(t_cwvm *vm, t_vmverb *v)
 {
 	uint8_t		curr_player;
 	uint8_t		p_len;
@@ -31,12 +31,12 @@ static void		buff_players_stats(t_cwvm *vm, t_vmverb *v)
 		ft_sprintf(v->color_buff[0], get_p_bgcolor(p->player_no));
 		ft_sprintf(v->color_buff[1], get_p_color(p->player_no));
 		p_len = ft_strlen(p->header.pname);
-		v->bytes_used += ft_sprintf(v->stats + v->bytes_used, INF_PSTAT1,
+		v->bytes_used += ft_sprintf(v->buff + v->bytes_used, INF_PSTAT1,
 			v->color_buff[0], p->player_no);
-		v->bytes_used += ft_sprintf(v->stats + v->bytes_used,
+		v->bytes_used += ft_sprintf(v->buff + v->bytes_used,
 			p_len > 22 ? INF_PNAMEL : INF_PNAME, v->color_buff[1],
 			p->header.pname);
-		v->bytes_used += ft_sprintf(v->stats + v->bytes_used, INF_PSTAT2,
+		v->bytes_used += ft_sprintf(v->buff + v->bytes_used, INF_PSTAT2,
 			p->nb_processes, p->nb_lives, p->last_live);
 	}
 }
@@ -103,13 +103,13 @@ void 			debug_game_infos(t_cwvm *vm, t_vcpu *c,
 
 	curr_break = v->cbreakdown;
 	last_break = v->lbreakdown;
-	buff_players_stats(vm, v);
+	buff_players_buff(vm, v);
 	fill_curr_bar(vm, v, curr_break, g->nb_lives);
 	ft_sprintf(v->color_buff[0], get_p_bgcolor(g->winner));
 	ft_sprintf(v->color_buff[1], get_p_color(vm->game.alpha));
 	clear_window("inf");
 	log_this("inf", 0, INF_MSG, c->tick, " ", vm->jobs.nb_processes,
-		g->nb_lives, v->color_buff[0], g->winner, v->stats,
+		g->nb_lives, v->color_buff[0], g->winner, v->buff,
 		v->color_buff[1], v->comment, curr_break, last_break,
 		g->to_die, g->nb_checks, MAX_CHECKS, g->last_check,
 		g->last_check + g->to_die - c->tick);

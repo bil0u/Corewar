@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 05:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 05:37:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 12:36:07 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int		dump_stop(t_cwvm *vm, uint32_t *breakpoint)
 
 void	print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
 {
-	ft_printf(V_PC, nb_bytes, pc, jump_to(pc, nb_bytes));
+	ft_printf(V_PCPRINT, nb_bytes, pc, jump_to(pc, nb_bytes));
 	while (nb_bytes--)
 		ft_printf(V_CELL, memory[pc++]);
 	ft_putchar('\n');

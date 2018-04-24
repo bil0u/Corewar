@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/23 05:16:41 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/23 16:04:26 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -35,6 +35,7 @@ LIBFT_DEP =		$(LIBFT_DIR)/libft.a
 # -- PATHS NAMES --
 
 SRC_DIR =		sources
+OP_DIR	=		cpu_instructions
 INC_DIR =		includes
 OBJ_DIR =		.objects
 
@@ -49,8 +50,23 @@ FILES =			vm_main \
 				load_core \
 				load_tools \
 				cpu_core \
-				cpu_instructions \
 				cpu_tools \
+				$(OP_DIR)/op01_live \
+				$(OP_DIR)/op02_ld \
+				$(OP_DIR)/op03_st \
+				$(OP_DIR)/op04_add \
+				$(OP_DIR)/op05_sub \
+				$(OP_DIR)/op06_and \
+				$(OP_DIR)/op07_or \
+				$(OP_DIR)/op08_xor \
+				$(OP_DIR)/op09_zjmp \
+				$(OP_DIR)/op10_ldi \
+				$(OP_DIR)/op11_sti \
+				$(OP_DIR)/op12_fork \
+				$(OP_DIR)/op13_lld \
+				$(OP_DIR)/op14_lldi \
+				$(OP_DIR)/op15_lfork \
+				$(OP_DIR)/op16_aff \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 
@@ -80,6 +96,7 @@ $(LIBFT_DEP):
 
 $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)
+	@$(MKDIR) $(OBJ_DIR)/$(OP_DIR)
 
 clean: libclean
 	@if [ -e $(OBJ_DIR) ]; \

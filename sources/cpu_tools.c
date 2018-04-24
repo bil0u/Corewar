@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/23 12:23:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,16 +19,15 @@
 **    > Return the PC address of a jump_pos value
 */
 
-uint32_t	jump_to(uint32_t pc, int jump_len)
+uint16_t	jump_to(uint16_t pc, int16_t index)
 {
-	int		tmp;
+	int16_t		index_tmp;
 
-	tmp = pc + jump_len;
-	while (tmp < 0)
-		tmp += MEM_SIZE;
-	while (tmp >= MEM_SIZE)
-		tmp -= MEM_SIZE;
-	return ((uint32_t)tmp);
+	index_tmp = pc + index;
+	while (index_tmp < 0)
+		index_tmp += MEM_SIZE;
+	index_tmp &= (MEM_SIZE - 1);
+	return ((uint16_t)index_tmp);
 }
 
 /*
@@ -79,21 +78,20 @@ void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
 }
 
 /*
-** -- INTERPRET ARG VALUE
-**    > Returns an error if the arg is a non valid register
+** -- INTERPRET ARGS VALUE
 */
 
-int			decode_arg(t_vcpu *cpu, t_process *process,
-						uint8_t arg_type, uint32_t *arg_buff)
+void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
 {
-	if (arg_type == ARG_REG)
-		if (*arg_buff != 0 && *arg_buff - 1 < REG_NUMBER)
-			*arg_buff = process->registers[*arg_buff - 1];
-		else
-			return (FAILURE);
-	else if (arg_type == ARG_IND)
-		secure_fetch(*arg_buff, cpu->memory, arg_buff, REG_SIZE);
-	return (SUCCESS);
+	int16_t		ind;
+
+	if (type == ARG_REG)
+		*buff = p->registers[*buff - 1];
+	else if (type == ARG_IND)
+	{
+		ind = jump_to(p->pc, TOI16(*buff));
+		secure_fetch(ind, mem, buff, REG_SIZE);
+	}
 }
 
 /*
