@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 18:53:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 04:04:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	child.pid = ++cpu->jobs->next_pid;
 	child.player_no = pl->player_no;
 	child.pc = init;
-	child.birth = p != NULL ? cpu->tick : 1;
-	child.last_live = child.birth;
+	child.birth = cpu->tick;
+	child.last_live = 0;
 	if (p != NULL)
 	{
 		child.carry = p->carry;
@@ -92,7 +92,8 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 	prev = NULL;
 	while (curr != NULL)
 	{
-		if ((p = (t_process *)curr->content)->last_live <= game->last_check)
+		if ((p = (t_process *)curr->content)->last_live <= game->last_check
+		|| game->to_die < 0)
 		{
 			--(jobs->nb_processes);
 			--(vm->players[p->player_no - 1].nb_processes);
@@ -112,31 +113,25 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 ** -- DELETE QUIET PROCESSES IF THERE'S ANY AND MODIFY GAME VARIABLES
 */
 
-void		check_gamestatus(t_cwvm *vm)
+void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c)
 {
-	t_gamectrl	*game;
-	t_jobctrl	*jobs;
-	t_vmctrl	*ctrl;
 	uint8_t		curr_player;
 
-	game = &vm->game;
-	jobs = &vm->jobs;
-	ctrl = &vm->ctrl;
-	refresh_pstack(vm, game, jobs, jobs->p_stack);
-	++(game->nb_checks);
-	if (game->nb_lives >= NBR_LIVE || game->nb_checks == MAX_CHECKS)
+	refresh_pstack(vm, g, j, j->p_stack);
+	if (g->nb_lives >= NBR_LIVE || ++g->nb_checks == MAX_CHECKS)
 	{
-		game->to_die -= CYCLE_DELTA;
-		game->nb_checks = 0;
+		g->to_die -= CYCLE_DELTA;
+		g->nb_checks = 0;
+		CYCL_VERB ? ft_printf(V_CYCLETD, g->to_die) : 0;
 	}
+	g->last_check = vm->cpu.tick;
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;
-	game->nb_lives = 0;
-	game->last_check = vm->cpu.tick;
-	if (ctrl->flags & CWF_SLOW && jobs->nb_processes > 0)
-		ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
-	ctrl->verbose.bar_crop = BAR_CROP;
-	ft_memcpy(ctrl->verbose.lbreakdown, ctrl->verbose.cbreakdown,
+	g->nb_lives = 0;
+	if (c->flags & CWF_SLOW && j->nb_processes > 0)
+		c->sleep_time = 1000000 / (c->cycles_sec * j->nb_processes);
+	c->verbose.bar_crop = BAR_CROP;
+	ft_memcpy(c->verbose.lbreakdown, c->verbose.cbreakdown,
 			BAR_BUFF_SIZE);
 }

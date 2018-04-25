@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 17:59:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 04:03:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,11 +117,12 @@ static void	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 
 	c = &vm->ctrl;
 	breakpoint = vm->ctrl.dump_cycles;
-	while (j->nb_processes && g->to_die && ++cpu->tick && (curr = j->p_stack))
+	while (j->nb_processes > 0 && ++cpu->tick)
 	{
 		CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
+		if (cpu->tick >= g->last_check + g->to_die)
+			check_gstate(vm, g, j, c);
 		INF_DEB ? debug_game_infos(vm, cpu, g, &c->verbose) : 0;
-		cpu->tick == g->last_check + g->to_die ? check_gamestatus(vm) : 0;
 		curr = j->p_stack;
 		while (curr != NULL)
 		{

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 19:42:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 03:36:00 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,5 +112,5 @@ void 			debug_game_infos(t_cwvm *vm, t_vcpu *c,
 		g->nb_lives, v->color_buff[0], g->winner, v->buff,
 		v->color_buff[1], v->comment, curr_break, last_break,
 		g->to_die, g->nb_checks, MAX_CHECKS, g->last_check,
-		g->last_check + g->to_die - c->tick);
+		(g->last_check + g->to_die - c->tick));
 }

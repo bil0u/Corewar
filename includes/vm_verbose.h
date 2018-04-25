@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 17:56:46 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 04:05:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,9 @@
 
 # define CYCL_VERB		(c->v_level & CWVL_CYCL)
 # define V_CYCLE		"It is now cycle %u\n"
+# define V_CYCLETD		"Cycle to die is now %d\n"
 # define KILL_VERB		(vm->ctrl.v_level & CWVL_KILL)
-# define V_KILL			"Process %u hasn't lived for %u cycles (CTD %u)\n"
+# define V_KILL			"Process %u hasn't lived for %u cycles (CTD %d)\n"
 # define V_SINCE		(vm->cpu.tick - p->last_live)
 
 /*
@@ -102,7 +103,7 @@
 # define CWU_L10		OPTN_TXT(" 8", "Show deaths")
 # define CWU_L11		OPTN_TXT("16", "Show PC movements")
 # define CWU_L13		OPTX_TXT("-D", "Debug level, bitwise | inclusive.")
-# define CWU_L14P1		COLY("    ``/!\\ CAUTION /!\\ ")
+# define CWU_L14P1		COLY("    /!\\ CAUTION /!\\ ")
 # define CWU_L14P2		COLR("This mode slows the program a LOT")
 # define CWU_L14		OPTA_TXT("     ", CWU_L14P1 CWU_L14P2)
 # define CWU_L15		OPTN_TXT(" 1", "Show game informations")
@@ -122,7 +123,7 @@
 # define CWU_L26		OPTA_TXT("--stealth", CWU_L26P1)
 # define CWU_L27		OPTA_TXT("--mute", "   Disable sounds")
 
-# define CWU_LEND1		"\n {red}jrobin, {yellow}glictevoux, {green}upopee, "
+# define CWU_LEND1		"\n {red}jrobin, {yellow}glictevo, {green}upopee, "
 # define CWU_LEND2		"{blue}susivagn {magenta}© 2018 @ 42{eoc}\n\n"
 # define CWU_LEND		CWU_LEND1 CWU_LEND2
 

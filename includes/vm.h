@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 17:59:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 03:33:04 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void		load_players(t_cwvm *vm);
 
 int			player_exists(uint8_t player_no, t_gamectrl *g);
 t_process	*dup_process(t_vcpu *c, t_player *pl, t_process *p, uint16_t init);
-void		check_gamestatus(t_cwvm *vm);
+void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c);
 
 /*
 ** -- ARGV UTILS --
