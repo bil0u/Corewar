@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 04:04:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 06:28:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,17 +30,21 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	++jobs->nb_processes;
 	ft_bzero(&child, sizeof(child));
 	child.pid = ++cpu->jobs->next_pid;
-	child.player_no = pl->player_no;
 	child.pc = init;
 	child.birth = cpu->tick;
-	child.last_live = 0;
 	if (p != NULL)
 	{
+		child.player_no = p->player_no;
+		child.last_live = p->last_live;
 		child.carry = p->carry;
 		ft_memcpy(child.registers, p->registers, REG_LEN);
 	}
 	else
+	{
+		child.player_no = pl->player_no;
 		child.registers[0] = REG_MAXVALUE - (child.player_no - 1);
+		child.last_live = 1;
+	}
 	ft_lstadd(&jobs->p_stack, ft_lstnew(&child, sizeof(child)));
 	return ((t_process *)jobs->p_stack->content);
 }

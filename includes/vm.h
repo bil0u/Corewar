@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 03:33:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 08:21:26 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void		print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
 ** -- DEBUG --
 */
 
-void 		debug_game_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
+void 		debug_infos(t_cwvm *vm, t_vcpu *c, t_gamectrl *g, t_vmverb *v);
 void		debug_memory(uint8_t *arena, t_list *p_stack, char *win);
 void		debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j);
 

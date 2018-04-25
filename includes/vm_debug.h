@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 18:04:12 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 08:25:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,8 @@
 ** -- ARENA DEBUG --
 */
 
+# define MDA			cpu->memory, cpu->jobs->p_stack
+
 # define MEM_WIN		"mem"
 # define MEM_DEB		(cpu->ctrl->d_level & CWDL_MEM)
 
@@ -77,8 +79,8 @@
 
 # define MEM_VALUE		COLB("   ") COLY("0x%4.4x") "   "
 
-# define MEMSET_COLOR	COLC("%2.2hhx")
-# define MEMZERO_COLOR	COLW("%2.2hhx")
+# define MEMSET_COLOR	COLC("%2.2hhx") " "
+# define MEMZERO_COLOR	COLW("%2.2hhx") " "
 
 # define COL_P0			"{white}"
 # define BCOL_P0		"{b_black}"
@@ -91,11 +93,11 @@
 # define COL_P4			"{green}"
 # define BCOL_P4		"{b_green}"
 
-# define PCC_P0			COLW("%2.2hhx")
-# define PCC_P1			BCOL_P1 COLBK("%2.2hhx")
-# define PCC_P2			BCOL_P2 COLBK("%2.2hhx")
-# define PCC_P3			BCOL_P3 COLBK("%2.2hhx")
-# define PCC_P4			BCOL_P4 COLBK("%2.2hhx")
+# define PCC_P0			COLW("%2.2hhx") " "
+# define PCC_P1			BCOL_P1 COLBK("%2.2hhx") " "
+# define PCC_P2			BCOL_P2 COLBK("%2.2hhx") " "
+# define PCC_P3			BCOL_P3 COLBK("%2.2hhx") " "
+# define PCC_P4			BCOL_P4 COLBK("%2.2hhx") " "
 
 /*
 ** -- PROCESSES INFO --
@@ -106,34 +108,37 @@
 # define PWA			PROC_WIN, 0
 # define PIA			v->color_buff[0], pr->player_no, pr->pid, \
 						pr->birth, pr->last_live, \
-						(pr->next_op ? pr->next_op->name : COLR("     ")), \
+						(pr->next_op ? pr->next_op->name : COLR("       ")), \
 						v->color_buff[1], pr->timer, pr->pc, \
 						(pr->carry ? COLG("1") : COLY("0"))
 
-# define PTIMER			"%s%5hu{eoc}"
-# define PCYCLE			COLC("%6u")
-# define POPNAME		COLG("  %5s")
-# define PPC			COLM("  %4hu")
-# define PPID			COLB("PID ") COLY("%3hu")
+# define PTIMER			"%s%-5hu{eoc}"
+# define PCYCLE			COLC("%-7u")
+# define POPNAME		COLG("%-7s")
+# define PPC			COLM("%-4hu")
+# define PPID			COLC(" ID ") COLY("%-5hu")
 # define PCARRY			COLY("%s")
 
-# define PH1			COLY("%4u") " processes" "\n\n"
-# define PH2			COLC("IDENTIFIERS") SEPVB COLB("BIRTH C.") SEPVB
-# define PH3			COLB("L. LIVE") SEPVB COLB("PENDING") SEPVB
-# define PH4			COLB("TIMER") SEPVB COLB("PC VAL") SEPVB COLB("C") SEPVB
-# define PROC_HEADER	COLG(">> PROCESSES <<\t\t") PH1 PH2 PH3 PH4 "\n"
-# define PROC_I1		" " P_PNO " " PPID SEPVB " " PCYCLE " " SEPVB " " PCYCLE
+# define PHPNUM			COLY("%4u") " processes" "\n\n"
+# define PH1			COLY(" PROCESSES ") SEPVB COLB(" BIRTH ") SEPVB
+# define PH2			COLB("L. LIVE") SEPVB COLB("PENDING") SEPVB
+# define PH3			COLB("TIMER") SEPVB COLB(" PC ") SEPVB COLB("C") SEPVB
+# define PHL1			SEPVB PH1 PH2 PH3 "\n"
+# define PHSEP			COLBBK(COLB("--------------------------------"))
+# define PHL2			PHSEP PHSEP "\n"
+# define PROC_HEADER	COLG(">> PROCESSES <<\t\t") PHPNUM PHL1 " " PHL2
+# define PROC_I1		SEPVB D_PNO PPID SEPVB PCYCLE SEPVB PCYCLE
 # define PROC_I2		SEPVB POPNAME SEPVB PTIMER SEPVB PPC SEPVB PCARRY SEPVB
 # define PROC_INFOS		PROC_I1 PROC_I2 "\n"
 
 # define TIMECOL_FAR	"{red}"
-# define FAR_LIMIT		51
+# define FAR_LIMIT		101
 # define TIMECOL_NEAR	"{magenta}"
-# define NEAR_LIMIT		21
+# define NEAR_LIMIT		31
 # define TIMECOL_VNEAR	"{cyan}"
-# define VNEAR_LIMIT	11
+# define VNEAR_LIMIT	16
 # define TIMECOL_IMM	"{yellow}"
-# define IMM_LIMIT		4
+# define IMM_LIMIT		6
 # define TIMECOL_NOW	"{green}"
 
 /*

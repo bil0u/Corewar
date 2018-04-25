@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:26:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 19:12:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 07:53:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ int		lfork_instr(t_vcpu *cpu, t_process *p, t_player *pl)
 	child = dup_process(cpu, pl, p, jump_to(p->pc, index));
 	if (ctrl->flags & CWF_SLOW)
 		ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
-		ARG_DEB ? log_this(ADW, P_ARG_DIR, 1, TOI16(CPU_ARG[0])) : 0;
-
+		ARG_DEB ? log_this(ADW, D_ARG_DIR, 1, TOI16(CPU_ARG[0])) : 0;
 	INS_DEB ? log_this(IDW, D_LFORK, IDA, child->pid, index, child->pc) : 0;
 	INS_VERB ? ft_printf(V_LFORK, IVA, index, child->pc) : 0;
 	return (ARG_INDSZ);

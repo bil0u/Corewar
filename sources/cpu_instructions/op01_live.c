@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:17:53 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 15:36:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 07:52:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *g)
 	uint32_t	alive;
 
 	secure_fetch(jump_to(p->pc, OPBC_SIZE), CPU_MEM, CPU_ARG, ARG_DIRSZ);
-	ARG_DEB ? log_this(ADW, P_ARG_DIR, 1, CPU_ARG[0]) : 0;
+	ARG_DEB ? log_this(ADW, D_ARG_DIR, 1, CPU_ARG[0]) : 0;
 	INS_VERB ? ft_printf(V_LIVE, IVA, CPU_ARG[0]) : 0;
 	alive = REG_MAXVALUE - TOI32(CPU_ARG[0]) + 1;
 	if (alive > 0 && alive <= MAX_PLAYERS

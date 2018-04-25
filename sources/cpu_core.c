@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 17:02:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 07:50:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,33 +37,27 @@
 static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 								uint8_t arg_no, uint8_t type)
 {
-	t_op		*next_op;
-	uint32_t	*arg_buff;
+	t_op		*op;
+	uint32_t	*b;
 
-	arg_buff = cpu->op_args + arg_no;
-	next_op = pending->next_op;
-	if (type == ARG_REG)
+	b = cpu->op_args + arg_no;
+	if ((op = pending->next_op) && type == ARG_REG)
 	{
-		*arg_buff = *(cpu->memory + cpu->pc_copy);
-		ARG_DEB ? log_this(ADW, P_ARG_REG, arg_no + 1, *arg_buff) : 0;
+		*b = *(cpu->memory + cpu->pc_copy);
+		ARG_DEB ? log_this(ADW, D_ARG_REG, arg_no + 1, TOU8(*b)) : 0;
 	}
 	else if (type == ARG_IND)
 	{
-		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, ARG_INDSZ);
-		ARG_DEB ? log_this(ADW, P_ARG_IND, arg_no + 1, *arg_buff) : 0;
-		if (next_op->op_number < 13)
-		{
-			*arg_buff = (uint32_t)(((int32_t)*arg_buff) % IDX_MOD);
-			ARG_DEB ? log_this(ADW, P_IND_MOD, *arg_buff) : 0;
-		}
-		*arg_buff = jump_to(pending->pc, (int)*arg_buff);
+		secure_fetch(cpu->pc_copy, cpu->memory, b, ARG_INDSZ);
+		ARG_DEB ? log_this(ADW, D_ARG_IND, arg_no + 1, TOI16(*b)) : 0;
+		op->op_number < 13 ? *b = (TOI16(*b) % IDX_MOD) & 0xFFFFFFFF : 0;
+		op->op_number < 13 && ARG_DEB ? log_this(ADW, D_IND_MOD, TOI16(*b)) : 0;
 	}
 	else if (type == ARG_DIR)
 	{
-		if (next_op->ind_address)
-			type = ARG_IND;
-		secure_fetch(cpu->pc_copy, cpu->memory, arg_buff, get_argsize(type));
-		ARG_DEB ? log_this(ADW, P_ARG_DIR, arg_no + 1, *arg_buff) : 0;
+		op->ind_address ? type = ARG_IND : 0;
+		secure_fetch(cpu->pc_copy, cpu->memory, b, get_argsize(type));
+		ARG_DEB ? log_this(ADW, D_ARG_DIR, arg_no + 1, *b) : 0;
 	}
 	return (get_argsize(type));
 }
@@ -151,7 +145,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	op = pending->next_op;
 	cpu->pc_copy = pending->pc;
 	cpu->b_read = OPBC_SIZE;
-	ARG_DEB ? log_this(ADW, P_CURROP, ADA) : 0;
+	ARG_DEB ? log_this(ADW, D_CURROP, ADA) : 0;
 	valid = TRUE;
 	if (op->has_bytecode)
 	{
@@ -168,7 +162,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 		PC_VERB ? print_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
 		pending->pc = jump_to(pending->pc, cpu->b_read);
 	}
-	ARG_DEB ? log_this(ADW, P_SEP) : 0;
+	ARG_DEB ? log_this(ADW, D_SEP) : 0;
 }
 
 /*

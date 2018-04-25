@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 18:07:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 08:32:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 	uint8_t		p_no;
 
 	i = 0;
-	win != NULL ? clear_window(win) : (void)0;
 	ret = (win != NULL ? ft_sprintf(buff, MEM_HEADER) : 0);
 	while (i < MEM_SIZE)
 	{
@@ -46,6 +45,7 @@ void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
+	win != NULL ? clear_window(win) : (void)0;
 	log_this(win, 0, buff);
 }
 
@@ -70,7 +70,6 @@ void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j)
 	t_process	*pr;
 	uint32_t	r;
 
-	clear_window(PROC_WIN);
 	v = &vm->ctrl.verbose;
 	r = ft_sprintf(buff, PROC_HEADER, j->nb_processes);
 	while (p != NULL)
@@ -81,6 +80,7 @@ void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j)
 		r += ft_sprintf(buff + r, PROC_INFOS, PIA);
 		p = p->next;
 	}
+	clear_window(PROC_WIN);
 	log_this(PWA, buff);
 }
 

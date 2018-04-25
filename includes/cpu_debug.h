@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 17:04:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 08:11:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,7 @@
 # define CPU_DEBUG_H
 
 /*
-** -- USEFUL MACROS --
-*/
-
-# define INS_DEB		(cpu->ctrl->d_level & CWDL_INS)
-# define INS_WIN		"ins"
-# define IDW			INS_WIN, 0
-# define IDA			cpu->tick, p->pc, cpu->ctrl->verbose.color_buff[0], \
-						p->player_no, p->pid, p->next_op->name
-
-# define ARG_DEB		(cpu->ctrl->d_level & CWDL_ARG)
-# define ARG_WIN		"arg"
-# define ADW			ARG_WIN, 0
-# define ADA			cpu->ctrl->verbose.color_buff[0], pending->player_no, \
-						op->name, pending->pc, pending->pid, cpu->tick
-
-# define MDA			cpu->memory, cpu->jobs->p_stack
-/*
-** -- COREWAR VM CPU OPS VERBOSE STYLE --
+** -- STYLE MACROS --
 */
 
 # define REGCOL(s)	COLM(s)
@@ -42,87 +25,105 @@
 # define OKCOL(s)	COLG(s)
 # define KOCOL(s)	COLR(s)
 
-# define P_OPI		COLM("%-4u ") P_PIDS COLB(" CYCLE ") COLC("%-4u")
-# define P_CURROP	P_PNO COLG(" %-5s") COLB(" PC ") P_OPI "\n"
+# define D_SEP1		"------------------------"
+# define D_SEP		COLB(D_SEP1 D_SEP1) "\n"
+# define D_SV		" " COLBBK(" ") " "
 
-# define P_SEP1		"--------------------"
-# define P_SEP		COLR(P_SEP1 P_SEP1 P_SEP1) "\n"
-# define P_SV		" " COLBBK(" ") " "
+# define D_RNO		REGCOL("R%hhu")
+# define D_IND		INDCOL("%+hd")
+# define D_DIR		DIRCOL("0x%.8x")
+# define D_NUM		NUMCOL("%+d")
+# define D_PC		COLM("PC %hu")
+# define D_PCNMOD	"PC" D_IND " = " D_PC
+# define D_PCMOD	"PC" D_IND " [%%] = " D_PC
 
-# define P_RNO		REGCOL("R%hhu")
-# define P_IND		INDCOL("%+hd")
-# define P_DIR		DIRCOL("0x%.8x")
-# define P_NUM		NUMCOL("%+d")
-# define P_PC		COLM("PC %hu")
-# define P_PCNMOD	"PC" P_IND " = " P_PC
-# define P_PCMOD	"PC" P_IND " [%%] = " P_PC
-
-# define P_CYCLE	COLBBK(" ") COLB(" CYCLE ") COLC("%6d")
-# define P_PNO		"%sP%hhu{eoc}"
-# define P_PID		COLB("PID ") COLY("%hu")
-# define P_PIDS		COLB("PID ") COLY("%3hu")
-# define P_PCVAL	COLB("PC ") COLM("%4u")
-# define P_OP		"%5s"
-# define P_ID1		P_CYCLE P_SV P_PCVAL P_SV P_PNO " " P_PIDS P_SV
-# define P_IDOK		P_ID1 OKCOL(P_OP) P_SV
-# define P_IDKO		P_ID1 KOCOL(P_OP) P_SV
-# define P_CARRY	" > Carry set to " COLY("%hhu")
-
-# define P_ARG_PMPT	COLB("#%hhu: ")
-# define P_ARG_REG	P_ARG_PMPT REGCOL("[REG]") " > " P_RNO "\n"
-# define P_ARG_IND	P_ARG_PMPT INDCOL("[IND]") " > " P_IND "\n"
-# define P_IND_MOD	"     %%IDX  > " P_IND "\n"
-# define P_ARG_DIR	P_ARG_PMPT DIRCOL("[DIR]") " > " P_DIR "\n"
+# define D_CYCLE	COLBBK(" ") COLB(" Cycle ") COLC("%-6d")
+# define D_PNO		"%sP%hhu{eoc}"
+# define D_PID		COLC("ID ") COLY("%hu")
+# define D_PIDS		COLC("ID ") COLY("%-5hu")
+# define D_PCVAL	COLB("PC ") COLM("%-4u")
+# define D_OP		"%-5s"
+# define D_ID1		D_CYCLE D_SV D_PCVAL D_SV D_PNO " " D_PIDS D_SV
+# define D_IDOK		D_ID1 OKCOL(D_OP) D_SV
+# define D_IDKO		D_ID1 KOCOL(D_OP) D_SV
+# define D_CARRY	" > Carry set to " COLY("%hhu")
 
 /*
-** -- COREWAR VM CPU OPS VERBOSE MESSAGES --
+** -- CPU ARGS DEBUG --
 */
+
+# define ARG_DEB	(cpu->ctrl->d_level & CWDL_ARG)
+# define ARG_WIN	"arg"
+# define ADW		ARG_WIN, 0
+# define ADA		op->name, pending->pc, cpu->ctrl->verbose.color_buff[0], \
+					pending->player_no, pending->pid, cpu->tick
+
+# define D_ARG_OPN	COLG("%-5s") COLB(" @ PC ") COLM("%-4u")
+# define D_ARG_FROM	COLB(" from ") D_PNO " " D_PIDS
+# define D_ARG_ATCY	COLB(" @ Cycle ") COLC("%-4u")
+# define D_CURROP	D_ARG_OPN D_ARG_FROM D_ARG_ATCY "\n"
+
+# define D_ARG_PMPT	COLB("#%hhu: ")
+# define D_ARG_REG	D_ARG_PMPT REGCOL("[REG]") " > " D_RNO "\n"
+# define D_ARG_IND	D_ARG_PMPT INDCOL("[IND]") " > " D_IND "\n"
+# define D_IND_MOD	"   %% IDX  > " D_IND "\n"
+# define D_ARG_DIR	D_ARG_PMPT DIRCOL("[DIR]") " > " D_DIR "\n"
+
+/*
+** -- CPU INSTRUCTIONS DEBUG --
+*/
+
+# define INS_DEB	(cpu->ctrl->d_level & CWDL_INS)
+# define INS_WIN	"ins"
+# define IDW		INS_WIN, 0
+# define IDA		cpu->tick, p->pc, cpu->ctrl->verbose.color_buff[0], \
+					p->player_no, p->pid, p->next_op->name
 
 # define OPBC_OK1	" -> " NUMCOL("%hhu") " args\n"
 # define OPBC_OK	"Check " OKCOL("OK") OPBC_OK1
 # define OPBC_KO1	" -> Move PC of " NUMCOL("+%hhu") "\n"
 # define OPBC_KO	"Check " KOCOL("KO") OPBC_KO1
-# define REG_KO		COLB("Arg #%hhu") " > " P_RNO " does not exists\n"
+# define REG_KO		COLB("Arg #%hhu") " > " D_RNO " does not exists\n"
 
-# define D_LIVEOK	P_IDOK "Player %hhu is alive !\n"
+# define D_LIVEOK	D_IDOK "Player %hhu is alive !\n"
 
-# define D_LDIND1	"Loaded " P_DIR " from " P_PCMOD " in "
-# define D_LDIND	P_IDOK D_LDIND1 P_RNO P_CARRY "\n"
-# define D_LDDIR	P_IDOK "Loaded " P_DIR " in " P_RNO P_CARRY "\n"
+# define D_LDIND1	"Loaded " D_DIR " from " D_PCMOD " in "
+# define D_LDIND	D_IDOK D_LDIND1 D_RNO D_CARRY "\n"
+# define D_LDDIR	D_IDOK "Loaded " D_DIR " in " D_RNO D_CARRY "\n"
 
-# define D_STIND	P_IDOK "Stored " P_DIR " from " P_RNO " at " P_PCMOD "\n"
-# define D_STREG	P_IDOK "Stored " P_DIR " from " P_RNO " in " P_RNO "\n"
+# define D_STIND	D_IDOK "Stored " D_DIR " from " D_RNO " at " D_PCMOD "\n"
+# define D_STREG	D_IDOK "Stored " D_DIR " from " D_RNO " in " D_RNO "\n"
 
-# define D_MOP(s)	P_RNO " " s " " P_RNO " = " P_NUM " stored in " P_RNO
-# define D_ADD		P_IDOK D_MOP("+") P_CARRY "\n"
-# define D_SUB		P_IDOK D_MOP("-") P_CARRY "\n"
-# define D_BOP(s)	P_DIR " " s " " P_DIR " = " P_NUM " stored in " P_RNO
-# define D_AND		P_IDOK D_BOP("&") P_CARRY "\n"
-# define D_OR		P_IDOK D_BOP("|") P_CARRY "\n"
-# define D_XOR		P_IDOK D_BOP("^") P_CARRY "\n"
+# define D_MOP(s)	D_RNO " " s " " D_RNO " = " D_NUM " stored in " D_RNO
+# define D_ADD		D_IDOK D_MOP("+") D_CARRY "\n"
+# define D_SUB		D_IDOK D_MOP("-") D_CARRY "\n"
+# define D_BOP(s)	D_DIR " " s " " D_DIR " = " D_NUM " stored in " D_RNO
+# define D_AND		D_IDOK D_BOP("&") D_CARRY "\n"
+# define D_OR		D_IDOK D_BOP("|") D_CARRY "\n"
+# define D_XOR		D_IDOK D_BOP("^") D_CARRY "\n"
 
-# define D_ZJMPOK	P_IDOK "Carry 1 > moving PC of " P_PCMOD "\n"
-# define D_ZJMPKO1	"Carry 0 > Jump was " P_IND " but continuing to next op"
-# define D_ZJMPKO	P_IDKO D_ZJMPKO1 "\n"
+# define D_ZJMPOK	D_IDOK "Carry 1 > moving PC of " D_PCMOD "\n"
+# define D_ZJMPKO1	"Carry 0 > Jump was " D_IND " but continuing to next op"
+# define D_ZJMPKO	D_IDKO D_ZJMPKO1 "\n"
 
-# define D_LDI1		"Loaded " P_DIR " from PC " P_NUM " " P_NUM " [%%] = " P_PC
-# define D_LDI		P_IDOK D_LDI1 " in " P_RNO P_CARRY "\n"
+# define D_LDI1		"Loaded " D_DIR " from PC " D_NUM " " D_NUM " [%%] = " D_PC
+# define D_LDI		D_IDOK D_LDI1 " in " D_RNO D_CARRY "\n"
 
-# define D_STI1		"Stored " P_DIR " from " P_RNO " at PC " P_NUM " " P_NUM
-# define D_STI		P_IDOK D_STI1 " [%%] = " P_PC "\n"
+# define D_STI1		"Stored " D_DIR " from " D_RNO " at PC " D_NUM " " D_NUM
+# define D_STI		D_IDOK D_STI1 " [%%] = " D_PC "\n"
 
-# define D_FORK		P_IDOK "New child " P_PID " set at " P_PCMOD "\n"
+# define D_FORK		D_IDOK "New child " D_PID " set at " D_PCMOD "\n"
 
-# define D_LLDIND1	"Loaded " P_DIR " from " P_PCNMOD " in "
-# define D_LLDIND	P_IDOK D_LLDIND1 P_RNO P_CARRY "\n"
-# define D_LLDDIR	P_IDOK "Loaded " P_DIR " in " P_RNO P_CARRY "\n"
+# define D_LLDIND1	"Loaded " D_DIR " from " D_PCNMOD " in "
+# define D_LLDIND	D_IDOK D_LLDIND1 D_RNO D_CARRY "\n"
+# define D_LLDDIR	D_IDOK "Loaded " D_DIR " in " D_RNO D_CARRY "\n"
 
-# define D_LLDI1	"Loaded " P_DIR " from PC " P_NUM " " P_NUM " = " P_PC
-# define D_LLDI		P_IDOK D_LLDI1 " in " P_RNO P_CARRY "\n"
+# define D_LLDI1	"Loaded " D_DIR " from PC " D_NUM " " D_NUM " = " D_PC
+# define D_LLDI		D_IDOK D_LLDI1 " in " D_RNO D_CARRY "\n"
 
-# define D_LFORK	P_IDOK "New child " P_PID " set at " P_PCNMOD "\n"
+# define D_LFORK	D_IDOK "New child " D_PID " set at " D_PCNMOD "\n"
 
-# define D_AFF1		"Printed '" COLY("%c")"' from " P_RNO
-# define D_AFF		P_IDOK D_AFF1 "\n"
+# define D_AFF1		"Printed '" COLY("%c")"' from " D_RNO
+# define D_AFF		D_IDOK D_AFF1 "\n"
 
 #endif

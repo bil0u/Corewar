@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 05:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 12:36:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 08:14:08 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,7 @@ int		err_msg(char *msg)
 int		dump_stop(t_cwvm *vm, uint32_t *breakpoint)
 {
 	ft_printf((vm->ctrl.flags & CWF_SDMP ? CW_SDMPH : CW_DUMPH), vm->cpu.tick);
-	if (vm->ctrl.d_level & CWDL_MEM)
-		debug_memory(vm->arena, vm->jobs.p_stack, NULL);
+	debug_memory(vm->arena, vm->jobs.p_stack, NULL);
 	if (vm->ctrl.flags & CWF_SDMP)
 	{
 		sleep(DUMP_WAIT);
