@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 08:32:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 09:39:31 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,54 +63,62 @@ static char		*get_timercolor(uint16_t timer)
 		return (TIMECOL_FAR);
 }
 
-void			debug_process(t_cwvm *vm, t_list *p, t_jobctrl *j)
+void			debug_processes(t_cwvm *vm, t_list *curr, t_jobctrl *jobs)
 {
 	char		buff[LOG_BUFF_SIZE];
-	t_vmverb	*v;
-	t_process	*pr;
-	uint32_t	r;
+	t_vmverb	*verb;
+	t_process	*process;
+	uint32_t	ret;
 
-	v = &vm->ctrl.verbose;
-	r = ft_sprintf(buff, PROC_HEADER, j->nb_processes);
-	while (p != NULL)
+	verb = &vm->ctrl.verbose;
+	ret = ft_sprintf(buff, PROC_HEADER, jobs->nb_processes);
+	while (curr != NULL)
 	{
-		pr = (t_process *)p->content;
-		ft_sprintf(v->color_buff[0], get_p_color(pr->player_no));
-		ft_sprintf(v->color_buff[1], get_timercolor(pr->timer));
-		r += ft_sprintf(buff + r, PROC_INFOS, PIA);
-		p = p->next;
+		process = (t_process *)curr->content;
+		ft_sprintf(verb->color_buff[0], get_p_color(process->player_no));
+		ft_sprintf(verb->color_buff[1], get_timercolor(process->timer));
+		ret += ft_sprintf(buff + ret, PROC_INFOS, PIA);
+		curr = curr->next;
 	}
 	clear_window(PROC_WIN);
 	log_this(PWA, buff);
 }
 
-// void			debug_registers(t_jobctrl *j)
-// {
-// 	// uint8_t		reg;
-//
-//
-//
-// 	char		buff[LOG_BUFF_SIZE];
-// 	t_process	*pr;
-// 	uint32_t	r;
-//
-// 	clear_window(PROC_WIN);
-// 	r = ft_sprintf(buff, REG_HEADER);
-// 	while (p != NULL && p->content != NULL)
-// 	{
-// 		pr = (t_process *)p->content;
-// 		reg = 0;
-// 		while (reg < REG_NUMBER)
-// 		{
-// 			if (reg == 0)
-// 				r += ft_sprintf(buff + r, PREGONE, pr->registers[reg]);
-// 			else
-// 				r += ft_sprintf(buff + r, (pr->registers[reg] ? PREGSET : \
-// 					PREGZERO), pr->registers[reg]);
-// 			++reg;
-// 		}
-// 		r += ft_sprintf(buff + r, "\n");
-// 		p = p->next;
-// 	}
-// 	log_this(RWA, buff);
-// }
+static uint32_t	print_regs(uint32_t *regs, char *buff)
+{
+	uint32_t	ret;
+	uint8_t		reg_no;
+
+	reg_no = 0;
+	ret = 0;
+	while (reg_no < REG_NUMBER)
+	{
+		if (reg_no == 0)
+			ret += ft_sprintf(buff + ret, PREGONE, regs[reg_no]);
+		else
+			ret += ft_sprintf(buff + ret, (regs[reg_no] ? PREGSET :
+				PREGZERO), regs[reg_no]);
+		++reg_no;
+	}
+	ret += ft_sprintf(buff + ret, "\n");
+	return (ret);
+}
+
+void			debug_registers(t_vmverb *verb, t_list *curr)
+{
+	char		buff[LOG_BUFF_SIZE];
+	t_process	*process;
+	uint32_t	ret;
+
+	ret = ft_sprintf(buff, REG_HEADER);
+	while (curr != NULL)
+	{
+		process = (t_process *)curr->content;
+		ft_sprintf(verb->color_buff[0], get_p_color(process->player_no));
+		ret += ft_sprintf(buff + ret, REG_INFOS, RWIA);
+		ret += print_regs(process->registers, buff + ret);
+		curr = curr->next;
+	}
+	clear_window(REG_WIN);
+	log_this(RWA, buff);
+}

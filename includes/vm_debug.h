@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 08:25:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 09:37:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,11 +106,11 @@
 # define PROC_WIN		"proc"
 # define PROC_DEB		(c->d_level & CWDL_PROC)
 # define PWA			PROC_WIN, 0
-# define PIA			v->color_buff[0], pr->player_no, pr->pid, \
-						pr->birth, pr->last_live, \
-						(pr->next_op ? pr->next_op->name : COLR("       ")), \
-						v->color_buff[1], pr->timer, pr->pc, \
-						(pr->carry ? COLG("1") : COLY("0"))
+# define PIA			verb->color_buff[0], process->player_no, process->pid, \
+						process->birth, process->last_live, (process->next_op ?\
+						process->next_op->name : COLR("       ")), \
+						verb->color_buff[1], process->timer, process->pc, \
+						(process->carry ? COLG("1") : COLY("0"))
 
 # define PTIMER			"%s%-5hu{eoc}"
 # define PCYCLE			COLC("%-7u")
@@ -145,11 +145,23 @@
 ** -- REGISTERS --
 */
 
+# define REG_DEB		(cpu->ctrl->d_level & CWDL_REG)
 # define REG_WIN		"reg"
 # define RWA			REG_WIN, 0
 
-# define PREGONE		COLC(" %8.8x ") SEPV
-# define PREGSET		COLY(" %8.8x ") SEPV
-# define PREGZERO		COLW(" %8.8x ") SEPV
+# define PREGONE		COLC("%8.8x") SEPVB
+# define PREGSET		COLY("%8.8x") SEPVB
+# define PREGZERO		COLW("%8.8x") SEPVB
+
+# define REGPIDS		"  {yellow}PROCESSES{blue}     "
+# define REGNOS1		"R1         R2         R3         R4         "
+# define REGNOS2		"R5         R6         R7         R8         "
+# define REGNOS3		"R9         R10        R11        R12        "
+# define REGNOS4		"R13        R14        R15        R16       "
+# define REGNOS			REGPIDS REGNOS1 REGNOS2 REGNOS3 REGNOS4
+# define REG_HEADER		COLG(">> REGISTERS <<") "\n\n " COLBBK(REGNOS) "\n"
+
+# define REG_INFOS		SEPVB D_PNO PPID SEPVB
+# define RWIA			verb->color_buff[0], process->player_no, process->pid
 
 #endif

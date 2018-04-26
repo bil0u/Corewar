@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:26:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 07:53:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 19:35:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ int		lfork_instr(t_vcpu *cpu, t_process *p, t_player *pl)
 	secure_fetch(jump_to(p->pc, OPBC_SIZE), CPU_MEM, CPU_ARG, ARG_INDSZ);
 	index = TOI16(CPU_ARG[0]);
 	child = dup_process(cpu, pl, p, jump_to(p->pc, index));
+	if (cpu->memory[child->pc] > 0 && cpu->memory[child->pc] <= NB_OPS)
+		exec_or_wait(cpu, child, pl, NULL);
 	if (ctrl->flags & CWF_SLOW)
 		ctrl->sleep_time = 1000000 / (ctrl->cycles_sec * jobs->nb_processes);
 		ARG_DEB ? log_this(ADW, D_ARG_DIR, 1, TOI16(CPU_ARG[0])) : 0;

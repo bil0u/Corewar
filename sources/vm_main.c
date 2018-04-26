@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 08:22:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 19:39:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,11 @@ static void	init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	c->d_level & CWDL_INS ? new_logwindow(INS_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_ARG ? new_logwindow(ARG_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_MEM ? new_logwindow(MEM_WIN, WF_KEEP | WF_CLOSE) : 0;
+	c->d_level & CWDL_REG ? new_logwindow(REG_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_PROC ? new_logwindow(PROC_WIN, WF_KEEP | WF_CLOSE) : 0;
-	c->d_level & CWDL_PROC ? debug_process(vm, j->p_stack, j) : 0;
+	c->d_level & CWDL_PROC ? debug_processes(vm, j->p_stack, j) : 0;
 	c->d_level & CWDL_MEM ? debug_memory(vm->arena, j->p_stack, MEM_WIN) : 0;
+	c->d_level & CWDL_REG ? debug_registers(&c->verbose, j->p_stack) : 0;
 }
 
 static void	init_data(t_cwvm *vm)
@@ -120,20 +122,20 @@ static int	run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 	breakpoint = vm->ctrl.dump_cycles;
 	while (j->nb_processes > 0 && ++cpu->tick)
 	{
+		if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
+			return (TRUE);
 		CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
-		cpu->tick >= g->last_check + g->to_die ? check_gstate(vm, g, j, c) : 0;
 		INF_DEB ? debug_infos(vm, cpu, g, &c->verbose) : 0;
 		curr = j->p_stack;
 		while (curr != NULL)
 		{
 			p = (t_process *)curr->content;
 			exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-			PROC_DEB ? debug_process(vm, j->p_stack, j) : 0;
+			PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
 			RUN_SLOW ? usleep(c->sleep_time) : 0;
 			curr = curr->next;
 		}
-		if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
-			return (TRUE);
+		cpu->tick >= g->last_check + g->to_die ? check_gstate(vm, g, j, c) : 0;
 	}
 	return (FALSE);
 }

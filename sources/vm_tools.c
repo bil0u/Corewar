@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 06:28:41 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 18:25:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,17 +122,18 @@ void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c)
 	uint8_t		curr_player;
 
 	refresh_pstack(vm, g, j, j->p_stack);
-	if (g->nb_lives >= NBR_LIVE || ++g->nb_checks == MAX_CHECKS)
+	++g->nb_checks;
+	if (g->nb_lives >= NBR_LIVE || g->nb_checks == MAX_CHECKS)
 	{
 		g->to_die -= CYCLE_DELTA;
 		g->nb_checks = 0;
 		CYCL_VERB ? ft_printf(V_CYCLETD, g->to_die) : 0;
 	}
 	g->last_check = vm->cpu.tick;
+	g->nb_lives = 0;
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;
-	g->nb_lives = 0;
 	if (c->flags & CWF_SLOW && j->nb_processes > 0)
 		c->sleep_time = 1000000 / (c->cycles_sec * j->nb_processes);
 	c->verbose.bar_crop = BAR_CROP;

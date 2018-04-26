@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 05:41:00 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 19:36:24 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef uint8_t		t_argtypes;
 **	-- INSTRUCTIONS --
 */
 
+# define NB_OPS			16
 # define OPBC_SIZE		1
 
 typedef int			(*t_instr)();

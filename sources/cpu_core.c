@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 07:50:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/25 18:22:59 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,7 +166,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 }
 
 /*
-** -- PERFORMS A EXECUTION STEP FOR THE GIVEN PROCESS
+** -- PERFORMS AN EXECUTION STEP FOR THE GIVEN PROCESS
 ** -- If current process's next_op is set to NULL :
 **    > Fetch the instruction on OPBC_SIZE bytes from PC pos in arena
 **    > Set the timer to fetched instruction's cycles costs value
@@ -196,6 +196,7 @@ void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 		ft_sprintf(cpu->ctrl->verbose.color_buff[0], get_p_color(pending->player_no));
 		exec_op(cpu, pending, player, game);
 		MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
+		REG_DEB ? debug_registers(&cpu->ctrl->verbose, cpu->jobs->p_stack) : 0;
 		pending->next_op = NULL;
 	}
 }
