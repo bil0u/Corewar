@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 18:25:17 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:13:44 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,6 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	{
 		child.player_no = pl->player_no;
 		child.registers[0] = REG_MAXVALUE - (child.player_no - 1);
-		child.last_live = 1;
 	}
 	ft_lstadd(&jobs->p_stack, ft_lstnew(&child, sizeof(child)));
 	return ((t_process *)jobs->p_stack->content);

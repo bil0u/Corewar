@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 06:12:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:05:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,8 @@ int		ldi_instr(t_vcpu *cpu, t_process *p)
 	index = TOI16((TOI32(CPU_ARG[0]) + TOI32(CPU_ARG[1])) % IDX_MOD);
 	pc_src = jump_to(p->pc, index);
 	secure_fetch(pc_src, CPU_MEM, r + r_dst - 1, REG_SIZE);
-	p->carry = (r[r_dst - 1] == 0);
+	if (!NEED_ZBUG)
+		p->carry = (r[r_dst - 1] == 0);
 	INS_DEB ? log_this(IDW, D_LDI, IDA,
 		r[r_dst - 1], CPU_ARG[0], CPU_ARG[1], pc_src, r_dst, p->carry) : 0;
 	INS_VERB ? ft_printf(V_LDI, IVA, CPU_ARG[0], CPU_ARG[1], r_dst,

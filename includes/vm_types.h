@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/24 18:06:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 00:34:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,8 +182,8 @@ typedef struct		s_cwvm
 ** -- GLOBAL FLAGS
 */
 
-# define NB_OPTIONS				7
-# define VALID_OPT				"avDdsVS"
+# define NB_OPTIONS				8
+# define VALID_OPT				"avDdsVSz"
 # define NUMERIC_OPT			"vDdsS"
 
 # define CWF_AFFON				(1 << 0)
@@ -193,6 +193,7 @@ typedef struct		s_cwvm
 # define CWF_SDMP				(1 << 4)
 # define CWF_VISU				(1 << 5)
 # define CWF_SLOW				(1 << 6)
+# define CWF_ZBUG				(1 << 7)
 
 # define CWF_PNO(x)				(1 << (NB_OPTIONS + (x - 1)))
 

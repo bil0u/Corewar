@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 18:12:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 00:33:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static int	parse_option(t_vmctrl *c, int ac, char **av, int *i)
 	opt[1] == 's' ? BSET(c->flags, CWF_DUMP | CWF_SDMP) : ++invalid;
 	opt[1] == 'V' ? BSET(c->flags, CWF_VISU) : ++invalid;
 	opt[1] == 'S' ? BSET(c->flags, CWF_SLOW) : ++invalid;
+	opt[1] == 'z' ? BSET(c->flags, CWF_ZBUG) : ++invalid;
 	opt[1] == 'v' ? c->v_level = ft_atoi(av[*i]) : 0;
 	opt[1] == 'D' ? c->d_level = ft_atoi(av[*i]) : 0;
 	opt[1] == 'S' ? c->cycles_sec = ft_atoi(av[*i]) : 0;

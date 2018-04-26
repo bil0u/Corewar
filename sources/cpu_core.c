@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 18:22:59 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/26 23:50:40 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,15 +92,13 @@ static void		fetch_arguments(t_vcpu *cpu, t_process *pending)
 **    > Increment the value pointed by 'b' pointer of total args size
 */
 
-static uint8_t	sanity_check(t_vcpu *cpu, t_op *op,
-							uint8_t *b_read, uint8_t arg_no)
+static uint8_t	sanity_check(t_vcpu *cpu, t_op *op, uint8_t arg_no)
 {
 	uint8_t		reg_no;
 	uint8_t		arg_type;
 	uint8_t		valid_types;
 	uint8_t		valid_args;
 
-	*b_read += ARGBC_SIZE;
 	valid_args = 0;
 	while (arg_no < op->nb_args)
 	{
@@ -117,7 +115,7 @@ static uint8_t	sanity_check(t_vcpu *cpu, t_op *op,
 				++valid_args;
 		}
 		op->ind_address && arg_type == ARG_DIR ? arg_type = ARG_IND : 0;
-		*b_read += get_argsize(arg_type);
+		cpu->b_read += get_argsize(arg_type);
 	}
 	return (valid_args == arg_no);
 }
@@ -149,9 +147,10 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	valid = TRUE;
 	if (op->has_bytecode)
 	{
+		cpu->b_read += ARGBC_SIZE;
 		CPU_OPBC = *(cpu->memory + jump_to(cpu->pc_copy, OPBC_SIZE));
 		if ((valid = CPU_OPBC)
-		&& (valid = sanity_check(cpu, op, &cpu->b_read, 0)))
+		&& (valid = sanity_check(cpu, op, 0)))
 			fetch_arguments(cpu, pending);
 		else if (ARG_DEB)
 			log_this(ADW, OPBC_KO, cpu->b_read);

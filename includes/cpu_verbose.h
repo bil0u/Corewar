@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/26 18:04:36 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:00:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@
 # define V_LDI		IVPMPT V_DIR " " V_DIR " " V_RNO "\n" IVIM("load from")
 # define V_STI		IVPMPT V_RNO " " V_DIR " " V_DIR "\n" IVIM("store to")
 # define V_FORK		IVPMPT V_IND " (" V_PC ")\n"
-# define V_LLD		V_LD
+# define V_LLD		IVPMPT V_DIR " " V_RNO "\n"
+# define V_LLDBUG	IVPMPT V_IND " " V_RNO "\n"
 # define V_LLDI		IVPMPT V_DIR " " V_DIR " " V_RNO "\n" IVI("load from")
 # define V_LFORK	V_FORK
 # define V_AFF		"Aff: %c\n"

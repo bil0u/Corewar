@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:25:17 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/26 18:06:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:00:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		lld_instr(t_vcpu *cpu, t_process *p)
 	{
 		data = CPU_ARG[0];
 		decode_arg(cpu->memory, p, ARG_IND, CPU_ARG);
-		r[r_dst - 1] = CPU_ARG[0];
+		r[r_dst - 1] = NEED_ZBUG ? (CPU_ARG[0] >> 16) : CPU_ARG[0];
 		INS_DEB ? log_this(IDW, D_LLDIND, IDA, r[r_dst - 1], TOI16(data),
 			p->pc + TOI16(data), r_dst, p->carry) : 0;
 	}
@@ -40,6 +40,7 @@ int		lld_instr(t_vcpu *cpu, t_process *p)
 		INS_DEB ? log_this(IDW, D_LLDDIR, IDA, CPU_ARG[0], r_dst, p->carry) : 0;
 	}
 	p->carry = (r[r_dst - 1] == 0);
-	INS_VERB ? ft_printf(V_LLD, IVA, r[r_dst - 1], r_dst) : 0;
+	if (INS_VERB)
+		ft_printf((NEED_ZBUG ? V_LLDBUG : V_LLD), IVA, r[r_dst - 1], r_dst);
 	return (0);
 }
