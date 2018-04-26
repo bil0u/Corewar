@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 04:05:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:34:40 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,8 +84,8 @@
 */
 
 # define CWU_L1P1		COLY("Usage:") "\t./corewar  [" OPT("-a") "] ["
-# define CWU_L1P2		OPT_N("-S") "] [" OPT_N("-v") "] [" OPT_N("-D")
-# define CWU_L1P3		"]   [" OPT_N("-d") " " OPT_N("-s") " | "
+# define CWU_L1P2		OPT("-z") "] [" OPT_N("-S") "] [" OPT_N("-v") "] ["
+# define CWU_L1P3		OPT_N("-D") "]   [" OPT_N("-d") " " OPT_N("-s") " | "
 # define CWU_L1P4		OPT_A("-V", "--stealth --mute")
 # define CWU_L1P5		 "]   " OPT_P("file.cor ...")
 # define CWU_L1			CWU_L1P1 CWU_L1P2 CWU_L1P3 CWU_L1P4 CWU_L1P5 "\n"
@@ -94,43 +94,46 @@
 
 # define CWU_L3P1		"Prints output of op. aff, hidden by default"
 # define CWU_L3			OPT_TXT("-a", CWU_L3P1)
-# define CWU_L4			OPTX_TXT("-S", "Set speed limit at N cycles/seconds")
-# define CWU_L5			OPTX_TXT("-v", "Verbosity level, bitwise | inclusive")
-# define CWU_L6			OPTN_TXT(" 0", "Show only essentials (default)")
-# define CWU_L7			OPTN_TXT(" 1", "Show lives")
-# define CWU_L8			OPTN_TXT(" 2", "Show cycles")
-# define CWU_L9			OPTN_TXT(" 4", "Show operations Args are NOT litteral")
-# define CWU_L10		OPTN_TXT(" 8", "Show deaths")
-# define CWU_L11		OPTN_TXT("16", "Show PC movements")
-# define CWU_L13		OPTX_TXT("-D", "Debug level, bitwise | inclusive.")
-# define CWU_L14P1		COLY("    /!\\ CAUTION /!\\ ")
-# define CWU_L14P2		COLR("This mode slows the program a LOT")
-# define CWU_L14		OPTA_TXT("     ", CWU_L14P1 CWU_L14P2)
-# define CWU_L15		OPTN_TXT(" 1", "Show game informations")
-# define CWU_L16		OPTN_TXT(" 2", "Show the arena memory zone")
-# define CWU_L17		OPTN_TXT(" 4", "Show instructions history")
-# define CWU_L18		OPTN_TXT(" 8", "Show instructions details")
-# define CWU_L19		OPTN_TXT("16", "Show processes details")
-# define CWU_L20		OPTN_TXT("32", "Show processes registers")
+# define CWU_L4			OPT_TXT("-z", "Reproduces Zaz's VM bugs (lld,ldi,etc.)")
+# define CWU_L5			OPTX_TXT("-n", "Manually set the player number")
+# define CWU_L6			OPTX_TXT("-S", "Set speed limit at N cycles/seconds")
+# define CWU_L7			OPTX_TXT("-v", "Verbose level, bitwise | inclusive")
+# define CWU_L8			OPTN_TXT(" 0", "Show only essentials (default)")
+# define CWU_L9			OPTN_TXT(" 1", "Show lives")
+# define CWU_L10		OPTN_TXT(" 2", "Show cycles")
+# define CWU_L11		OPTN_TXT(" 4", "Show operations Args are NOT litteral")
+# define CWU_L12		OPTN_TXT(" 8", "Show deaths")
+# define CWU_L13		OPTN_TXT("16", "Show PC movements")
+# define CWU_L14		OPTX_TXT("-D", "Debug level, bitwise | inclusive.")
+# define CWU_L15P1		COLY("    /!\\ CAUTION /!\\ ")
+# define CWU_L15P2		COLR("This mode slows the program a LOT")
+# define CWU_L15		OPTA_TXT("     ", CWU_L15P1 CWU_L15P2)
+# define CWU_L16		OPTN_TXT(" 1", "Show game informations")
+# define CWU_L17		OPTN_TXT(" 2", "Show the arena memory zone")
+# define CWU_L18		OPTN_TXT(" 4", "Show instructions history")
+# define CWU_L19		OPTN_TXT(" 8", "Show instructions details")
+# define CWU_L20		OPTN_TXT("16", "Show processes details")
+# define CWU_L21		OPTN_TXT("32", "Show processes registers")
 
-# define CWU_L21		CAT("DUMP MODE")
-# define CWU_L22		OPTX_TXT("-d", "Dumps memory after N cycles then exits")
-# define CWU_L23		OPTX_TXT("-s", "Runs N cycles, dumps, pauses, repeat")
 
-# define CWU_L24		CAT("VISUALIZER")
-# define CWU_L25		OPT_TXT("-V", "SDL output mode")
-# define CWU_L26P1		"Hides the real contents of the memory"
-# define CWU_L26		OPTA_TXT("--stealth", CWU_L26P1)
-# define CWU_L27		OPTA_TXT("--mute", "   Disable sounds")
+# define CWU_L22		CAT("DUMP MODE")
+# define CWU_L23		OPTX_TXT("-d", "Dumps memory after N cycles then exits")
+# define CWU_L24		OPTX_TXT("-s", "Runs N cycles, dumps, pauses, repeat")
 
-# define CWU_LEND1		"\n {red}jrobin, {yellow}glictevo, {green}upopee, "
-# define CWU_LEND2		"{blue}susivagn {magenta}© 2018 @ 42{eoc}\n\n"
-# define CWU_LEND		CWU_LEND1 CWU_LEND2
+# define CWU_L25		CAT("VISUALIZER")
+# define CWU_L26		OPT_TXT("-V", "SDL output mode")
+# define CWU_L27P1		"Hides the real contents of the memory"
+# define CWU_L27		OPTA_TXT("--stealth", CWU_L27P1)
+# define CWU_L28		OPTA_TXT("--mute", "   Disable sounds")
+
+# define CWU_LEND1		COLR("jrobin, ") COLY("glictevo, ") COLG("upopee, ")
+# define CWU_LEND2		COLB("susivagn") COLM(" © 2018 @ 42 Paris")
+# define CWU_LEND		"\n" CWU_LEND1 CWU_LEND2 "\n\n"
 
 # define CW_USAGE1		CWU_L1 CWU_L2 CWU_L3 CWU_L4 CWU_L5 CWU_L6 CWU_L7 CWU_L8
-# define CW_USAGE2		CWU_L9 CWU_L10 CWU_L11 CWU_L13 CWU_L14 CWU_L15
+# define CW_USAGE2		CWU_L9 CWU_L10 CWU_L11 CWU_L12 CWU_L13 CWU_L14 CWU_L15
 # define CW_USAGE3		CWU_L16 CWU_L17 CWU_L18 CWU_L19 CWU_L20 CWU_L21 CWU_L22
-# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_L27 CWU_LEND
+# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_L27 CWU_L28 CWU_LEND
 # define CW_USAGE		CW_USAGE1 CW_USAGE2 CW_USAGE3 CW_USAGE4
 
 /*

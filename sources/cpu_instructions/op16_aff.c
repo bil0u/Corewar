@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:26:31 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 06:14:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:56:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ int		aff_instr(t_vcpu *cpu, t_process *p, t_player *pl)
 	if (pl->aff_bytes == 0xFF || (to_print == '\0' && pl->aff_bytes > 0))
 	{
 		write(1, pl->aff_buff, pl->aff_bytes);
+		write(1, "\n", 1);
 		ft_bzero(pl->aff_buff, pl->aff_bytes);
 		pl->aff_bytes = 0;
 	}

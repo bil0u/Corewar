@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 01:00:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 01:34:08 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,29 +55,3 @@
 # define V_AFF		"Aff: %c\n"
 
 #endif
-
-// uint32_t	stop;
-// t_list		*curr;
-// t_process	*p;
-// t_vmctrl	*c;
-//
-// c = &vm->ctrl;
-// stop = vm->ctrl.dump_cycles;
-// while (j->nb_processes > 0 && ++cpu->tick)
-// {
-// 	if (cpu->tick == stop && dump_stop(vm, &stop))
-// 		return (TRUE);
-// 	CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
-// 	INF_DEB ? debug_infos(vm, cpu, g, &c->verbose) : 0;
-// 	curr = j->p_stack;
-// 	while (curr != NULL && (p = (t_process *)curr->content) != NULL)
-// 	{
-// 		exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-// 		PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
-// 		RUN_SLOW ? usleep(c->sleep_time) : 0;
-// 		curr = curr->next;
-// 	}
-// 	if (cpu->tick >= g->last_check + g->to_die)
-// 		check_gstate(vm, g, j, c);
-// }
-// return (FALSE);
