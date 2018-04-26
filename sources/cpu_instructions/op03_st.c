@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:19:20 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 06:09:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/26 17:46:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,6 @@ int		st_instr(t_vcpu *cpu, t_process *p)
 		if (INS_DEB)
 			log_this(IDW, D_STREG, IDA, r[r_src - 1], r_src, TOU8(data));
 	}
-	INS_VERB ? ft_printf(V_ST, IVA, r_src, r[r_src - 1]) : 0;
+	INS_VERB ? ft_printf(V_ST, IVA, r_src, TOI16(data)) : 0;
 	return (0);
 }

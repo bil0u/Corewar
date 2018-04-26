@@ -1,8 +1,16 @@
 .name		"OP Tests"
 .comment	"Tu peux pas test"
 
-main:	sti	r1,%:test,%1
-		live	%1
-		live	%0
-		live	%-1
-test:	live	%1
+ld:		ld		%0,r15
+		ld		%-1,r16
+		ld		0,r15
+		ld		:ld,r2
+lld:	lld		%0,r15
+		lld		%-1,r16
+		lld		0,r15
+		lld		:ld,r2
+lldi:	lldi	%:ld,%1,r13
+fork:	fork	%:zjmp
+lfork:	lfork	%:zjmp
+		ld		%0,r16
+zjmp:	zjmp	%:zjmp

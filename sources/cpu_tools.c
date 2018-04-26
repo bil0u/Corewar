@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 19:08:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/26 19:03:59 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,9 +94,7 @@ void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
 		secure_fetch(ind, mem, buff, REG_SIZE);
 	}
 	else if (type == ARG_DIR && p->next_op->ind_address)
-	{
 		*buff = TOU32(TOI32(TOI16(*buff)));
-	}
 }
 
 /*
