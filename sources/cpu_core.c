@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 16:33:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:13:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,12 +144,12 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	cpu->pc_copy = pending->pc;
 	cpu->b_read = OPBC_SIZE;
 	ARG_DEB ? log_this(ADW, D_CURROP, ADA) : 0;
-	BUNSET(cpu->m_flags[pending->pc], CWCF_PC);
 	if ((valid = TRUE) && op->has_bytecode)
 	{
 		cpu->b_read += ARGBC_SIZE;
 		CPU_OPBC = *(cpu->memory + jump_to(cpu->pc_copy, OPBC_SIZE));
-		if ((valid = CPU_OPBC) && (valid = sanity_check(cpu, op, 0)))
+		if ((valid = CPU_OPBC)
+		&& (valid = sanity_check(cpu, op, 0)))
 			fetch_arguments(cpu, pending);
 		else if (ARG_DEB)
 			log_this(ADW, OPBC_KO, cpu->b_read);
@@ -160,7 +160,6 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 		PC_VERB ? print_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
 		pending->pc = jump_to(pending->pc, cpu->b_read);
 	}
-	BSET(cpu->m_flags[pending->pc], CWCF_PC);
 	ARG_DEB ? log_this(ADW, D_SEP) : 0;
 }
 
@@ -192,8 +191,11 @@ void			exec_or_wait(t_vcpu *cpu, t_process *pending,
 	}
 	if (--pending->timer == 0)
 	{
-		ft_sprintf(cpu->ctrl->verbose.color_buff[0], get_p_color(pending->player_no));
+		ft_sprintf(cpu->ctrl->verbose.color_buff[0],
+				get_p_color(pending->player_no));
+		BUNSET(cpu->m_flags[pending->pc], CWCF_PC);
 		exec_op(cpu, pending, player, game);
+		BSET(cpu->m_flags[pending->pc], CWCF_PC);
 		MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 		REG_DEB ? debug_registers(&cpu->ctrl->verbose, cpu->jobs->p_stack) : 0;
 		pending->next_op = NULL;

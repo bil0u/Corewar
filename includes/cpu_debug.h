@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 15:39:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:38:59 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,8 +55,9 @@
 # define ARG_DEB	(cpu->ctrl->d_level & CWDL_ARG)
 # define ARG_WIN	"arg"
 # define ADW		ARG_WIN, 0
-# define ADA		op->name, pending->pc, cpu->ctrl->verbose.color_buff[0], \
-					pending->player_no, pending->pid, cpu->tick
+# define ADA1		op->name, pending->pc, cpu->ctrl->verbose.color_buff[0],
+# define ADA2		pending->player_no, pending->pid, cpu->tick
+# define ADA		ADA1 ADA2
 
 # define D_ARG_OPN	COLG("%-5s") COLB(" @ PC ") COLM("%-4u")
 # define D_ARG_FROM	COLB(" from ") D_PNO " " D_PIDS
@@ -76,8 +77,9 @@
 # define INS_DEB	(cpu->ctrl->d_level & CWDL_INS)
 # define INS_WIN	"ins"
 # define IDW		INS_WIN, 0
-# define IDA		cpu->tick, p->pc, cpu->ctrl->verbose.color_buff[0], \
-					p->player_no, p->pid, p->next_op->name
+# define IDA1		cpu->tick, p->pc, cpu->ctrl->verbose.color_buff[0],
+# define IDA2		p->player_no, p->pid, p->next_op->name
+# define IDA		IDA1 IDA2
 
 # define OPBC_OK1	" -> " NUMCOL("%hhu") " args\n"
 # define OPBC_OK	"Check " OKCOL("OK") OPBC_OK1

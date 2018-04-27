@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 17:34:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:37:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,14 +104,16 @@
 ** -- PROCESSES INFO --
 */
 
+# define PROC			process
 # define PROC_WIN		"proc"
 # define PROC_DEB		(c->d_level & CWDL_PROC)
 # define PWA			PROC_WIN, 0
-# define PIA			verb->color_buff[0], process->player_no, process->pid, \
-						process->birth, process->last_live, (process->next_op ?\
-						process->next_op->name : COLR("       ")), \
-						verb->color_buff[1], process->timer, process->pc, \
-						(process->carry ? COLG("1") : COLY("0"))
+# define PIA1			verb->color_buff[0], PROC->player_no, PROC->pid,
+# define PIA2			PROC->birth, PROC->last_live,
+# define PIA3			(PROC->next_op ? PROC->next_op->name : COLR("       ")),
+# define PIA4			verb->color_buff[1], PROC->timer, PROC->pc,
+# define PIA5			(PROC->carry ? COLG("1") : COLY("0"))
+# define PIA			PIA1 PIA2 PIA3 PIA4 PIA5
 
 # define PTIMER			"%s%-5hu{eoc}"
 # define PCYCLE			COLC("%-7u")

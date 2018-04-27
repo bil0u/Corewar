@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:09:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:29:43 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,6 @@
 # define CWU_L20		OPTN_TXT("16", "Show processes details")
 # define CWU_L21		OPTN_TXT("32", "Show processes registers")
 
-
 # define CWU_L22		CAT("DUMP MODE")
 # define CWU_L23		OPTX_TXT("-d", "Dumps memory after N cycles then exits")
 # define CWU_L24		OPTX_TXT("-s", "Runs N cycles, dumps, pauses, repeat")
@@ -159,6 +158,5 @@
 # define CWE_NOPLAYERS	"No .cor files given\n"
 # define CWE_BADVL		COLY("%hu") " > invalid verbose level, maximum is %u\n"
 # define CWE_BADDL		COLY("%hu") " > invalid debug level, maximum is %u\n"
-
 
 #endif

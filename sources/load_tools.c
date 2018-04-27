@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:57:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 03:09:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:16:54 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,6 @@ int		is_valid_pno(t_vmctrl *ctrl, int ac, char **av, int *i)
 	return (TRUE);
 }
 
-
 /*
 ** - CHECK IF ARG IS A VALID OPTION
 */
@@ -81,8 +80,8 @@ int		is_numeric(int ac, char **av, int i)
 			return (log_this(NULL, LF_ERR, CWE_NOTNUM, av[i - 1], av[i]));
 		if (av[i][0] == '-' || av[i][0] == '+')
 			return (log_this(NULL, LF_ERR, CWE_SIGN,
-							av[i - 1], av[i], av[i][0]));
-		return (TRUE);
+				av[i - 1], av[i], av[i][0]));
+			return (TRUE);
 	}
 	return (log_this(NULL, LF_ERR, CWE_NUMERIC, av[i - 1]));
 }

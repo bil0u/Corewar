@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 17:07:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:21:09 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 ** -- RETURNS PLAYER_NO FROM GIVEN ARENA FLAGS
 */
 
-uint8_t			get_pno(uint8_t a_flags)
+uint8_t		get_pno(uint8_t a_flags)
 {
 	uint8_t		player_no;
 
@@ -34,7 +34,21 @@ uint8_t			get_pno(uint8_t a_flags)
 ** -- RETURNS COLORS FOR A GIVEN PLAYER NO
 */
 
-char			*get_p_color(uint8_t player_no)
+char		*get_timercolor(uint16_t timer)
+{
+	if (timer == 0)
+		return (TIMECOL_NOW);
+	else if (timer < IMM_LIMIT)
+		return (TIMECOL_IMM);
+	else if (timer < VNEAR_LIMIT)
+		return (TIMECOL_VNEAR);
+	else if (timer < NEAR_LIMIT)
+		return (TIMECOL_FAR);
+	else
+		return (TIMECOL_FAR);
+}
+
+char		*get_p_color(uint8_t player_no)
 {
 	if (player_no == 1)
 		return (COL_P1);
@@ -48,7 +62,7 @@ char			*get_p_color(uint8_t player_no)
 		return (COL_P0);
 }
 
-char			*get_p_bgcolor(uint8_t player_no)
+char		*get_p_bgcolor(uint8_t player_no)
 {
 	if (player_no == 1)
 		return (BCOL_P1);
@@ -62,7 +76,7 @@ char			*get_p_bgcolor(uint8_t player_no)
 		return (BCOL_P0);
 }
 
-char			*get_p_pccolor(uint8_t player_no)
+char		*get_p_pccolor(uint8_t player_no)
 {
 	if (player_no == 1)
 		return (PCC_P1);

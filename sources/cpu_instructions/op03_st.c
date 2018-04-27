@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:19:20 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 16:20:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:14:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		st_instr(t_vcpu *cpu, t_process *p)
 	uint32_t	data;
 	uint8_t		r_src;
 
- 	r = p->registers;
+	r = p->registers;
 	r_src = TOU8(CPU_ARG[0]);
 	data = CPU_ARG[1];
 	if (((CPU_OPBC >> 4) & 3) == ARG_IND)

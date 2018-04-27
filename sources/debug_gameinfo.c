@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 08:21:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:17:43 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ static void		fill_curr_bar(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 			vm->players[vm->game.alpha - 1].header.pname);
 }
 
-void 			debug_infos(t_cwvm *vm, t_vcpu *c,
+void			debug_infos(t_cwvm *vm, t_vcpu *c,
 											t_gamectrl *g, t_vmverb *v)
 {
 	char		*curr_break;

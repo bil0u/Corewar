@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:08:36 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:15:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "cpu.h"
 #include "vm.h"
 #include "vm_verbose.h"
-
 
 /*
 ** - LOAD A BINARY FILE
@@ -108,7 +107,7 @@ static int	parse_player(t_cwvm *v, int ac, char **av, int *i)
 ** - CHECK ALL ARGV ARGUMENTS
 */
 
-int		 	check_argv(int ac, char **av, t_cwvm *vm)
+int			check_argv(int ac, char **av, t_cwvm *vm)
 {
 	int		curr_arg;
 

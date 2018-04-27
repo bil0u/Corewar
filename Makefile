@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/23 16:04:26 by upopee           ###   ########.fr        #
+#    Updated: 2018/04/27 19:27:27 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -42,6 +42,7 @@ OBJ_DIR =		.objects
 # -- PROJECT FILES --
 
 FILES =			vm_main \
+				vm_init \
 				vm_tools \
 				debug_gameinfo \
 				debug_memory \

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 15:53:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:39:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ typedef struct		s_op
 # define REG_MAXVALUE	((1UL << (REG_SIZE * CHAR_BIT)) - 1)
 # define REG_READ		cpu->memory[jump_to(cpu->pc_copy, cpu->b_read)]
 
-typedef struct			s_process
+typedef struct		s_process
 {
 	uint32_t		registers[REG_NUMBER];
 	uint32_t		pc;
@@ -96,8 +96,8 @@ typedef struct			s_process
 # define CPU_OPBC		cpu->op_bytecode
 # define CPU_MEM		cpu->memory
 
-typedef struct		s_vmctrl t_vmctrl;
-typedef struct		s_jobctrl t_jobctrl;
+typedef struct s_vmctrl		t_vmctrl;
+typedef struct s_jobctrl	t_jobctrl;
 
 # define NEED_ZBUG		(cpu->ctrl->flags & CWF_ZBUG)
 

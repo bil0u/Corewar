@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 17:35:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:24:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,29 @@
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
+static void		print_pcell(uint8_t cell, char *buff, uint32_t *ret)
+{
+	uint8_t		p_no;
+
+	p_no = get_pno(cell);
+	*ret += ft_sprintf(buff + *ret, get_p_color(p_no), cell);
+	if (cell & CWCF_PC)
+		*ret += ft_sprintf(buff + *ret, get_p_pccolor(p_no), cell);
+	else
+	{
+		if (cell & CWCF_RWRITE)
+			*ret += ft_sprintf(buff + *ret, MEMWR_COLOR);
+		*ret += ft_sprintf(buff + *ret, MEMSET_COLOR, cell);
+		if (cell & CWCF_RWRITE)
+			cell &= ~(CWCF_RWRITE);
+	}
+}
+
 void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 {
 	char		buff[LOG_BUFF_SIZE];
 	uint32_t	i;
 	uint32_t	ret;
-	uint8_t		p_no;
 
 	i = 0;
 	ret = (win != NULL ? ft_sprintf(buff, MEM_HEADER) : 0);
@@ -39,39 +56,12 @@ void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 		if (a_flags[i] == CWCF_NONE)
 			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, arena[i]);
 		else
-		{
-			p_no = get_pno(a_flags[i]);
-			ret += ft_sprintf(buff + ret, get_p_color(p_no), arena[i]);
-			if (a_flags[i] & CWCF_PC)
-				ret += ft_sprintf(buff + ret, get_p_pccolor(p_no), arena[i]);
-			else
-			{
-				if (a_flags[i] & CWCF_RWRITE)
-					ret += ft_sprintf(buff + ret, MEMWR_COLOR);
-				ret += ft_sprintf(buff + ret, MEMSET_COLOR, arena[i]);
-				if (a_flags[i] & CWCF_RWRITE)
-					a_flags[i] &= ~(CWCF_RWRITE);
-			}
-		}
+			print_pcell(a_flags[i], buff, &ret);
 		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
 	win != NULL ? clear_window(win) : (void)0;
 	log_this(win, 0, buff);
-}
-
-static char		*get_timercolor(uint16_t timer)
-{
-	if (timer == 0)
-		return (TIMECOL_NOW);
-	else if (timer < IMM_LIMIT)
-		return (TIMECOL_IMM);
-	else if (timer < VNEAR_LIMIT)
-		return (TIMECOL_VNEAR);
-	else if (timer < NEAR_LIMIT)
-		return (TIMECOL_FAR);
-	else
-		return (TIMECOL_FAR);
 }
 
 void			debug_processes(t_cwvm *vm, t_list *curr, t_jobctrl *jobs)
