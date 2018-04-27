@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:24:48 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:56:21 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,21 +23,21 @@
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
-static void		print_pcell(uint8_t cell, char *buff, uint32_t *ret)
+static void		print_pcell(uint8_t *fl, uint8_t cel, char *buff, uint32_t *ret)
 {
 	uint8_t		p_no;
 
-	p_no = get_pno(cell);
-	*ret += ft_sprintf(buff + *ret, get_p_color(p_no), cell);
-	if (cell & CWCF_PC)
-		*ret += ft_sprintf(buff + *ret, get_p_pccolor(p_no), cell);
+	p_no = get_pno(*fl);
+	*ret += ft_sprintf(buff + *ret, get_p_color(p_no), cel);
+	if (*fl & CWCF_PC)
+		*ret += ft_sprintf(buff + *ret, get_p_pccolor(p_no), cel);
 	else
 	{
-		if (cell & CWCF_RWRITE)
+		if (*fl & CWCF_RWRITE)
 			*ret += ft_sprintf(buff + *ret, MEMWR_COLOR);
-		*ret += ft_sprintf(buff + *ret, MEMSET_COLOR, cell);
-		if (cell & CWCF_RWRITE)
-			cell &= ~(CWCF_RWRITE);
+		*ret += ft_sprintf(buff + *ret, MEMSET_COLOR, cel);
+		if (*fl & CWCF_RWRITE)
+			*fl &= ~(CWCF_RWRITE);
 	}
 }
 
@@ -56,7 +56,7 @@ void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 		if (a_flags[i] == CWCF_NONE)
 			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, arena[i]);
 		else
-			print_pcell(a_flags[i], buff, &ret);
+			print_pcell(a_flags + i, arena[i], buff, &ret);
 		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
