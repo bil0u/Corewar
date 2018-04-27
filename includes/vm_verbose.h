@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 01:34:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:09:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,16 @@
 ** -- COREWAR VM GAME INTRO & OUTRO --
 */
 
+# define CW_ZLOADING	"Introducing contestants...\n"
 # define CW_LOADING		COLY(">>> ") "Introducing competitors ...\n" SEPR
 
+# define CW_ZPLAYER		"* Player %hhu, weighing %u bytes, \"%s\" (\"%s\") !\n"
 # define CW_PLAYERP1	COLY("* ") "Player " COLC("%hhu") ", weighing "
 # define CW_PLAYERP2	COLM("%u") " bytes, known as '" COLG("%s") "'\n"
 # define CW_PLAYERP3	COLB("* He's saying *") "\n%s\n"
 # define CW_PLAYER		CW_PLAYERP1 CW_PLAYERP2 CW_PLAYERP3 SEPR
 
+# define CW_ZWINNER_IS	"Contestant %hhu, \"%s\", has won !\n"
 # define CW_WIN_MSG1	COLY(">>> ") "Competitor " COLC("%hhu") " aka '"
 # define CW_WIN_MSG2	COLG("%s") "' has won !"
 # define CW_WINNER_IS	SEPG CW_WIN_MSG1 CW_WIN_MSG2 "\n" SEPG
@@ -94,7 +97,7 @@
 
 # define CWU_L3P1		"Prints output of op. aff, hidden by default"
 # define CWU_L3			OPT_TXT("-a", CWU_L3P1)
-# define CWU_L4			OPT_TXT("-z", "Reproduces Zaz's VM bugs (lld,ldi,etc.)")
+# define CWU_L4			OPT_TXT("-z", "Reproduces Zaz's VM bugs (lld,etc.)")
 # define CWU_L5			OPTX_TXT("-n", "Manually set the player number")
 # define CWU_L6			OPTX_TXT("-S", "Set speed limit at N cycles/seconds")
 # define CWU_L7			OPTX_TXT("-v", "Verbose level, bitwise | inclusive")

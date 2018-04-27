@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 15:51:23 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:08:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void		load_players(t_cwvm *vm)
 	uint16_t	pos;
 	uint8_t		curr_player;
 
-	ft_printf(CW_LOADING);
+	ft_printf(vm->ctrl.flags & CWF_VERB ? CW_ZLOADING : CW_LOADING);
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 	{
@@ -156,7 +156,8 @@ void		load_players(t_cwvm *vm)
 		ft_memcpy(vm->arena + pos, p_data->binary, head->psize);
 		ft_memset(vm->a_flags + pos, CWCF_PNO(p_data->player_no), head->psize);
 		vm->a_flags[pos] |= CWCF_PC;
-		ft_printf(CW_PLAYER, p_data->player_no, head->psize, head->pname, head->comment);
+		ft_printf((vm->ctrl.flags & CWF_VERB ? CW_ZPLAYER : CW_PLAYER),
+			p_data->player_no, head->psize, head->pname, head->comment);
 		++curr_player;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 17:16:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 19:08:08 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,8 @@ static void	end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
 		}
 	ft_lstdel(&j->p_stack, &ft_delcontent);
 	if (dumped == FALSE)
-		ft_printf(CW_WINNER_IS, winner, name);
+		ft_printf((c->flags & CWF_VERB ? CW_ZWINNER_IS : CW_WINNER_IS),
+			winner, name);
 }
 
 /*
