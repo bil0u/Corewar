@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:25:17 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 01:00:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 16:24:43 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int		lld_instr(t_vcpu *cpu, t_process *p)
 	if (((CPU_OPBC >> 6) & 3) == ARG_IND)
 	{
 		data = CPU_ARG[0];
-		decode_arg(cpu->memory, p, ARG_IND, CPU_ARG);
+		decode_arg(CPU_MEM, p, ARG_IND, CPU_ARG);
 		r[r_dst - 1] = NEED_ZBUG ? (CPU_ARG[0] >> 16) : CPU_ARG[0];
 		INS_DEB ? log_this(IDW, D_LLDIND, IDA, r[r_dst - 1], TOI16(data),
 			p->pc + TOI16(data), r_dst, p->carry) : 0;

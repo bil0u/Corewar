@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:21:48 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 07:52:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 16:09:10 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int		zjmp_instr(t_vcpu *cpu, t_process *p)
 	uint16_t	pc_dst;
 	int16_t		index;
 
-	secure_fetch(jump_to(p->pc, OPBC_SIZE), CPU_MEM, CPU_ARG, ARG_INDSZ);
+	secure_fetch(CPU_MEM, jump_to(p->pc, OPBC_SIZE), CPU_ARG, ARG_INDSZ);
 	ARG_DEB ? log_this(ADW, D_ARG_DIR, 1, CPU_ARG[0]) : 0;
 	index = TOI16(CPU_ARG[0]);
 	if (p->carry == 1)

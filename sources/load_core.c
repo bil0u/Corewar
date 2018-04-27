@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 00:33:42 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 15:51:23 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,19 +141,22 @@ int		 	check_argv(int ac, char **av, t_cwvm *vm)
 void		load_players(t_cwvm *vm)
 {
 	t_player	*p_data;
+	t_header	*head;
+	uint16_t	pos;
 	uint8_t		curr_player;
-	uint16_t	init;
 
 	ft_printf(CW_LOADING);
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 	{
 		p_data = vm->players + vm->p_indexes[curr_player];
-		init = (MEM_SIZE / vm->nb_players) * curr_player;
-		dup_process(&vm->cpu, p_data, NULL, init);
-		ft_memcpy(vm->arena + init, p_data->binary, p_data->header.psize);
-		ft_printf(CW_PLAYER, p_data->player_no,
-			p_data->header.psize, p_data->header.pname, p_data->header.comment);
+		head = &p_data->header;
+		pos = (MEM_SIZE / vm->nb_players) * curr_player;
+		dup_process(&vm->cpu, p_data, NULL, pos);
+		ft_memcpy(vm->arena + pos, p_data->binary, head->psize);
+		ft_memset(vm->a_flags + pos, CWCF_PNO(p_data->player_no), head->psize);
+		vm->a_flags[pos] |= CWCF_PC;
+		ft_printf(CW_PLAYER, p_data->player_no, head->psize, head->pname, head->comment);
 		++curr_player;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 09:39:31 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 17:35:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 **    > Print the cpu->pc in red, and the filled memory cells in yellow
 */
 
-void			debug_memory(uint8_t *arena, t_list *processes, char *win)
+void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 {
 	char		buff[LOG_BUFF_SIZE];
 	uint32_t	i;
@@ -36,12 +36,23 @@ void			debug_memory(uint8_t *arena, t_list *processes, char *win)
 	{
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, MEM_VALUE, ((i / BPL) * BPL));
-		if ((p_no = is_pc_val(i, processes)) > 0)
-			ret += ft_sprintf(buff + ret, get_p_pccolor(p_no), arena[i]);
-		else if (arena[i] != 0)
-			ret += ft_sprintf(buff + ret, MEMSET_COLOR, arena[i]);
-		else
+		if (a_flags[i] == CWCF_NONE)
 			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, arena[i]);
+		else
+		{
+			p_no = get_pno(a_flags[i]);
+			ret += ft_sprintf(buff + ret, get_p_color(p_no), arena[i]);
+			if (a_flags[i] & CWCF_PC)
+				ret += ft_sprintf(buff + ret, get_p_pccolor(p_no), arena[i]);
+			else
+			{
+				if (a_flags[i] & CWCF_RWRITE)
+					ret += ft_sprintf(buff + ret, MEMWR_COLOR);
+				ret += ft_sprintf(buff + ret, MEMSET_COLOR, arena[i]);
+				if (a_flags[i] & CWCF_RWRITE)
+					a_flags[i] &= ~(CWCF_RWRITE);
+			}
+		}
 		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}

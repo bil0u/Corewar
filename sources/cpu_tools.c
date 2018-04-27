@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/26 19:03:59 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 16:23:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,28 +53,24 @@ uint8_t		get_argsize(uint8_t arg_type)
 **    > BIG_ENDIAN >> LITTLE_ENDIAN
 */
 
-void		secure_fetch(uint32_t pc, uint8_t *memory, uint32_t *dst, size_t sz)
+void		secure_fetch(uint8_t *memory, uint32_t pc, uint32_t *dst, size_t sz)
 {
 	uint8_t		*tmp;
 
 	*dst = 0;
 	tmp = (uint8_t *)dst;
 	if (pc + sz < MEM_SIZE)
-	{
 		while (sz--)
 		{
 			*(tmp + sz) = *(memory + pc);
 			++pc;
 		}
-	}
 	else
-	{
 		while (sz--)
 		{
 			*(tmp + sz) = *(memory + pc);
 			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
-	}
 }
 
 /*
@@ -91,7 +87,7 @@ void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
 	{
 		ind = jump_to(p->pc, TOI16(*buff));
 		*buff = 0;
-		secure_fetch(ind, mem, buff, REG_SIZE);
+		secure_fetch(mem, ind, buff, REG_SIZE);
 	}
 	else if (type == ARG_DIR && p->next_op->ind_address)
 		*buff = TOU32(TOI32(TOI16(*buff)));
@@ -103,25 +99,29 @@ void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
 **    > LITTLE_ENDIAN >> BIG_ENDIAN
 */
 
-void		secure_store(uint32_t pc, uint8_t *memory, uint32_t src, size_t sz)
+void		secure_store(t_vcpu *cpu, uint8_t p_no, uint32_t src, size_t sz)
 {
+	uint32_t	pc;
 	uint8_t		*tmp;
+	uint8_t		*mem;
+	uint8_t		*flags;
 
 	tmp = (uint8_t *)(&src);
+	pc = cpu->pc_copy;
+	mem = cpu->memory;
+	flags = cpu->m_flags;
 	if (pc + sz < MEM_SIZE)
-	{
 		while (sz--)
 		{
-			*(memory + pc) = *(tmp + sz);
+			*(mem + pc) = *(tmp + sz);
+			*(flags + pc) = CWCF_PNO(p_no) | CWCF_RWRITE;
 			++pc;
 		}
-	}
 	else
-	{
 		while (sz--)
 		{
-			*(memory + pc) = *(tmp + sz);
+			*(mem + pc) = *(tmp + sz);
+			*(flags + pc) = CWCF_PNO(p_no) | CWCF_RWRITE;
 			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
-	}
 }

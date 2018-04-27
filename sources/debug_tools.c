@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/23 05:13:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 17:07:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,25 +16,22 @@
 #include "vm_debug.h"
 
 /*
-** -- RETURNS TRUE IF THE GIVEN VALUE IS A BUSY PROCESSES'S PC
+** -- RETURNS PLAYER_NO FROM GIVEN ARENA FLAGS
 */
 
-int				is_pc_val(uint32_t to_test, t_list *curr_process)
+uint8_t			get_pno(uint8_t a_flags)
 {
-	t_process	*proc_data;
+	uint8_t		player_no;
 
-	while (curr_process != NULL)
-	{
-		proc_data = (t_process *)curr_process->content;
-		if (proc_data->pc == to_test)
-			return (proc_data->player_no);
-		curr_process = curr_process->next;
-	}
-	return (FALSE);
+	a_flags >>= 2;
+	player_no = 0;
+	while (!((a_flags >> player_no) & 1))
+		++player_no;
+	return (player_no + 1);
 }
 
 /*
-** -- RETURNS COLOR FOR A GIVEN PLAYER NO
+** -- RETURNS COLORS FOR A GIVEN PLAYER NO
 */
 
 char			*get_p_color(uint8_t player_no)

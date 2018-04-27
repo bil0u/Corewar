@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/26 23:50:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 16:33:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 	}
 	else if (type == ARG_IND)
 	{
-		secure_fetch(cpu->pc_copy, cpu->memory, b, ARG_INDSZ);
+		secure_fetch(cpu->memory, cpu->pc_copy, b, ARG_INDSZ);
 		ARG_DEB ? log_this(ADW, D_ARG_IND, arg_no + 1, TOI16(*b)) : 0;
 		op->op_number < 13 ? *b = (TOI16(*b) % IDX_MOD) & 0xFFFFFFFF : 0;
 		op->op_number < 13 && ARG_DEB ? log_this(ADW, D_IND_MOD, TOI16(*b)) : 0;
@@ -56,7 +56,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 	else if (type == ARG_DIR)
 	{
 		op->ind_address ? type = ARG_IND : 0;
-		secure_fetch(cpu->pc_copy, cpu->memory, b, get_argsize(type));
+		secure_fetch(cpu->memory, cpu->pc_copy, b, get_argsize(type));
 		ARG_DEB ? log_this(ADW, D_ARG_DIR, arg_no + 1, *b) : 0;
 	}
 	return (get_argsize(type));
@@ -144,13 +144,12 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	cpu->pc_copy = pending->pc;
 	cpu->b_read = OPBC_SIZE;
 	ARG_DEB ? log_this(ADW, D_CURROP, ADA) : 0;
-	valid = TRUE;
-	if (op->has_bytecode)
+	BUNSET(cpu->m_flags[pending->pc], CWCF_PC);
+	if ((valid = TRUE) && op->has_bytecode)
 	{
 		cpu->b_read += ARGBC_SIZE;
 		CPU_OPBC = *(cpu->memory + jump_to(cpu->pc_copy, OPBC_SIZE));
-		if ((valid = CPU_OPBC)
-		&& (valid = sanity_check(cpu, op, 0)))
+		if ((valid = CPU_OPBC) && (valid = sanity_check(cpu, op, 0)))
 			fetch_arguments(cpu, pending);
 		else if (ARG_DEB)
 			log_this(ADW, OPBC_KO, cpu->b_read);
@@ -161,6 +160,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 		PC_VERB ? print_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
 		pending->pc = jump_to(pending->pc, cpu->b_read);
 	}
+	BSET(cpu->m_flags[pending->pc], CWCF_PC);
 	ARG_DEB ? log_this(ADW, D_SEP) : 0;
 }
 

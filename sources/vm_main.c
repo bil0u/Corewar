@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/26 22:43:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 17:16:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ static int	init_vm(int argc, char **argv, t_cwvm *vm)
 	if (check_argv(argc, argv, vm) != SUCCESS)
 		return (FAILURE);
 	vm->cpu.memory = vm->arena;
+	vm->cpu.m_flags = vm->a_flags;
 	vm->cpu.jobs = &vm->jobs;
 	vm->cpu.ctrl = &vm->ctrl;
 	return (SUCCESS);
@@ -57,7 +58,7 @@ static void	init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	c->d_level & CWDL_REG ? new_logwindow(REG_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_PROC ? new_logwindow(PROC_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_PROC ? debug_processes(vm, j->p_stack, j) : 0;
-	c->d_level & CWDL_MEM ? debug_memory(vm->arena, j->p_stack, MEM_WIN) : 0;
+	c->d_level & CWDL_MEM ? debug_memory(vm->arena, vm->a_flags, MEM_WIN) : 0;
 	c->d_level & CWDL_REG ? debug_registers(&c->verbose, j->p_stack) : 0;
 }
 
@@ -90,7 +91,7 @@ static void	end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
 	uint8_t		winner;
 	int			i;
 
-	c->d_level & CWDL_MEM ? debug_memory(v->arena, j->p_stack, MEM_WIN) : 0;
+	c->d_level & CWDL_MEM ? debug_memory(v->arena, v->a_flags, MEM_WIN) : 0;
 	c->d_level & CWDL_INF ? debug_infos(v, &v->cpu, &v->game, &c->verbose) : 0;
 	i = -1;
 	winner = v->game.winner;

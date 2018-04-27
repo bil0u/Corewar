@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/25 09:17:39 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/27 15:39:11 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,7 +107,7 @@
 # define D_ZJMPKO	D_IDKO D_ZJMPKO1 "\n"
 
 # define D_LDI1		"Loaded " D_DIR " from PC " D_NUM " " D_NUM " [%%] = " D_PC
-# define D_LDI		D_IDOK D_LDI1 " in " D_RNO D_CARRY "\n"
+# define D_LDI		D_IDOK D_LDI1 " in " D_RNO "\n"
 
 # define D_STI1		"Stored " D_DIR " from " D_RNO " at PC " D_NUM " " D_NUM
 # define D_STI		D_IDOK D_STI1 " [%%] = " D_PC "\n"
