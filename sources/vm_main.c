@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:26:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/28 20:26:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ int				main(int argc, char **argv)
 		return (err_msg(CW_USAGE));
 	if (init_vm(argc, argv, &vm) != SUCCESS)
 		return (err_msg(CWE_HELP));
-	load_players(&vm);
+	if (load_players(&vm) == FAILURE)
+		return (err_msg(CWE_MALLOC));
 	init_data(&vm);
 	ret = run_cpu(&vm, &vm.cpu, &vm.game, &vm.jobs);
 	end_game(&vm, &vm.ctrl, &vm.jobs, ret);

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 01:34:08 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/28 22:07:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 ** -- COREWAR VM CPU OPS VERBOSE MESSAGES (ZAZ_VERSION) --
 */
 
-# define V_PC		"%hu"
+# define V_PC		"%u"
 # define V_RNO		"r%hhu"
 # define V_IND		"%hd"
 # define V_DIR		"%d"

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:30:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/28 20:25:48 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 */
 
 int			check_argv(int ac, char **av, t_cwvm *vm);
-void		load_players(t_cwvm *vm);
+int			load_players(t_cwvm *vm);
 int			init_vm(int argc, char **argv, t_cwvm *vm);
 void		init_data(t_cwvm *vm);
 

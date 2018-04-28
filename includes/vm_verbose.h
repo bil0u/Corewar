@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:29:43 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/28 22:15:58 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@
 
 # define CWU_L3P1		"Prints output of op. aff, hidden by default"
 # define CWU_L3			OPT_TXT("-a", CWU_L3P1)
-# define CWU_L4			OPT_TXT("-z", "Reproduces Zaz's VM bugs (lld,etc.)")
+# define CWU_L4			OPT_TXT("-z", "Reproduces Zaz's VM bugs (lld,lldi...)")
 # define CWU_L5			OPTX_TXT("-n", "Manually set the player number")
 # define CWU_L6			OPTX_TXT("-S", "Set speed limit at N cycles/seconds")
 # define CWU_L7			OPTX_TXT("-v", "Verbose level, bitwise | inclusive")
@@ -158,5 +158,6 @@
 # define CWE_NOPLAYERS	"No .cor files given\n"
 # define CWE_BADVL		COLY("%hu") " > invalid verbose level, maximum is %u\n"
 # define CWE_BADDL		COLY("%hu") " > invalid debug level, maximum is %u\n"
+# define CWE_MALLOC		"Can't malloc anymore, check your system\n"
 
 #endif
