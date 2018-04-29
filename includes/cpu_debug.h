@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 23:57:34 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:07:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,9 @@
 # define D_ARG_IND	D_ARG_PMPT INDCOL("[IND]") " > " D_IND "\n"
 # define D_IND_MOD	"   %% IDX  > " D_IND "\n"
 # define D_ARG_DIR	D_ARG_PMPT DIRCOL("[DIR]") " > " D_DIR "\n"
+
+# define D_CELL		"%.2hhx "
+# define D_ARGREAD	COLC("%s") "on " COLY("%hhu") " bytes\n"
 
 /*
 ** -- CPU INSTRUCTIONS DEBUG --

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:13:50 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:21:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@
 **    > Securely fetch (circular buffer proof) the n_th argument, and return
 **      the number of bytes read;
 **    > Apply the IDX MOD for indirect args if the op is restricted
-**    > Fetch directs on 2 bytes if the op ind_address's flag is set
+**    > Fetch directs on 2 bytes if the op short_directs's flag is set
 */
 
 static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
@@ -55,7 +55,7 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 	}
 	else if (type == ARG_DIR)
 	{
-		op->ind_address ? type = ARG_IND : 0;
+		op->short_directs ? type = ARG_IND : 0;
 		secure_fetch(cpu->memory, cpu->pc_copy, b, get_argsize(type));
 		ARG_DEB ? log_this(ADW, D_ARG_DIR, arg_no + 1, *b) : 0;
 	}
@@ -89,6 +89,7 @@ static void		fetch_arguments(t_vcpu *cpu, t_process *pending)
 /*
 ** -- CHECK THE SANITY OF BYTECODE AND ARGS
 **    > Check if the given bytecode is valid for the current instruction
+**    > Check if registers values exists
 **    > Increment the value pointed by 'b' pointer of total args size
 */
 
@@ -114,7 +115,7 @@ static uint8_t	sanity_check(t_vcpu *cpu, t_op *op, uint8_t arg_no)
 			else
 				++valid_args;
 		}
-		op->ind_address && arg_type == ARG_DIR ? arg_type = ARG_IND : 0;
+		op->short_directs && arg_type == ARG_DIR ? arg_type = ARG_IND : 0;
 		cpu->b_read += get_argsize(arg_type);
 	}
 	return (valid_args == arg_no);
@@ -157,7 +158,8 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	valid ? cpu->b_read += op->funct_ptr(cpu, pending, player, game) : 0;
 	if (cpu->b_read)
 	{
-		PC_VERB ? print_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
+		PC_VERB ? verb_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
+		ARG_DEB ? debug_pcmove(pending->pc, cpu->memory, cpu->b_read) : 0;
 		pending->pc = jump_to(pending->pc, cpu->b_read);
 	}
 	ARG_DEB ? log_this(ADW, D_SEP) : 0;

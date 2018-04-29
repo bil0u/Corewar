@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:39:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:20:58 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct		s_op
 	uint8_t			op_number;
 	uint8_t			nb_args;
 	uint8_t			has_bytecode;
-	uint8_t			ind_address;
+	uint8_t			short_directs;
 	t_argtypes		valid_types[NBR_TYPES];
 }					t_op;
 

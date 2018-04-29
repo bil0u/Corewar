@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 16:23:52 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:22:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,26 +74,6 @@ void		secure_fetch(uint8_t *memory, uint32_t pc, uint32_t *dst, size_t sz)
 }
 
 /*
-** -- INTERPRET ARGS VALUE
-*/
-
-void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
-{
-	int16_t		ind;
-
-	if (type == ARG_REG)
-		*buff = p->registers[*buff - 1];
-	else if (type == ARG_IND)
-	{
-		ind = jump_to(p->pc, TOI16(*buff));
-		*buff = 0;
-		secure_fetch(mem, ind, buff, REG_SIZE);
-	}
-	else if (type == ARG_DIR && p->next_op->ind_address)
-		*buff = TOU32(TOI32(TOI16(*buff)));
-}
-
-/*
 ** -- SECURE STORE DATA IN MEMORY
 **    > Handle the circular memory
 **    > LITTLE_ENDIAN >> BIG_ENDIAN
@@ -124,4 +104,24 @@ void		secure_store(t_vcpu *cpu, uint8_t p_no, uint32_t src, size_t sz)
 			*(flags + pc) = CWCF_PNO(p_no) | CWCF_RWRITE;
 			pc = (pc + 1 == MEM_SIZE) ? 0 : pc + 1;
 		}
+}
+
+/*
+** -- INTERPRET ARGS VALUE
+*/
+
+void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
+{
+	int16_t		ind;
+
+	if (type == ARG_REG)
+		*buff = p->registers[*buff - 1];
+	else if (type == ARG_IND)
+	{
+		ind = jump_to(p->pc, TOI16(*buff));
+		*buff = 0;
+		secure_fetch(mem, ind, buff, REG_SIZE);
+	}
+	else if (type == ARG_DIR && p->next_op->short_directs)
+		*buff = TOU32(TOI32(TOI16(*buff)));
 }

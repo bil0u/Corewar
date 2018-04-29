@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 04:08:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:19:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,8 +70,7 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 }
 
 /*
-** -- RUN THE CPU FOR A SET CYCLES NUMBER OR UNTIL A WINNER IS FOUND,
-**    DEPENDING ON GIVEN OPTIONS
+** -- RUN THE CPU UNTIL A WINNER IS FOUND OR UTIL DUMP CYCLE NO IS REACHED
 */
 
 static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
@@ -86,10 +85,9 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 	{
 		if (read(STDIN_FILENO, &key_input, 1) > 0 && key_input == ' ')
 			c->paused = ~(c->paused);
-		if (c->paused == 0 || key_input == '\n')
+		if ((c->paused == 0 || key_input == '\n') && (key_input = 0) == 0)
 		{
 			++cpu->tick;
-			key_input = 0;
 			CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
 			INF_DEB ? debug_infos(vm, cpu, g, &c->verbose) : 0;
 			consume_cycle(vm, cpu, g, j);
@@ -98,9 +96,15 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 			if (cpu->tick >= g->last_check + g->to_die)
 				check_gstate(vm, g, j, c);
 		}
+		else
+			usleep(1000);
 	}
 	return (FALSE);
 }
+
+/*
+** -- COREWAR VM MAIN
+*/
 
 int				main(int argc, char **argv)
 {

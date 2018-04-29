@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:17:43 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:25:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,10 @@
 #include "vm_types.h"
 #include "vm.h"
 #include "vm_debug.h"
+
+/*
+** -- FILL VERBOSE BUFFER WITH PLAYERS INFORMATIONS
+*/
 
 static void		buff_players_buff(t_cwvm *vm, t_vmverb *v)
 {
@@ -41,6 +45,10 @@ static void		buff_players_buff(t_cwvm *vm, t_vmverb *v)
 	}
 }
 
+/*
+** -- FILL BREAKDOWN BARS BUFFER WITH CURRENT LIVE'S STATE
+*/
+
 static uint8_t	buff_breakdown(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 {
 	float		nb_sp;
@@ -65,6 +73,10 @@ static uint8_t	buff_breakdown(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 	}
 	return (ret);
 }
+
+/*
+** -- FILL BREAKDOWN BARS AND COMMENTS FOR THE GAME INFOS
+*/
 
 static void		fill_curr_bar(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 {
@@ -95,6 +107,10 @@ static void		fill_curr_bar(t_cwvm *vm, t_vmverb *v, char *bar, uint32_t nbl)
 			vm->players[vm->game.alpha - 1].header.pname);
 }
 
+/*
+** -- DISLPAY GAME INFORMATIONS
+*/
+
 void			debug_infos(t_cwvm *vm, t_vcpu *c,
 											t_gamectrl *g, t_vmverb *v)
 {
@@ -107,8 +123,8 @@ void			debug_infos(t_cwvm *vm, t_vcpu *c,
 	fill_curr_bar(vm, v, curr_break, g->nb_lives);
 	ft_sprintf(v->color_buff[0], get_p_bgcolor(g->winner));
 	ft_sprintf(v->color_buff[1], get_p_color(vm->game.alpha));
-	clear_window("inf");
-	log_this("inf", 0, INF_MSG, c->tick, " ", vm->jobs.nb_processes,
+	clear_window(INF_WIN);
+	log_this(IWA, INF_MSG, c->tick, " ", vm->jobs.nb_processes,
 		g->nb_lives, v->color_buff[0], g->winner, v->buff,
 		v->color_buff[1], v->comment, curr_break, last_break,
 		g->to_die, g->nb_checks, MAX_CHECKS, g->last_check,

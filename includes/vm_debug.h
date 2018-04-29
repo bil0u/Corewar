@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 01:34:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:25:19 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@
 */
 
 # define INF_WIN		"inf"
+# define IWA			INF_WIN, 0
 # define INF_DEB		(c->d_level & CWDL_INF)
 
 # define BAR_ECOLOR		"{b_black}"

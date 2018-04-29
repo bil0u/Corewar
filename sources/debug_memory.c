@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:56:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:28:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 #include "cpu_debug.h"
 
 /*
-** -- PRINT MEMORY CONTENT (IN HEX)
-**    > Print the cpu->pc in red, and the filled memory cells in yellow
+** -- PRINT MEMORY CELL IN HEX AND REMOVE RECENT WRITE FLAG IF SET
 */
 
 static void		print_pcell(uint8_t *fl, uint8_t cel, char *buff, uint32_t *ret)
@@ -40,6 +39,13 @@ static void		print_pcell(uint8_t *fl, uint8_t cel, char *buff, uint32_t *ret)
 			*fl &= ~(CWCF_RWRITE);
 	}
 }
+
+/*
+** -- PRINT MEMORY CONTENT (IN HEX) WITH COLORS
+**    > PCs are background colored
+**    > Recent writes are highlighted
+**    > Empty cells are in white
+*/
 
 void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 {
@@ -64,6 +70,10 @@ void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
 	log_this(win, 0, buff);
 }
 
+/*
+** -- PRINT PROCESSES LIST AND ASSOCIATED INFORMATIONS
+*/
+
 void			debug_processes(t_cwvm *vm, t_list *curr, t_jobctrl *jobs)
 {
 	char		buff[LOG_BUFF_SIZE];
@@ -84,6 +94,10 @@ void			debug_processes(t_cwvm *vm, t_list *curr, t_jobctrl *jobs)
 	clear_window(PROC_WIN);
 	log_this(PWA, buff);
 }
+
+/*
+** -- PRINT PROCESSES REGISTERS
+*/
 
 static uint32_t	print_regs(uint32_t *regs, char *buff)
 {

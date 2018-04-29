@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 05:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:15:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 05:00:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "cpu.h"
 #include "vm_verbose.h"
 #include "cpu_verbose.h"
+#include "cpu_debug.h"
 #include "vm.h"
 
 /*
@@ -49,10 +50,27 @@ int		dump_stop(t_cwvm *vm, uint32_t *breakpoint)
 ** -- PRINT PC MOVEMENT (CALLED IF THE CORRESPONDING VERBOSE FLAG IS SET)
 */
 
-void	print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
+void	verb_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
 {
 	ft_printf(V_PCPRINT, nb_bytes, pc, jump_to(pc, nb_bytes));
 	while (nb_bytes--)
 		ft_printf(V_CELL, memory[pc++]);
 	ft_putchar('\n');
+}
+
+/*
+** -- PRINT READ INSTRUCTION IN ARG DEBUG WINDOW
+*/
+
+void	debug_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
+{
+	char		buff[64];
+	uint32_t	ret;
+	uint8_t		loops;
+
+	ret = 0;
+	loops = nb_bytes;
+	while (loops--)
+		ret += ft_sprintf(buff + ret, D_CELL, memory[pc++]);
+	log_this(ADW, D_ARGREAD, buff, nb_bytes);
 }

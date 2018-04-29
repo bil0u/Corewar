@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:58:14 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 03:15:53 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 04:57:11 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,8 @@ int			is_numeric(int ac, char **av, int a);
 
 int			err_msg(char *msg);
 int			dump_stop(t_cwvm *vm, uint32_t *breakpoint);
-void		print_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
+void		verb_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
+void		debug_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes);
 
 /*
 ** -- DEBUG --
