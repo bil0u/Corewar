@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:19:16 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 06:26:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,10 +63,10 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 	{
 		p = (t_process *)curr->content;
 		exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-		PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
 		RUN_SLOW ? usleep(c->sleep_time) : 0;
 		curr = curr->next;
 	}
+	PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
 }
 
 /*
