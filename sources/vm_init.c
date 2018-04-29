@@ -6,10 +6,11 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 20:16:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 03:48:50 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <fcntl.h>
 #include "libft.h"
 #include "cpu_types.h"
 #include "vm_types.h"
@@ -31,6 +32,12 @@ int				init_vm(int argc, char **argv, t_cwvm *vm)
 	vm->cpu.m_flags = vm->a_flags;
 	vm->cpu.jobs = &vm->jobs;
 	vm->cpu.ctrl = &vm->ctrl;
+	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL) | O_NONBLOCK);
+	tcgetattr(STDIN_FILENO, &vm->ctrl.t_info);
+	vm->ctrl.t_save = vm->ctrl.t_info;
+	vm->ctrl.t_info.c_lflag &= ~(ECHO);
+	vm->ctrl.t_info.c_lflag &= ~(ICANON);
+	tcsetattr(STDIN_FILENO, TCSANOW, &vm->ctrl.t_info);
 	return (SUCCESS);
 }
 
@@ -43,7 +50,7 @@ static void		init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	uint8_t		ret;
 
 	c->verbose.bar_crop = BAR_CROP;
-	ret = ft_sprintf(c->verbose.lbreakdown, "{b_black}");
+	ret = ft_sprintf(c->verbose.lbreakdown, BAR_ECOLOR);
 	ft_memset(c->verbose.lbreakdown + ret, ' ', BAR_LEN);
 	if (c->flags & CWF_DEBUG && c->d_level != CWDL_NONE && c->cycles_sec == 0
 	&& BSET(c->flags, CWF_SLOW))
@@ -77,5 +84,4 @@ void			init_data(t_cwvm *vm)
 	g->winner = g->p_indexes[g->nb_players - 1] + 1;
 	j->nb_processes = j->next_pid;
 	init_parameters(vm, c, j);
-	sleep(1);
 }

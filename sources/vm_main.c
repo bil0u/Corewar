@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 20:26:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 03:59:21 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 #include "cpu.h"
 #include "vm.h"
 #include "vm_verbose.h"
-#include "cpu_debug.h"
 #include "vm_debug.h"
 
 /*
@@ -44,6 +43,30 @@ static void		end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
 	if (dumped == FALSE)
 		ft_printf((c->flags & CWF_VERB ? CW_ZWINNER_IS : CW_WINNER_IS),
 			winner, name);
+	tcsetattr(STDIN_FILENO, TCSANOW, &v->ctrl.t_save);
+}
+
+/*
+** -- COMSUME AN EXEC STEP FOR EACH PROCESS IN THE VM P_STACK
+*/
+
+static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
+								t_gamectrl *g, t_jobctrl *j)
+{
+	t_vmctrl	*c;
+	t_list		*curr;
+	t_process	*p;
+
+	curr = j->p_stack;
+	c = &vm->ctrl;
+	while (curr != NULL)
+	{
+		p = (t_process *)curr->content;
+		exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
+		PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
+		RUN_SLOW ? usleep(c->sleep_time) : 0;
+		curr = curr->next;
+	}
 }
 
 /*
@@ -54,25 +77,23 @@ static void		end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
 static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 {
 	uint32_t	breakpoint;
-	t_list		*curr;
-	t_process	*p;
 	t_vmctrl	*c;
+	char		buff;
 
 	c = &vm->ctrl;
 	breakpoint = vm->ctrl.dump_cycles;
 	while (j->nb_processes > 0 && ++cpu->tick)
 	{
+		if (read(STDIN_FILENO, &buff, 1) > 0 && buff == ' ')
+			c->paused = 1;
+		while (c->paused)
+			if (read(STDIN_FILENO, &buff, 1) > 0 && buff == ' ')
+				c->paused = 0;
+			else if (read(STDIN_FILENO, &buff, 1) > 0 && buff == '\n')
+				break ;
 		CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;
 		INF_DEB ? debug_infos(vm, cpu, g, &c->verbose) : 0;
-		curr = j->p_stack;
-		while (curr != NULL)
-		{
-			p = (t_process *)curr->content;
-			exec_or_wait(cpu, p, vm->players + (p->player_no - 1), g);
-			PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
-			RUN_SLOW ? usleep(c->sleep_time) : 0;
-			curr = curr->next;
-		}
+		consume_cycle(vm, cpu, g, j);
 		if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
 			return (TRUE);
 		cpu->tick >= g->last_check + g->to_die ? check_gstate(vm, g, j, c) : 0;

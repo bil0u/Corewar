@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 01:57:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:16:54 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 02:39:59 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,21 @@
 #include "vm_types.h"
 #include "vm.h"
 #include "vm_verbose.h"
+
+/*
+** -- DELETE A GIVEN PROCESS FROM A PLAYER'S PROCESSES LIST
+*/
+
+int		player_exists(uint8_t player_no, t_gamectrl *g)
+{
+	uint8_t curr_p;
+
+	curr_p = 0;
+	while (curr_p < g->nb_players)
+		if (g->players[g->p_indexes[curr_p++]].player_no == player_no)
+			return (TRUE);
+	return (FALSE);
+}
 
 /*
 ** - RETURNS NEXT PLAYER NUMBER AVAILABLE

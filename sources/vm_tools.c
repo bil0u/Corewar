@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 20:23:10 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 03:18:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "vm_types.h"
 #include "vm.h"
 #include "vm_verbose.h"
+#include "vm_debug.h"
 
 /*
 ** -- DUPLICATE THE GIVEN PROCESS AND SET ITS VALUES TO MATCH ACTUAL CYCLE
@@ -46,21 +47,6 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	}
 	ft_lstadd(&jobs->p_stack, ft_lstnew(&child, sizeof(child)));
 	return (jobs->p_stack ? (t_process *)jobs->p_stack->content : NULL);
-}
-
-/*
-** -- DELETE A GIVEN PROCESS FROM A PLAYER'S PROCESSES LIST
-*/
-
-int			player_exists(uint8_t player_no, t_gamectrl *g)
-{
-	uint8_t curr_p;
-
-	curr_p = 0;
-	while (curr_p < g->nb_players)
-		if (g->players[g->p_indexes[curr_p++]].player_no == player_no)
-			return (TRUE);
-	return (FALSE);
 }
 
 /*

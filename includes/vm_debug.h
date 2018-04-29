@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:37:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/29 01:34:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 
 # define INF_WIN		"inf"
 # define INF_DEB		(c->d_level & CWDL_INF)
+
+# define BAR_ECOLOR		"{b_black}"
 
 # define INF_HEAD		COLG(">> INFO <<\n\n")
 
