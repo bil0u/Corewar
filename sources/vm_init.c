@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 17:01:28 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:16:52 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,16 +45,20 @@ int				init_vm(int argc, char **argv, t_cwvm *vm)
 ** -- INITIALIZE THE NEEDED ELEMENTS FOR LAUNCHING THE GAME
 */
 
-static void		init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
+static void		init_parameters(t_cwvm *vm, t_vmctrl *c,
+									t_jobctrl *j, t_vmverb *v)
 {
 	uint8_t		ret;
 
-	c->verbose.bar_crop = BAR_CROP;
-	ret = ft_sprintf(c->verbose.lbreakdown, BAR_ECOLOR);
-	ft_memset(c->verbose.lbreakdown + ret, ' ', BAR_LEN);
-	if (c->flags & CWF_DEBUG && c->d_level != CWDL_NONE && c->cycles_sec == 0
-	&& BSET(c->flags, CWF_SLOW))
-		c->cycles_sec = CPS_DEFAULT;
+	v->bar_crop = BAR_CROP;
+	ret = ft_sprintf(v->lbreakdown, BAR_ECOLOR);
+	ft_memset(v->lbreakdown + ret, ' ', BAR_LEN);
+	if (c->flags & CWF_DEBUG && c->d_level != CWDL_NONE)
+	{
+		if (c->cycles_sec == 0 && BSET(c->flags, CWF_SLOW))
+			c->cycles_sec = CPS_DEFAULT;
+		c->paused = TRUE;
+	}
 	if (c->flags & CWF_SLOW)
 		c->sleep_time = 1000000 / (c->cycles_sec * j->nb_processes);
 	c->d_level & CWDL_INF ? new_logwindow(INF_WIN, WF_KEEP | WF_CLOSE) : 0;
@@ -65,7 +69,9 @@ static void		init_parameters(t_cwvm *vm, t_vmctrl *c, t_jobctrl *j)
 	c->d_level & CWDL_PROC ? new_logwindow(PROC_WIN, WF_KEEP | WF_CLOSE) : 0;
 	c->d_level & CWDL_PROC ? debug_processes(vm, j->p_stack, j) : 0;
 	c->d_level & CWDL_MEM ? debug_memory(vm->arena, vm->a_flags, MEM_WIN) : 0;
-	c->d_level & CWDL_REG ? debug_registers(&c->verbose, j->p_stack) : 0;
+	c->d_level & CWDL_REG ? debug_registers(v, j->p_stack) : 0;
+	c->d_level & CWDL_REG ? debug_registers(v, j->p_stack) : 0;
+	c->d_level & CWDL_INF ? debug_infos(vm, &vm->cpu, &vm->game, v) : 0;
 }
 
 void			init_data(t_cwvm *vm)
@@ -83,5 +89,5 @@ void			init_data(t_cwvm *vm)
 	g->to_die = CYCLE_TO_DIE;
 	g->winner = g->p_indexes[g->nb_players - 1] + 1;
 	j->nb_processes = j->next_pid;
-	init_parameters(vm, c, j);
+	init_parameters(vm, c, j, &c->verbose);
 }
