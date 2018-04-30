@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 04:29:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:01:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,11 @@ int				init_vm(int argc, char **argv, t_cwvm *vm)
 	vm->cpu.m_flags = vm->a_flags;
 	vm->cpu.jobs = &vm->jobs;
 	vm->cpu.ctrl = &vm->ctrl;
-	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL) | O_NONBLOCK);
 	tcgetattr(STDIN_FILENO, &vm->ctrl.t_info);
 	vm->ctrl.t_save = vm->ctrl.t_info;
 	vm->ctrl.t_info.c_lflag &= ~(ECHO | ICANON);
+	vm->ctrl.t_info.c_cc[VMIN] = 0;
+	vm->ctrl.t_info.c_cc[VTIME] = 0;
 	tcsetattr(STDIN_FILENO, TCSANOW, &vm->ctrl.t_info);
 	return (SUCCESS);
 }

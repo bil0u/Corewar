@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:20:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 14:31:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ typedef struct		s_op
 typedef struct		s_process
 {
 	uint32_t		registers[REG_NUMBER];
-	uint32_t		pc;
+	uint16_t		pc;
 	uint32_t		birth;
 	uint32_t		last_live;
 	uint16_t		pid;
@@ -104,7 +104,7 @@ typedef struct s_jobctrl	t_jobctrl;
 typedef struct		s_vcpu
 {
 	uint32_t		tick;
-	uint32_t		pc_copy;
+	uint16_t		pc_copy;
 	uint8_t			*memory;
 	uint8_t			*m_flags;
 	uint32_t		op_args[MAX_ARGS];

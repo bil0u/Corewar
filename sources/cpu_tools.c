@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:22:29 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 14:31:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ uint8_t		get_argsize(uint8_t arg_type)
 **    > BIG_ENDIAN >> LITTLE_ENDIAN
 */
 
-void		secure_fetch(uint8_t *memory, uint32_t pc, uint32_t *dst, size_t sz)
+void		secure_fetch(uint8_t *memory, uint16_t pc, uint32_t *dst, size_t sz)
 {
 	uint8_t		*tmp;
 
@@ -81,7 +81,7 @@ void		secure_fetch(uint8_t *memory, uint32_t pc, uint32_t *dst, size_t sz)
 
 void		secure_store(t_vcpu *cpu, uint8_t p_no, uint32_t src, size_t sz)
 {
-	uint32_t	pc;
+	uint16_t	pc;
 	uint8_t		*tmp;
 	uint8_t		*mem;
 	uint8_t		*flags;

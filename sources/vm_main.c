@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 06:26:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 16:01:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 	while (j->nb_processes > 0)
 	{
 		if (read(STDIN_FILENO, &key_input, 1) > 0 && key_input == ' ')
-			c->paused = ~(c->paused);
+			c->paused = !(c->paused);
 		if ((c->paused == 0 || key_input == '\n') && (key_input = 0) == 0)
 		{
 			++cpu->tick;

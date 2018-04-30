@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 03:48:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 15:22:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,17 +97,17 @@ typedef struct		s_vmverb
 
 typedef struct		s_vmctrl
 {
-	uint32_t		dump_cycles;
-	uint32_t		cycles_sec;
-	useconds_t		sleep_time;
-	uint16_t		flags;
-	uint8_t			d_level;
-	uint8_t			v_level;
-	uint8_t			next_pno;
-	uint8_t			paused;
-	t_vmverb		verbose;
-	struct termios	t_info;
-	struct termios	t_save;
+	uint32_t			dump_cycles;
+	uint32_t			cycles_sec;
+	useconds_t			sleep_time;
+	uint16_t			flags;
+	uint8_t				d_level;
+	uint8_t				v_level;
+	uint8_t				next_pno;
+	volatile uint8_t	paused;
+	t_vmverb			verbose;
+	struct termios		t_info;
+	struct termios		t_save;
 }					t_vmctrl;
 
 /*
