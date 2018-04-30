@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 16:57:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:45:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,14 +108,15 @@ void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c)
 
 	refresh_pstack(vm, g, j, j->p_stack);
 	++g->nb_checks;
-	if (g->nb_lives >= NBR_LIVE || g->nb_checks == MAX_CHECKS)
+	if (g->n_lives >= NBR_LIVE || g->nb_checks == MAX_CHECKS)
 	{
 		g->to_die -= CYCLE_DELTA;
 		g->nb_checks = 0;
 		CYCL_VERB ? ft_printf(V_CYCLETD, g->to_die) : 0;
 	}
 	g->last_check = vm->cpu.tick;
-	g->nb_lives = 0;
+	g->n_lives = 0;
+	g->p_lives = 0;
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;

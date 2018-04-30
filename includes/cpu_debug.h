@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:07:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:57:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,9 @@
 # define OPBC_KO	"Check " KOCOL("KO") OPBC_KO1
 # define REG_KO		COLB("Arg #%hhu") " > " D_RNO " does not exists\n"
 
-# define D_LIVEOK	D_IDOK "Player %hhu is alive !\n"
+# define D_LIVEPID	"Process %u is alive ! "
+# define D_LIVEPL	D_IDOK D_LIVEPID COLG("(Player no.: %hhu)") "\n"
+# define D_LIVEPR	D_IDOK D_LIVEPID COLR("(Invalid player no.)") "\n"
 
 # define D_LDIND1	"Loaded " D_DIR " from " D_PCMOD " in "
 # define D_LDIND	D_IDOK D_LDIND1 D_RNO D_CARRY "\n"

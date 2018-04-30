@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 15:22:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:44:05 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,7 +124,8 @@ typedef struct		s_gamectrl
 {
 	uint8_t			*p_indexes;
 	t_player		*players;
-	uint32_t		nb_lives;
+	uint32_t		p_lives;
+	uint32_t		n_lives;
 	uint32_t		last_check;
 	int32_t			to_die;
 	uint8_t			nb_players;

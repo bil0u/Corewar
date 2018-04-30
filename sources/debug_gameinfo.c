@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/18 03:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:25:28 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 17:46:43 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,12 @@ void			debug_infos(t_cwvm *vm, t_vcpu *c,
 	curr_break = v->cbreakdown;
 	last_break = v->lbreakdown;
 	buff_players_buff(vm, v);
-	fill_curr_bar(vm, v, curr_break, g->nb_lives);
+	fill_curr_bar(vm, v, curr_break, g->p_lives);
 	ft_sprintf(v->color_buff[0], get_p_bgcolor(g->winner));
 	ft_sprintf(v->color_buff[1], get_p_color(vm->game.alpha));
 	clear_window(INF_WIN);
 	log_this(IWA, INF_MSG, c->tick, " ", vm->jobs.nb_processes,
-		g->nb_lives, v->color_buff[0], g->winner, v->buff,
+		g->p_lives, v->color_buff[0], g->winner, v->buff,
 		v->color_buff[1], v->comment, curr_break, last_break,
 		g->to_die, g->nb_checks, MAX_CHECKS, g->last_check,
 		(g->last_check + g->to_die - c->tick));
