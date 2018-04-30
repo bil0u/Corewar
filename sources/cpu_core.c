@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:21:46 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 19:55:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	{
 		cpu->b_read += ARGBC_SIZE;
 		CPU_OPBC = *(cpu->memory + jump_to(cpu->pc_copy, OPBC_SIZE));
-		if ((valid = CPU_OPBC)
+		if ((valid = CPU_OPBC) != 0
 		&& (valid = sanity_check(cpu, op, 0)))
 			fetch_arguments(cpu, pending);
 		else if (ARG_DEB)

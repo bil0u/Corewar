@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:17:53 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 17:54:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 18:25:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int		live_instr(t_vcpu *cpu, t_process *p, t_player *pl, t_gamectrl *g)
 	&& player_exists(TOU8(alive), g) && ++g->p_lives)
 	{
 		g->winner = alive;
-		g->players[alive - 1].last_live = p->last_live;
+		g->players[alive - 1].last_live = cpu->tick;
 		nbl = ++(g->players[alive - 1].nb_lives);
 		if (g->alpha == 0 || nbl > g->players[g->alpha - 1].nb_lives)
 			g->alpha = alive;

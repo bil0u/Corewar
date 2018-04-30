@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 17:45:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 18:28:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ static void	delete_process(t_list **p_stack, t_list **prev,
 		(*prev)->next = next;
 	else
 		*p_stack = next;
-	ft_memdel((void **)curr);
 	ft_memdel((void **)p);
+	ft_memdel((void **)curr);
 	*curr = next;
 }
 
@@ -81,8 +81,8 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 	prev = NULL;
 	while (curr != NULL)
 	{
-		if ((p = (t_process *)curr->content)->last_live <= game->last_check
-		|| game->to_die < 0)
+		p = (t_process *)curr->content;
+		if (p->last_live <= game->last_check || game->to_die < 0)
 		{
 			--(jobs->nb_processes);
 			--(vm->players[p->player_no - 1].nb_processes);
@@ -115,14 +115,13 @@ void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c)
 		CYCL_VERB ? ft_printf(V_CYCLETD, g->to_die) : 0;
 	}
 	g->last_check = vm->cpu.tick;
-	g->n_lives = 0;
 	g->p_lives = 0;
+	g->n_lives = 0;
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;
 	if (c->flags & CWF_SLOW && j->nb_processes > 0)
 		c->sleep_time = 1000000 / (c->cycles_sec * j->nb_processes);
 	c->verbose.bar_crop = BAR_CROP;
-	ft_memcpy(c->verbose.lbreakdown, c->verbose.cbreakdown,
-			BAR_BUFF_SIZE);
+	ft_memcpy(c->verbose.lbreakdown, c->verbose.cbreakdown, BAR_BUFF_SIZE);
 }

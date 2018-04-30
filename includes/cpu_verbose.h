@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 22:07:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 20:15:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@
 # define IVA		p->pid, p->next_op->name
 # define IVPMPT		"P %4u | %s "
 # define IVIH(str)	"       | -> " str " " V_DIR " + " V_DIR " = " V_DIR " "
-# define IVIM(str)	IVIH(str) "(with pc and mod " V_PC ")\n"
-# define IVI(str)	IVIH(str) "(with pc " V_PC ")\n"
+# define IVIM(str)	IVIH(str) "(with pc and mod " V_DIR ")\n"
+# define IVI(str)	IVIH(str) "(with pc " V_DIR ")\n"
 
 # define V_LIVE		IVPMPT V_DIR "\n"
 # define V_LD		IVPMPT V_DIR " " V_RNO "\n"

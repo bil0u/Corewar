@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 14:31:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/04/30 19:38:32 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,10 @@ typedef struct		s_op
 typedef struct		s_process
 {
 	uint32_t		registers[REG_NUMBER];
-	uint16_t		pc;
 	uint32_t		birth;
 	uint32_t		last_live;
-	uint16_t		pid;
+	uint32_t		pid;
+	uint16_t		pc;
 	uint16_t		timer;
 	uint8_t			carry;
 	uint8_t			player_no;
