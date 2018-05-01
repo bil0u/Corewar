@@ -11,17 +11,31 @@ diff_cmd="diff -C 1 -b"
 our_corewar="./corewar -z $verb $dump $champs"
 zaz_corewar="./tests/corewar_zaz $verb $dump $champs"
 
-echo "+-------------------------------------------"
-echo "| Testing diff on the first" $2 "lines"
-echo "+-------------------------------------------"
-echo "| Verb level >" $v_level "|" $1 "cycles" 
-echo "+-------------------------------------------"
-echo "| " $3
-echo "| " $4
-echo "| " $5
-echo "| " $6
-echo "+-------------------------------------------"
-echo "$diff_cmd <($our_corewar | $head) <($zaz_corewar | $head)"
-echo "--------------------------------------------"
-
-$diff_cmd <($our_corewar | $head) <($zaz_corewar | $head)
+if (($# < 3))
+then
+	echo "> Usage:"
+	echo "./check_diff.sh [dump cycles] [nb_lines to cmp] ./path/to/champ.cor [...]"
+elif (($1 < 1))
+then
+	echo "Please enter a positive dump cycles number ( >= 1 )"
+elif (($2 < 1))
+then
+	echo "Please enter a positive lines number ( >= 1 )"
+else
+	echo "+-------------------------------------------"
+	echo "| Testing diff on the first" $2 "lines"
+	echo "+-------------------------------------------"
+	echo "| Verb level >" $v_level "|" $1 "cycles" 
+	echo "+-------------------------------------------"
+	echo "| " $3
+	echo "| " $4
+	echo "| " $5
+	echo "| " $6
+	echo "+-------------------------------------------"
+	echo ">> COMMAND <<"
+	echo ""
+	echo "$diff_cmd <($our_corewar | $head) <($zaz_corewar | $head)"
+	echo ""
+	echo "--------------------------------------------"
+	$diff_cmd <($our_corewar | $head) <($zaz_corewar | $head)
+fi
