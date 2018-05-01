@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:19:20 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:14:20 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 22:08:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,10 @@ int		st_instr(t_vcpu *cpu, t_process *p)
 	data = CPU_ARG[1];
 	if (((CPU_OPBC >> 4) & 3) == ARG_IND)
 	{
-		cpu->pc_copy = jump_to(p->pc, TOI16(data));
+		cpu->pc_copy = jump_to(p->pc, TOI16(data) % IDX_MOD);
 		secure_store(cpu, p->player_no, r[r_src - 1], REG_SIZE);
 		INS_DEB ? log_this(IDW, D_STIND, IDA,
-			r[r_src - 1], r_src, TOI16(data), cpu->pc_copy) : 0;
+			r[r_src - 1], r_src, TOI16(data) % IDX_MOD, cpu->pc_copy) : 0;
 	}
 	else
 	{

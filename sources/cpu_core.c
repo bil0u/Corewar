@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 21:13:04 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 21:55:47 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,8 @@ static uint8_t	fetch_nextarg(t_vcpu *cpu, t_process *pending,
 	{
 		secure_fetch(cpu->memory, cpu->pc_copy, b, ARG_INDSZ);
 		ARG_DEB ? log_this(ADW, D_ARG_IND, arg_no + 1, TOI16(*b)) : 0;
-		op->op_number < 13 ? *b = (TOI16(*b) % IDX_MOD) & 0xFFFFFFFF : 0;
-		op->op_number < 13 && ARG_DEB ? log_this(ADW, D_IND_MOD, TOI16(*b)) : 0;
+		if (ARG_DEB && op->op_number < 13)
+			log_this(ADW, D_IND_MOD, TOI16(*b) % IDX_MOD);
 	}
 	else if (type == ARG_DIR)
 	{

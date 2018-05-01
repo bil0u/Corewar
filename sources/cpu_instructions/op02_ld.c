@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:19:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 16:12:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 22:12:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@
 int		ld_instr(t_vcpu *cpu, t_process *p)
 {
 	uint32_t	*r;
-	uint32_t	data;
+	int16_t		ind;
 	uint8_t		r_dst;
 
 	r = p->registers;
 	r_dst = TOU8(CPU_ARG[1]);
 	if (((CPU_OPBC >> 6) & 3) == ARG_IND)
 	{
-		data = CPU_ARG[0];
+		ind = TOI16(CPU_ARG[0]) % IDX_MOD;
 		decode_arg(CPU_MEM, p, ARG_IND, CPU_ARG);
 		r[r_dst - 1] = CPU_ARG[0];
-		INS_DEB ? log_this(IDW, D_LDIND, IDA, r[r_dst - 1], TOI16(data),
-			p->pc + TOI16(data), r_dst, p->carry) : 0;
+		INS_DEB ? log_this(IDW, D_LDIND, IDA, r[r_dst - 1], ind,
+			jump_to(p->pc, ind), r_dst, p->carry) : 0;
 	}
 	else
 	{

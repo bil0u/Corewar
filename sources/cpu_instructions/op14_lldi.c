@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:25:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 21:06:51 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 22:17:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,11 @@ int		lldi_instr(t_vcpu *cpu, t_process *p)
 
 	r = p->registers;
 	r_dst = TOU8(CPU_ARG[2]);
-	NEED_ZBUG && ((CPU_OPBC >> 6) & 3) == ARG_IND ? CPU_ARG[0] %= IDX_MOD : 0;
-	NEED_ZBUG && ((CPU_OPBC >> 4) & 3) == ARG_IND ? CPU_ARG[1] %= IDX_MOD : 0;
+	if (NEED_ZBUG)
+	{
+		((CPU_OPBC >> 6) & 3) == ARG_IND ? CPU_ARG[0] %= IDX_MOD : 0;
+		((CPU_OPBC >> 4) & 3) == ARG_IND ? CPU_ARG[1] %= IDX_MOD : 0;
+	}
 	decode_arg(CPU_MEM, p, (CPU_OPBC >> 6) & 3, CPU_ARG);
 	decode_arg(CPU_MEM, p, (CPU_OPBC >> 4) & 3, CPU_ARG + 1);
 	index = TOI32(CPU_ARG[0]) + TOI32(CPU_ARG[1]);
