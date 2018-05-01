@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 05:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 15:50:23 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 21:02:44 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,30 +31,6 @@ int				err_msg(char *msg)
 }
 
 /*
-** -- DUMP MEMORY ON STDOUT
-*/
-
-// static void		dump_memory(uint8_t *arena)
-// {
-// 	char		buff[LOG_BUFF_SIZE];
-// 	uint32_t	i;
-// 	uint32_t	ret;
-//
-// 	i = 0;
-// 	ret = 0;
-// 	while (i < MEM_SIZE)
-// 	{
-// 		if ((i & (BPL - 1)) == 0)
-// 			ret += ft_sprintf(buff + ret, MEM_VALUE, ((i / BPL) * BPL));
-// 		ret += ft_sprintf(buff + ret, "%.2hhx ", arena[i]);
-// 		++i;
-// 		if ((i & (BPL - 1)) == 0)
-// 			ret += ft_sprintf(buff + ret, "\n");
-// 	}
-// 	write(STDOUT_FILENO, buff, ret);
-// }
-
-/*
 ** -- PRINTS MEMORY ON STDOUT
 */
 
@@ -77,9 +53,17 @@ int				dump_stop(t_cwvm *vm, uint32_t *breakpoint)
 
 void			verb_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
 {
-	ft_printf(V_PCPRINT, nb_bytes, pc, jump_to(pc, nb_bytes));
-	while (nb_bytes--)
-		ft_printf(V_CELL, memory[pc++]);
+	ft_printf(V_PCPRINT, nb_bytes, pc, pc + nb_bytes);
+	if (pc + nb_bytes < MEM_SIZE)
+	{
+		while (nb_bytes--)
+			ft_printf(V_CELL, memory[pc++]);
+	}
+	else
+	{
+		while (nb_bytes--)
+			ft_printf(V_CELL, memory[pc++ & (MEM_SIZE - 1)]);
+	}
 	ft_putchar('\n');
 }
 
@@ -90,12 +74,20 @@ void			verb_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
 void			debug_pcmove(uint32_t pc, uint8_t *memory, uint8_t nb_bytes)
 {
 	char		buff[64];
-	uint32_t	ret;
+	uint32_t	r;
 	uint8_t		loops;
 
-	ret = 0;
+	r = 0;
 	loops = nb_bytes;
-	while (loops--)
-		ret += ft_sprintf(buff + ret, D_CELL, memory[pc++]);
+	if (pc + nb_bytes < MEM_SIZE)
+	{
+		while (loops--)
+			r += ft_sprintf(buff + r, D_CELL, memory[pc++]);
+	}
+	else
+	{
+		while (loops--)
+			r += ft_sprintf(buff + r, D_CELL, memory[pc++ & (MEM_SIZE - 1)]);
+	}
 	log_this(ADW, D_ARGREAD, buff, nb_bytes);
 }

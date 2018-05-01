@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 20:25:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 18:25:34 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,11 +151,10 @@ int			load_players(t_cwvm *vm)
 		p_data = vm->players + vm->p_indexes[curr_player];
 		head = &p_data->header;
 		pos = (MEM_SIZE / vm->nb_players) * curr_player;
-		if (!dup_process(&vm->cpu, p_data, NULL, pos))
-			return (FAILURE);
 		ft_memcpy(vm->arena + pos, p_data->binary, head->psize);
 		ft_memset(vm->a_flags + pos, CWCF_PNO(p_data->player_no), head->psize);
-		vm->a_flags[pos] |= CWCF_PC;
+		if (!dup_process(&vm->cpu, p_data, NULL, pos))
+			return (FAILURE);
 		ft_printf((vm->ctrl.flags & CWF_VERB ? CW_ZPLAYER : CW_PLAYER),
 			p_data->player_no, head->psize, head->pname, head->comment);
 		++curr_player;

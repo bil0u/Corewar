@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 18:28:25 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 19:28:28 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 #include "vm_debug.h"
 
 /*
-** -- DUPLICATE THE GIVEN PROCESS AND SET ITS VALUES TO MATCH ACTUAL CYCLE
+** -- DUPLICATE THE GIVEN PROCESS, INIT IF NONE GIVEN
 */
 
 t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
@@ -33,6 +33,7 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	child.pid = ++cpu->jobs->next_pid;
 	child.pc = init;
 	child.birth = cpu->tick;
+	BSET(cpu->m_flags[init], CWCF_PC);
 	if (p != NULL)
 	{
 		child.player_no = p->player_no;
@@ -88,6 +89,7 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 			--(vm->players[p->player_no - 1].nb_processes);
 			if (KILL_VERB)
 				ft_printf(V_KILL, p->pid, V_SINCE, game->to_die);
+			BUNSET(vm->a_flags[p->pc], CWCF_PC);
 			delete_process(&jobs->p_stack, &prev, &curr, &p);
 		}
 		else
@@ -108,15 +110,15 @@ void		check_gstate(t_cwvm *vm, t_gamectrl *g, t_jobctrl *j, t_vmctrl *c)
 
 	refresh_pstack(vm, g, j, j->p_stack);
 	++g->nb_checks;
-	if (g->n_lives >= NBR_LIVE || g->nb_checks == MAX_CHECKS)
+	if (g->tot_lives >= NBR_LIVE || g->nb_checks == MAX_CHECKS)
 	{
 		g->to_die -= CYCLE_DELTA;
 		g->nb_checks = 0;
 		CYCL_VERB ? ft_printf(V_CYCLETD, g->to_die) : 0;
 	}
 	g->last_check = vm->cpu.tick;
-	g->p_lives = 0;
-	g->n_lives = 0;
+	g->tot_lives = 0;
+	g->valid_lives = 0;
 	curr_player = 0;
 	while (curr_player < vm->nb_players)
 		vm->players[vm->p_indexes[curr_player++]].nb_lives = 0;

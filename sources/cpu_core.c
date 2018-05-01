@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 19:55:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 21:13:04 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -175,31 +175,32 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 **    > Launch the intruction execution, and set next_op to NULL
 */
 
-void			exec_or_wait(t_vcpu *cpu, t_process *pending,
-								t_player *player, t_gamectrl *game)
+void			exec_or_wait(t_vcpu *cpu, t_process *p,
+								t_player *pl, t_gamectrl *game)
 {
 	uint8_t		op_no;
 
-	if (pending->next_op == NULL)
+	BSET(cpu->m_flags[p->pc], CWCF_PC);
+	if (p->next_op == NULL)
 	{
-		if ((op_no = cpu->memory[pending->pc]) == 0 || op_no-- > NB_OPS)
+		if ((op_no = cpu->memory[p->pc]) == 0 || op_no-- > NB_OPS)
 		{
-			pending->pc = jump_to(pending->pc, OPBC_SIZE);
+			BUNSET(cpu->m_flags[p->pc], CWCF_PC);
+			p->pc = jump_to(p->pc, OPBC_SIZE);
 			MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 			return ;
 		}
-		pending->next_op = &(g_op_set[op_no]);
-		pending->timer = pending->next_op->cost;
+		p->next_op = &(g_op_set[op_no]);
+		p->timer = p->next_op->cost;
+		// MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 	}
-	if (--pending->timer == 0)
+	if (--p->timer == 0)
 	{
-		ft_sprintf(cpu->ctrl->verbose.color_buff[0],
-				get_p_color(pending->player_no));
-		BUNSET(cpu->m_flags[pending->pc], CWCF_PC);
-		exec_op(cpu, pending, player, game);
-		BSET(cpu->m_flags[pending->pc], CWCF_PC);
-		MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
+		ft_sprintf(cpu->ctrl->verbose.color_buff[0], get_p_color(p->player_no));
+		BUNSET(cpu->m_flags[p->pc], CWCF_PC);
+		exec_op(cpu, p, pl, game);
+		BSET(cpu->m_flags[p->pc], CWCF_PC);
 		REG_DEB ? debug_registers(&cpu->ctrl->verbose, cpu->jobs->p_stack) : 0;
-		pending->next_op = NULL;
+		p->next_op = NULL;
 	}
 }

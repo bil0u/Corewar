@@ -1,0 +1,45 @@
+--- ./results_tests/ORIG_sti_all_d75	2017-12-15 10:44:32.000000000 +0100
++++ ./results_tests/MINE_sti_all_d75	2017-12-15 10:44:41.000000000 +0100
+@@ -26,7 +26,7 @@
+ It is now cycle 24
+ It is now cycle 25
+ P    1 | sti r6 1946615801 0
+-       | -> store to 1946615801 + 0 = 1946615801 (with pc and mod 505)
++       | -> store to 1946615801 + 0 = 505 (with pc and mod 505)
+ ADV 6 (0x0000 -> 0x0006) 0b 74 06 00 07 07 
+ It is now cycle 26
+ It is now cycle 27
+@@ -53,8 +53,8 @@
+ It is now cycle 48
+ It is now cycle 49
+ It is now cycle 50
+-P    1 | sti r6 750598 0
+-       | -> store to 750598 + 0 = 750598 (with pc and mod 12)
++P    1 | sti r6 10515462 0
++       | -> store to 10515462 + 0 = 6 (with pc and mod 12)
+ ADV 6 (0x0006 -> 0x000c) 0b 74 06 ff f9 07 
+ It is now cycle 51
+ It is now cycle 52
+@@ -67,21 +67,19 @@
+ It is now cycle 59
+ It is now cycle 60
+ It is now cycle 61
+-ADV 6 (0x0011 -> 0x0017) 07 0b 74 06 c8 e2 
++ADV 7 (0x0011 -> 0x0018) 07 0b 74 06 c8 e2 07 
+ It is now cycle 62
+ It is now cycle 63
+ It is now cycle 64
+ It is now cycle 65
+ It is now cycle 66
+ It is now cycle 67
+-ADV 6 (0x0017 -> 0x001d) 07 0b 64 06 00 07 
+ It is now cycle 68
+ It is now cycle 69
+ It is now cycle 70
+ It is now cycle 71
+ It is now cycle 72
+ It is now cycle 73
+-ADV 6 (0x001d -> 0x0023) 07 0b 64 06 ff f9 
+ It is now cycle 74
+ It is now cycle 75
+ 0x0000 : 0b 74 06 00 07 07 0b 74 06 ff f9 07 00 00 00 00 1e 07 0b 74 06 c8 e2 07 0b 64 06 00 07 07 0b 64 06 ff f9 07 0b 64 06 51 84 07 0b 64 06 ae 7c 07 0b 54 06 07 07 0b 78 06 00 07 00 07 0b 78 06 ff 

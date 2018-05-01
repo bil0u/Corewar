@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:24:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 16:12:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 20:00:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,6 @@ int		ldi_instr(t_vcpu *cpu, t_process *p)
 	INS_DEB ? log_this(IDW, D_LDI, IDA,
 		r[r_dst - 1], CPU_ARG[0], CPU_ARG[1], pc_src, r_dst) : 0;
 	INS_VERB ? ft_printf(V_LDI, IVA, CPU_ARG[0], CPU_ARG[1], r_dst,
-		CPU_ARG[0], CPU_ARG[1], CPU_ARG[0] + CPU_ARG[1], pc_src) : 0;
+		CPU_ARG[0], CPU_ARG[1], CPU_ARG[0] + CPU_ARG[1], p->pc + index) : 0;
 	return (0);
 }

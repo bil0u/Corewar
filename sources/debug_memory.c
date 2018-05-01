@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 16:09:38 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 19:27:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void			debug_processes(t_cwvm *vm, t_list *curr, t_jobctrl *jobs)
 	uint32_t	ret;
 
 	verb = &vm->ctrl.verbose;
-	ret = ft_sprintf(buff, PROC_HEADER, jobs->nb_processes);
+	ret = ft_sprintf(buff, PROC_HEADER, jobs->nb_processes, vm->game.tot_lives);
 	while (curr != NULL)
 	{
 		process = (t_process *)curr->content;

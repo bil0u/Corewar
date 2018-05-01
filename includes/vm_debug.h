@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/29 05:25:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 19:33:07 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@
 # define INF_NBLIVE		"Lives " COLG("%-3u")
 
 # define INF_M1P1		"   " "Cycle " COLC("%-6d")
-# define INF_M1P2		"%16s" "Processes " COLM("%-4u") "   " INF_NBLIVE
+# define INF_M1P2		"%13s" "Processes " COLM("%-7u") "   " INF_NBLIVE
 # define INF_M1P3		"   " "Last live  " INF_PSQC
 # define INF_MSG1		INF_M1P1 INF_M1P2 INF_M1P3 "\n\n"
 
 # define INF_PSTAT1		"    " INF_PSQC "  "
-# define INF_PSTAT21	"  " "Childs " COLY("%-4u")
+# define INF_PSTAT21	"  " "Childs " COLY("%-7u")
 # define INF_PSTAT22	"   " INF_NBLIVE
 # define INF_PSTAT23	"   " "Last live  " COLC("%u")
 # define INF_PSTAT2		INF_PSTAT21 INF_PSTAT22 INF_PSTAT23 "\n\n"
-# define INF_PNAME		"%s%-22s{eoc}"
-# define INF_PNAMEL		"%s%-.19s...{eoc}"
+# define INF_PNAME		"%s%-19s{eoc}"
+# define INF_PNAMEL		"%s%-.16s...{eoc}"
 # define INF_BUFFSTAT	"%s\n"
 
 # define INF_BARMSG		"                          " "%s%50s\n\n"
@@ -122,17 +122,17 @@
 # define PCYCLE			COLC("%-7u")
 # define POPNAME		COLG("%-7s")
 # define PPC			COLM("%-4hu")
-# define PPID			COLC(" ID ") COLY("%-5hu")
+# define PPID			COLC(" ID ") COLY("%-7hu")
 # define PCARRY			COLY("%s")
 
-# define PHPNUM			COLY("%4u") " processes" "\n\n"
-# define PH1			COLY(" PROCESSES ") SEPVB COLB(" BIRTH ") SEPVB
+# define PHINF			COLY("%7u") " processes\t" COLY("%5u") " lives" "\n\n"
+# define PH1			COLY(" PROCESS IDS ") SEPVB COLB(" BIRTH ") SEPVB
 # define PH2			COLB("L. LIVE") SEPVB COLB("PENDING") SEPVB
 # define PH3			COLB("TIMER") SEPVB COLB(" PC ") SEPVB COLB("C") SEPVB
 # define PHL1			SEPVB PH1 PH2 PH3 "\n"
-# define PHSEP			COLBBK(COLB("--------------------------------"))
+# define PHSEP			COLBBK(COLB("---------------------------------"))
 # define PHL2			PHSEP PHSEP "\n"
-# define PROC_HEADER	COLG(">> PROCESSES <<\t\t") PHPNUM PHL1 " " PHL2
+# define PROC_HEADER	COLG(">> PROCESSES <<\t\t") PHINF PHL1 " " PHL2
 # define PROC_I1		SEPVB D_PNO PPID SEPVB PCYCLE SEPVB PCYCLE
 # define PROC_I2		SEPVB POPNAME SEPVB PTIMER SEPVB PPC SEPVB PCARRY SEPVB
 # define PROC_INFOS		PROC_I1 PROC_I2 "\n"
@@ -159,7 +159,7 @@
 # define PREGSET		COLY("%8.8x") SEPVB
 # define PREGZERO		COLW("%8.8x") SEPVB
 
-# define REGPIDS		"  {yellow}PROCESSES{blue}     "
+# define REGPIDS		"  {yellow}PROCESS IDS{blue}     "
 # define REGNOS1		"R1         R2         R3         R4         "
 # define REGNOS2		"R5         R6         R7         R8         "
 # define REGNOS3		"R9         R10        R11        R12        "

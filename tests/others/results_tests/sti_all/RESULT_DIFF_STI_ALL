@@ -1,0 +1,304 @@
+--- ./results_tests/ORIG_sti_all	2017-12-15 10:11:23.000000000 +0100
++++ ./results_tests/MINE_sti_all	2017-12-15 10:11:38.000000000 +0100
+@@ -26,7 +26,7 @@
+ It is now cycle 24
+ It is now cycle 25
+ P    1 | sti r6 1946615801 0
+-       | -> store to 1946615801 + 0 = 1946615801 (with pc and mod 505)
++       | -> store to 1946615801 + 0 = 505 (with pc and mod 505)
+ ADV 6 (0x0000 -> 0x0006) 0b 74 06 00 07 07 
+ It is now cycle 26
+ It is now cycle 27
+@@ -53,8 +53,8 @@
+ It is now cycle 48
+ It is now cycle 49
+ It is now cycle 50
+-P    1 | sti r6 750598 0
+-       | -> store to 750598 + 0 = 750598 (with pc and mod 12)
++P    1 | sti r6 1078278 0
++       | -> store to 1078278 + 0 = 6 (with pc and mod 12)
+ ADV 6 (0x0006 -> 0x000c) 0b 74 06 ff f9 07 
+ It is now cycle 51
+ It is now cycle 52
+@@ -67,42 +67,40 @@
+ It is now cycle 59
+ It is now cycle 60
+ It is now cycle 61
+-ADV 6 (0x0011 -> 0x0017) 07 0b 74 06 c8 e2 
++ADV 7 (0x0011 -> 0x0018) 07 0b 74 06 c8 e2 07 
+ It is now cycle 62
+ It is now cycle 63
+ It is now cycle 64
+ It is now cycle 65
+ It is now cycle 66
+ It is now cycle 67
+-ADV 6 (0x0017 -> 0x001d) 07 0b 64 06 00 07 
+ It is now cycle 68
+ It is now cycle 69
+ It is now cycle 70
+ It is now cycle 71
+ It is now cycle 72
+ It is now cycle 73
+-ADV 6 (0x001d -> 0x0023) 07 0b 64 06 ff f9 
+ It is now cycle 74
+ It is now cycle 75
+ It is now cycle 76
+ It is now cycle 77
+ It is now cycle 78
+ It is now cycle 79
+-ADV 6 (0x0023 -> 0x0029) 07 0b 64 06 51 84 
+ It is now cycle 80
+ It is now cycle 81
+ It is now cycle 82
+ It is now cycle 83
+ It is now cycle 84
+ It is now cycle 85
+-ADV 6 (0x0029 -> 0x002f) 07 0b 64 06 ae 7c 
+ It is now cycle 86
++P    1 | sti r6 7 0
++       | -> store to 7 + 0 = 7 (with pc and mod 31)
++ADV 6 (0x0018 -> 0x001e) 0b 64 06 00 07 07 
+ It is now cycle 87
+ It is now cycle 88
+ It is now cycle 89
+ It is now cycle 90
+ It is now cycle 91
+-ADV 6 (0x002f -> 0x0035) 07 0b 54 06 07 07 
+ It is now cycle 92
+ It is now cycle 93
+ It is now cycle 94
+@@ -123,18 +121,17 @@
+ It is now cycle 109
+ It is now cycle 110
+ It is now cycle 111
++ADV 2 (0x001e -> 0x0020) 0b 00 
+ It is now cycle 112
+ It is now cycle 113
+ It is now cycle 114
+ It is now cycle 115
+ It is now cycle 116
+-P    1 | sti r6 192415487 7
+-       | -> store to 192415487 + 7 = 192415494 (with pc and mod 315)
+-ADV 7 (0x0035 -> 0x003c) 0b 78 06 00 07 00 07 
+ It is now cycle 117
+ It is now cycle 118
+ It is now cycle 119
+ It is now cycle 120
++ADV 7 (0x0023 -> 0x002a) 07 0b 64 06 51 84 07 
+ It is now cycle 121
+ It is now cycle 122
+ It is now cycle 123
+@@ -156,13 +153,13 @@
+ It is now cycle 139
+ It is now cycle 140
+ It is now cycle 141
+-P    1 | sti r6 192415232 -7
+-       | -> store to 192415232 + -7 = 192415225 (with pc and mod 565)
+-ADV 7 (0x003c -> 0x0043) 0b 78 06 ff f9 ff f9 
+ It is now cycle 142
+ It is now cycle 143
+ It is now cycle 144
+ It is now cycle 145
++P    1 | sti r6 -20868 0
++       | -> store to 44668 + 0 = 124 (with pc and mod 166)
++ADV 6 (0x002a -> 0x0030) 0b 64 06 ae 7c 07 
+ It is now cycle 146
+ It is now cycle 147
+ It is now cycle 148
+@@ -184,13 +181,13 @@
+ It is now cycle 164
+ It is now cycle 165
+ It is now cycle 166
+-P    1 | sti r6 -488436872 -30543
+-       | -> store to -488436872 + -30543 = -488467415 (with pc and mod -404)
+-ADV 7 (0x0043 -> 0x004a) 0b 78 06 12 2f 88 b1 
+ It is now cycle 167
+ It is now cycle 168
+ It is now cycle 169
+ It is now cycle 170
++P    1 | sti r6 0 0
++       | -> store to 0 + 0 = 0 (with pc and mod 48)
++ADV 5 (0x0030 -> 0x0035) 00 00 00 00 07 
+ It is now cycle 171
+ It is now cycle 172
+ It is now cycle 173
+@@ -212,13 +209,13 @@
+ It is now cycle 189
+ It is now cycle 190
+ It is now cycle 191
+-P    1 | sti r6 0 -30101
+-       | -> store to 0 + -30101 = -30101 (with pc and mod -331)
+-ADV 7 (0x004a -> 0x0051) 0b 78 06 20 9b 8a 6b 
+ It is now cycle 192
+ It is now cycle 193
+ It is now cycle 194
+ It is now cycle 195
++P    1 | sti r6 192415487 7
++       | -> store to 192415487 + 7 = 262 (with pc and mod 315)
++ADV 7 (0x0035 -> 0x003c) 0b 78 06 00 07 00 07 
+ It is now cycle 196
+ It is now cycle 197
+ It is now cycle 198
+@@ -240,13 +237,13 @@
+ It is now cycle 214
+ It is now cycle 215
+ It is now cycle 216
+-P    1 | sti r6 7 7
+-       | -> store to 7 + 7 = 14 (with pc and mod 95)
+-ADV 7 (0x0051 -> 0x0058) 0b 68 06 00 07 00 07 
+ It is now cycle 217
+ It is now cycle 218
+ It is now cycle 219
+ It is now cycle 220
++P    1 | sti r6 192415232 -7
++       | -> store to 192415232 + -7 = 505 (with pc and mod 565)
++ADV 7 (0x003c -> 0x0043) 0b 78 06 ff f9 ff f9 
+ It is now cycle 221
+ It is now cycle 222
+ It is now cycle 223
+@@ -268,13 +265,13 @@
+ It is now cycle 239
+ It is now cycle 240
+ It is now cycle 241
+-P    1 | sti r6 14779 9645
+-       | -> store to 14779 + 9645 = 24424 (with pc and mod 448)
+-ADV 7 (0x0058 -> 0x005f) 0b 68 06 39 bb 25 ad 
+ It is now cycle 242
+ It is now cycle 243
+ It is now cycle 244
+ It is now cycle 245
++P    1 | sti r6 0 -30543
++       | -> store to 0 + -30543 = 177 (with pc and mod -268)
++ADV 7 (0x0043 -> 0x004a) 0b 78 06 12 2f 88 b1 
+ It is now cycle 246
+ It is now cycle 247
+ It is now cycle 248
+@@ -300,12 +297,12 @@
+ It is now cycle 268
+ It is now cycle 269
+ It is now cycle 270
++P    1 | sti r6 0 -30101
++       | -> store to 0 + -30101 = 107 (with pc and mod -331)
++ADV 7 (0x004a -> 0x0051) 0b 78 06 20 9b 8a 6b 
+ It is now cycle 271
+ It is now cycle 272
+ It is now cycle 273
+-P    1 | sti r6 8457 7453
+-       | -> store to 8457 + 7453 = 15910 (with pc and mod 140)
+-ADV 7 (0x0066 -> 0x006d) 0b 68 06 21 09 1d 1d 
+ It is now cycle 274
+ It is now cycle 275
+ It is now cycle 276
+@@ -328,12 +325,12 @@
+ It is now cycle 293
+ It is now cycle 294
+ It is now cycle 295
++P    1 | sti r6 7 7
++       | -> store to 7 + 7 = 14 (with pc and mod 95)
++ADV 7 (0x0051 -> 0x0058) 0b 68 06 00 07 00 07 
+ It is now cycle 296
+ It is now cycle 297
+ It is now cycle 298
+-P    1 | sti r6 -8457 -7453
+-       | -> store to -8457 + -7453 = -15910 (with pc and mod 71)
+-ADV 7 (0x006d -> 0x0074) 0b 68 06 de f7 e2 e3 
+ It is now cycle 299
+ It is now cycle 300
+ It is now cycle 301
+@@ -356,12 +353,12 @@
+ It is now cycle 318
+ It is now cycle 319
+ It is now cycle 320
++P    1 | sti r6 14779 9645
++       | -> store to 14779 + 9645 = 360 (with pc and mod 448)
++ADV 7 (0x0058 -> 0x005f) 0b 68 06 39 bb 25 ad 
+ It is now cycle 321
+ It is now cycle 322
+ It is now cycle 323
+-P    1 | sti r6 0 -7453
+-       | -> store to 0 + -7453 = -7453 (with pc and mod -169)
+-ADV 7 (0x0074 -> 0x007b) 0b 78 06 de f7 e2 e3 
+ It is now cycle 324
+ It is now cycle 325
+ It is now cycle 326
+@@ -387,13 +384,13 @@
+ It is now cycle 346
+ It is now cycle 347
+ It is now cycle 348
+-P    1 | sti r6 0 7453
+-       | -> store to 0 + 7453 = 7453 (with pc and mod 408)
+-ADV 7 (0x007b -> 0x0082) 0b 78 06 21 09 1d 1d 
+ It is now cycle 349
+ It is now cycle 350
+ It is now cycle 351
+ It is now cycle 352
++P    1 | sti r6 8457 7453
++       | -> store to 8457 + 7453 = 38 (with pc and mod 140)
++ADV 7 (0x0066 -> 0x006d) 0b 68 06 21 09 1d 1d 
+ It is now cycle 353
+ It is now cycle 354
+ It is now cycle 355
+@@ -415,13 +412,13 @@
+ It is now cycle 371
+ It is now cycle 372
+ It is now cycle 373
+-P    1 | sti r6 0 5647
+-       | -> store to 0 + 5647 = 5647 (with pc and mod 145)
+-ADV 6 (0x0082 -> 0x0088) 0b 58 06 07 16 0f 
+ It is now cycle 374
+ It is now cycle 375
+ It is now cycle 376
+ It is now cycle 377
++P    1 | sti r6 -8457 -7453
++       | -> store to 57079 + -7453 = 474 (with pc and mod 583)
++ADV 7 (0x006d -> 0x0074) 0b 68 06 de f7 e2 e3 
+ It is now cycle 378
+ It is now cycle 379
+ It is now cycle 380
+@@ -443,13 +440,13 @@
+ It is now cycle 396
+ It is now cycle 397
+ It is now cycle 398
+-P    1 | sti r6 0 0
+-       | -> store to 0 + 0 = 0 (with pc and mod 136)
+-ADV 6 (0x0088 -> 0x008e) 00 00 00 00 00 00 
+ It is now cycle 399
+ It is now cycle 400
+ It is now cycle 401
+ It is now cycle 402
++P    1 | sti r6 0 -7453
++       | -> store to 0 + -7453 = 227 (with pc and mod -169)
++ADV 7 (0x0074 -> 0x007b) 0b 78 06 de f7 e2 e3 
+ It is now cycle 403
+ It is now cycle 404
+ It is now cycle 405
+@@ -475,6 +472,9 @@
+ It is now cycle 425
+ It is now cycle 426
+ It is now cycle 427
++P    1 | sti r6 0 7453
++       | -> store to 0 + 7453 = 285 (with pc and mod 408)
++ADV 7 (0x007b -> 0x0082) 0b 78 06 21 09 1d 1d 
+ It is now cycle 428
+ It is now cycle 429
+ It is now cycle 430
+@@ -500,6 +500,9 @@
+ It is now cycle 450
+ It is now cycle 451
+ It is now cycle 452
++P    1 | sti r6 0 5647
++       | -> store to 0 + 5647 = 15 (with pc and mod 145)
++ADV 6 (0x0082 -> 0x0088) 0b 58 06 07 16 0f 
+ It is now cycle 453
+ It is now cycle 454
+ It is now cycle 455
+@@ -525,6 +528,9 @@
+ It is now cycle 475
+ It is now cycle 476
+ It is now cycle 477
++P    1 | sti r6 0 0
++       | -> store to 0 + 0 = 0 (with pc and mod 136)
++ADV 6 (0x0088 -> 0x008e) 00 00 00 00 00 00 
+ It is now cycle 478
+ It is now cycle 479
+ It is now cycle 480

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 19:38:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 21:15:01 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 
 	curr = j->p_stack;
 	c = &vm->ctrl;
+	cpu->b_read = 0;
 	while (curr != NULL)
 	{
 		p = (t_process *)curr->content;
@@ -67,6 +68,7 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 		curr = curr->next;
 	}
 	PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
+	MEM_DEB && cpu->b_read > 0 ? debug_memory(MDA, MEM_WIN) : 0;
 }
 
 /*
@@ -93,7 +95,7 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 			consume_cycle(vm, cpu, g, j);
 			if (cpu->tick == breakpoint && dump_stop(vm, &breakpoint) == TRUE)
 				return (TRUE);
-			if (cpu->tick >= g->last_check + g->to_die)
+			if (TOI32(cpu->tick - g->last_check) >= g->to_die)
 				check_gstate(vm, g, j, c);
 		}
 		else
@@ -116,7 +118,10 @@ int				main(int argc, char **argv)
 	if (init_vm(argc, argv, &vm) != SUCCESS)
 		return (err_msg(CWE_HELP));
 	if (load_players(&vm) == FAILURE)
-		return (err_msg(CWE_MALLOC));
+	{
+		ft_putstr_fd(CWE_MALLOC, STDERR_FILENO);
+		return (FAILURE);
+	}
 	init_data(&vm);
 	ret = run_cpu(&vm, &vm.cpu, &vm.game, &vm.jobs);
 	end_game(&vm, &vm.ctrl, &vm.jobs, ret);

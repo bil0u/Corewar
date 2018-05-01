@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:26:08 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 20:19:06 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 18:53:25 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ int		lfork_instr(t_vcpu *cpu, t_process *p, t_player *pl)
 		INS_VERB ? ft_printf(V_LFORK, IVA, index, p->pc + index) : 0;
 	}
 	else
-		log_this(NULL, LF_ERR, CWE_MALLOC);
+		ft_putstr_fd(CWE_MALLOC, STDERR_FILENO);
 	return (ARG_INDSZ);
 }

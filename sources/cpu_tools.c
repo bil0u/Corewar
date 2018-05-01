@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 14:31:56 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 20:05:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,6 @@ void		decode_arg(uint8_t *mem, t_process *p, uint8_t type, uint32_t *buff)
 	else if (type == ARG_IND)
 	{
 		ind = jump_to(p->pc, TOI16(*buff));
-		*buff = 0;
 		secure_fetch(mem, ind, buff, REG_SIZE);
 	}
 	else if (type == ARG_DIR && p->next_op->short_directs)
