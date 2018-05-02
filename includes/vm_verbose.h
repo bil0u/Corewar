@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/28 22:15:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 17:48:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 ** -- SEPARATORS --
 */
 
-# define SEPL1			"+---------------------------+----------------------+"
+# define SEPL1			"+----------------------------+-----------------------+"
 # define SEPL2			"-------------------------------------"
 # define SEPB			COLB(SEPL1) "\n"
 # define SEPR			COLR(SEPL2) "\n"
@@ -56,9 +56,9 @@
 ** -- COREWAR VM DUMP & SDUMP HEADERS --
 */
 
-# define CW_STOP_MSG	COLG(" >> ") "Memory at cycle " COLY("%-6u") COLB(" | ")
+# define CW_STOP_MSG	COLG(" >> ") "Memory at cycle " COLY("%-7u") COLB(" | ")
 # define CW_DUMP_MSG	"Exiting\n\n"
-# define CW_SDMP_MSG	"Paused for 3 seconds" COLB(" |") "\n"
+# define CW_SDMP_MSG	"< SPACE > to continue" COLB(" |") "\n"
 # define CW_SDMPH		SEPB COLB("|") CW_STOP_MSG CW_SDMP_MSG SEPB
 # define CW_DUMPH		CW_STOP_MSG CW_DUMP_MSG
 

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 00:33:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 19:11:36 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 }
 
 /*
-** -- RUN THE CPU UNTIL A WINNER IS FOUND OR UTIL DUMP CYCLE NO IS REACHED
+** -- RUN THE VCPU UNTIL A WINNER IS FOUND OR UTIL DUMP CYCLE NO IS REACHED
 */
 
 static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)

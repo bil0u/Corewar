@@ -23,6 +23,9 @@ then
 	echo "Please enter a positive lines number ( >= 1 )"
 else
 	echo "+-------------------------------------------"
+	echo "| WARNING : Having diffs with Zaz's VM"
+	echo "| does not mean you're wrong"
+	echo "+-------------------------------------------"
 	echo "| Showing the first" $2 "diff lines"
 	echo "+-------------------------------------------"
 	echo "| Verb level >" $v_level "|" $1 "cycles" 

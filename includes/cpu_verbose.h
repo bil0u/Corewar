@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 07:25:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 19:34:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define IVPMPT		"P %4u | %s "
 # define IVIH(str)	"       | -> " str " " V_DIR " + " V_DIR " = " V_DIR " "
 # define IVIM(str)	IVIH(str) "(with pc and mod " V_IND ")\n"
-# define IVI(str)	IVIH(str) "(with pc " V_IND ")\n"
+# define IVI(str)	IVIH(str) "(with pc " V_DIR ")\n"
 
 # define V_LIVE		IVPMPT V_DIR "\n"
 # define V_LD		IVPMPT V_DIR " " V_RNO "\n"

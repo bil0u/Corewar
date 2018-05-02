@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 08:24:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 19:14:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ static void		exec_op(t_vcpu *cpu, t_process *pending,
 	cpu->pc_copy = pending->pc;
 	cpu->b_read = OPBC_SIZE;
 	ARG_DEB ? log_this(ADW, D_CURROP, ADA) : 0;
-	if ((valid = TRUE) && op->has_bytecode)
+	if ((valid = (op->op_number == cpu->memory[cpu->pc_copy])) && op->has_bytecode)
 	{
 		cpu->b_read += ARGBC_SIZE;
 		CPU_OPBC = *(cpu->memory + jump_to(cpu->pc_copy, OPBC_SIZE));
