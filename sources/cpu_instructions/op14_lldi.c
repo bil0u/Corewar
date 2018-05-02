@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:25:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 19:36:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 20:39:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,12 @@ int		lldi_instr(t_vcpu *cpu, t_process *p)
 	decode_arg(CPU_MEM, p, (CPU_OPBC >> 6) & 3, CPU_ARG);
 	decode_arg(CPU_MEM, p, (CPU_OPBC >> 4) & 3, CPU_ARG + 1);
 	index = TOI32(CPU_ARG[0]) + TOI32(CPU_ARG[1]);
-	pc_src = jump_to(p->pc, TOI16(NEED_ZBUG ? index % IDX_MOD : index));
+	pc_src = jump_to(p->pc, index);
 	secure_fetch(CPU_MEM, pc_src, r + r_dst - 1, REG_SIZE);
 	p->carry = (r[r_dst - 1] == 0);
 	INS_DEB ? log_this(IDW, D_LLDI, IDA,
 		r[r_dst - 1], CPU_ARG[0], CPU_ARG[1], pc_src, r_dst, p->carry) : 0;
-	INS_VERB ? ft_printf(V_LLDI, IVA, CPU_ARG[0], CPU_ARG[1], r_dst, CPU_ARG[0],
-		CPU_ARG[1], index, p->pc + index) : 0;
+	INS_VERB ? ft_printf(V_LLDI, IVA, CPU_ARG[0], CPU_ARG[1], r_dst,
+		CPU_ARG[0], CPU_ARG[1], index, p->pc + index) : 0;
 	return (0);
 }
