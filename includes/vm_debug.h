@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 04:31:35 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 20:54:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,9 +99,9 @@
 
 # define PCC_P0			"{b_white}" COLBK("%2.2hhx") "{eoc} "
 # define PCC_P1			BCOL_P1 COLW("%2.2hhx") COL_P1 " "
-# define PCC_P2			BCOL_P2 COLBK("%2.2hhx") COL_P2 " "
+# define PCC_P2			BCOL_P2 COLW("%2.2hhx") COL_P2 " "
 # define PCC_P3			BCOL_P3 COLW("%2.2hhx") COL_P3 " "
-# define PCC_P4			BCOL_P4 COLBK("%2.2hhx") COL_P4 " "
+# define PCC_P4			BCOL_P4 COLW("%2.2hhx") COL_P4 " "
 
 /*
 ** -- PROCESSES INFO --
