@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 02:06:49 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 19:27:17 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 04:20:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,32 @@
 #include "cpu_debug.h"
 
 /*
-** -- PRINT MEMORY CELL IN HEX AND REMOVE RECENT WRITE FLAG IF SET
+** -- PRINT MEMORY CELL IN HEX AND REMOVE PC OR RECENT WRITE FLAGS IF SET
 */
 
-static void		print_pcell(uint8_t *fl, uint8_t cel, char *buff, uint32_t *ret)
+static void		print_pcell(uint16_t *f, uint8_t cell, char *buff, uint32_t *r)
 {
 	uint8_t		p_no;
 
-	p_no = get_pno(*fl);
-	*ret += ft_sprintf(buff + *ret, get_p_color(p_no), cel);
-	if (*fl & CWCF_PC)
-		*ret += ft_sprintf(buff + *ret, get_p_pccolor(p_no), cel);
+	if ((*f >> CWCF_PCSHIFT) == CWCF_NONE)
+	{
+		p_no = get_pno((*f >> NB_CFLAGS) & 0xF);
+		*r += ft_sprintf(buff + *r, get_p_color(p_no), cell);
+		if (*f & CWCF_RWRITE)
+		{
+			*r += ft_sprintf(buff + *r, MEMWR_COLOR);
+			BUNSET(*f, CWCF_RWRITE);
+		}
+		*r += ft_sprintf(buff + *r, MEMSET_COLOR, cell);
+	}
 	else
 	{
-		if (*fl & CWCF_RWRITE)
-			*ret += ft_sprintf(buff + *ret, MEMWR_COLOR);
-		*ret += ft_sprintf(buff + *ret, MEMSET_COLOR, cel);
-		if (*fl & CWCF_RWRITE)
-			*fl &= ~(CWCF_RWRITE);
+		if (((*f >> NB_CFLAGS) & 0xF) == 0)
+			p_no = 0;
+		else
+			p_no = get_pno((*f >> CWCF_PCSHIFT) & 0xF);
+		*r += ft_sprintf(buff + *r, get_p_pccolor(p_no), cell);
+		BUNSET(*f, CWCF_PCNO(p_no));
 	}
 }
 
@@ -47,26 +55,28 @@ static void		print_pcell(uint8_t *fl, uint8_t cel, char *buff, uint32_t *ret)
 **    > Empty cells are in white
 */
 
-void			debug_memory(uint8_t *arena, uint8_t *a_flags, char *win)
+void			debug_memory(uint8_t *arena, uint16_t *a_flags, char *win)
 {
 	char		buff[LOG_BUFF_SIZE];
-	uint32_t	i;
 	uint32_t	ret;
+	uint16_t	i;
+	uint8_t		cell;
 
 	i = 0;
 	ret = (win != NULL ? ft_sprintf(buff, MEM_HEADER) : 0);
 	while (i < MEM_SIZE)
 	{
+		cell = arena[i];
 		if ((i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, MEM_VALUE, ((i / BPL) * BPL));
 		if (a_flags[i] == CWCF_NONE)
-			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, arena[i]);
+			ret += ft_sprintf(buff + ret, MEMZERO_COLOR, cell);
 		else
-			print_pcell(a_flags + i, arena[i], buff, &ret);
+			print_pcell(a_flags + i, cell, buff, &ret);
 		if ((++i & (BPL - 1)) == 0)
 			ret += ft_sprintf(buff + ret, "\n");
 	}
-	win != NULL ? clear_window(win) : (void)0;
+	clear_window(win);
 	log_this(win, 0, buff);
 }
 

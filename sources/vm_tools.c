@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/08 06:06:59 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 19:28:28 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 01:40:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,13 +27,10 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 	t_process	child;
 
 	jobs = cpu->jobs;
-	++pl->nb_processes;
-	++jobs->nb_processes;
 	ft_bzero(&child, sizeof(child));
-	child.pid = ++cpu->jobs->next_pid;
-	child.pc = init;
 	child.birth = cpu->tick;
-	BSET(cpu->m_flags[init], CWCF_PC);
+	child.pid = ++jobs->next_pid;
+	child.pc = init;
 	if (p != NULL)
 	{
 		child.player_no = p->player_no;
@@ -46,6 +43,9 @@ t_process	*dup_process(t_vcpu *cpu, t_player *pl, t_process *p, uint16_t init)
 		child.player_no = pl->player_no;
 		child.registers[0] = REG_MAXVALUE - (child.player_no - 1);
 	}
+	BSET(cpu->m_flags[init], CWCF_PCNO(child.player_no));
+	++pl->nb_processes;
+	++jobs->nb_processes;
 	ft_lstadd(&jobs->p_stack, ft_lstnew(&child, sizeof(child)));
 	return (jobs->p_stack ? (t_process *)jobs->p_stack->content : NULL);
 }
@@ -89,7 +89,7 @@ static void	refresh_pstack(t_cwvm *vm, t_gamectrl *game,
 			--(vm->players[p->player_no - 1].nb_processes);
 			if (KILL_VERB)
 				ft_printf(V_KILL, p->pid, V_SINCE, game->to_die);
-			BUNSET(vm->a_flags[p->pc], CWCF_PC);
+			BUNSET(vm->a_flags[p->pc], CWCF_PCNO(p->player_no));
 			delete_process(&jobs->p_stack, &prev, &curr, &p);
 		}
 		else

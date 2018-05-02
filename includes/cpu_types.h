@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 19:38:32 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 01:08:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ typedef struct		s_vcpu
 	uint32_t		tick;
 	uint16_t		pc_copy;
 	uint8_t			*memory;
-	uint8_t			*m_flags;
+	uint16_t		*m_flags;
 	uint32_t		op_args[MAX_ARGS];
 	uint8_t			op_bytecode;
 	uint8_t			b_read;

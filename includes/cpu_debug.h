@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 02:41:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 17:57:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 23:50:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@
 # define D_CYCLE	COLBBK(" ") COLB(" Cycle ") COLC("%-6d")
 # define D_PNO		"%sP%hhu{eoc}"
 # define D_PID		COLC("ID ") COLY("%hu")
-# define D_PIDS		COLC("ID ") COLY("%-5hu")
+# define D_PIDS		COLC("ID ") COLY("%-7hu")
 # define D_PCVAL	COLB("PC ") COLM("%-4u")
 # define D_OP		"%-5s"
 # define D_ID1		D_CYCLE D_SV D_PCVAL D_SV D_PNO " " D_PIDS D_SV

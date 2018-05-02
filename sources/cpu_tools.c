@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 16:21:21 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 22:12:11 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 04:17:11 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,10 @@ void		secure_fetch(uint8_t *memory, uint16_t pc, uint32_t *dst, size_t sz)
 
 void		secure_store(t_vcpu *cpu, uint8_t p_no, uint32_t src, size_t sz)
 {
-	uint16_t	pc;
-	uint8_t		*tmp;
+	uint16_t	*flags;
 	uint8_t		*mem;
-	uint8_t		*flags;
+	uint8_t		*tmp;
+	uint16_t	pc;
 
 	tmp = (uint8_t *)(&src);
 	pc = cpu->pc_copy;

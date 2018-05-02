@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 05:12:38 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 21:02:44 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/01 23:47:33 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int				dump_stop(t_cwvm *vm, uint32_t *breakpoint)
 	debug_memory(vm->arena, vm->a_flags, NULL);
 	if (vm->ctrl.flags & CWF_SDMP)
 	{
-		sleep(DUMP_WAIT);
+		vm->ctrl.paused = TRUE;
 		*breakpoint += vm->ctrl.dump_cycles;
 		return (FALSE);
 	}

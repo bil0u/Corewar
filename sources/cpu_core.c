@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/27 17:07:41 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 21:55:47 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 04:17:38 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -180,27 +180,26 @@ void			exec_or_wait(t_vcpu *cpu, t_process *p,
 {
 	uint8_t		op_no;
 
-	BSET(cpu->m_flags[p->pc], CWCF_PC);
 	if (p->next_op == NULL)
 	{
 		if ((op_no = cpu->memory[p->pc]) == 0 || op_no-- > NB_OPS)
 		{
-			BUNSET(cpu->m_flags[p->pc], CWCF_PC);
+			BUNSET(cpu->m_flags[p->pc], CWCF_PCNO(p->player_no));
 			p->pc = jump_to(p->pc, OPBC_SIZE);
-			MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
+			cpu->b_read = OPBC_SIZE;
+			BSET(cpu->m_flags[p->pc], CWCF_PCNO(p->player_no));
 			return ;
 		}
 		p->next_op = &(g_op_set[op_no]);
 		p->timer = p->next_op->cost;
-		// MEM_DEB ? debug_memory(MDA, MEM_WIN) : 0;
 	}
 	if (--p->timer == 0)
 	{
 		ft_sprintf(cpu->ctrl->verbose.color_buff[0], get_p_color(p->player_no));
-		BUNSET(cpu->m_flags[p->pc], CWCF_PC);
+		BUNSET(cpu->m_flags[p->pc], CWCF_PCNO(p->player_no));
 		exec_op(cpu, p, pl, game);
-		BSET(cpu->m_flags[p->pc], CWCF_PC);
 		REG_DEB ? debug_registers(&cpu->ctrl->verbose, cpu->jobs->p_stack) : 0;
 		p->next_op = NULL;
 	}
+	BSET(cpu->m_flags[p->pc], CWCF_PCNO(p->player_no));
 }

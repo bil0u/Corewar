@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 21:15:01 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 00:33:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 	{
 		if (read(STDIN_FILENO, &key_input, 1) > 0 && key_input == ' ')
 			c->paused = !(c->paused);
-		if ((c->paused == 0 || key_input == '\n') && (key_input = 0) == 0)
+		if ((c->paused == FALSE || key_input == '\n') && (key_input = 0) == 0)
 		{
 			++cpu->tick;
 			CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;

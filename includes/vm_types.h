@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 19:27:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 01:34:03 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ typedef struct		s_cwvm
 	t_gamectrl		game;
 	t_vcpu			cpu;
 	uint8_t			arena[MEM_SIZE];
-	uint8_t			a_flags[MEM_SIZE];
+	uint16_t		a_flags[MEM_SIZE];
 	t_player		players[MAX_PLAYERS];
 	uint8_t			p_indexes[MAX_PLAYERS];
 	uint8_t			nb_players;
@@ -208,12 +208,12 @@ typedef struct		s_cwvm
 ** -- COLOR FLAGS
 */
 
-# define NB_CFLAGS				2
+# define NB_CFLAGS				1
+# define CWCF_PCSHIFT			(NB_CFLAGS + MAX_PLAYERS)
 
 # define CWCF_NONE				(0)
-# define CWCF_PC				(1 << 0)
-# define CWCF_RWRITE			(1 << 1)
-
+# define CWCF_RWRITE			(1 << 0)
 # define CWCF_PNO(x)			(1 << (NB_CFLAGS + (x - 1)))
+# define CWCF_PCNO(x)			(1 << (CWCF_PCSHIFT + (x - 1)))
 
 #endif

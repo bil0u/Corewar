@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 19:33:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 04:31:35 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@
 # define INF_HEAD		COLG(">> INFO <<\n\n")
 
 # define INF_PSQC		"%s" COLBK(" P%hhu ")
-# define INF_NBLIVE		"Lives " COLG("%-3u")
+# define INF_NBLIVE		"Lives " COLG("%-5u")
 
 # define INF_M1P1		"   " "Cycle " COLC("%-6d")
 # define INF_M1P2		"%13s" "Processes " COLM("%-7u") "   " INF_NBLIVE
@@ -97,10 +97,10 @@
 # define COL_P4			"{green}"
 # define BCOL_P4		"{b_green}"
 
-# define PCC_P0			COLW("%2.2hhx") " "
-# define PCC_P1			BCOL_P1 COLBK("%2.2hhx") COL_P1 " "
+# define PCC_P0			"{b_white}" COLBK("%2.2hhx") "{eoc} "
+# define PCC_P1			BCOL_P1 COLW("%2.2hhx") COL_P1 " "
 # define PCC_P2			BCOL_P2 COLBK("%2.2hhx") COL_P2 " "
-# define PCC_P3			BCOL_P3 COLBK("%2.2hhx") COL_P3 " "
+# define PCC_P3			BCOL_P3 COLW("%2.2hhx") COL_P3 " "
 # define PCC_P4			BCOL_P4 COLBK("%2.2hhx") COL_P4 " "
 
 /*

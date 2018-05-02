@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/09 05:34:16 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/27 19:21:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 01:39:37 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,12 @@
 ** -- RETURNS PLAYER_NO FROM GIVEN ARENA FLAGS
 */
 
-uint8_t		get_pno(uint8_t a_flags)
+uint8_t		get_pno(uint16_t a_flags)
 {
 	uint8_t		player_no;
 
-	a_flags >>= 2;
+	if (a_flags == CWCF_NONE)
+		return (0);
 	player_no = 0;
 	while (!((a_flags >> player_no) & 1))
 		++player_no;

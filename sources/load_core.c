@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 18:25:34 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/02 04:15:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,22 +142,21 @@ int			load_players(t_cwvm *vm)
 	t_player	*p_data;
 	t_header	*head;
 	uint16_t	pos;
-	uint8_t		curr_player;
+	int			curr_player;
 
 	ft_printf(vm->ctrl.flags & CWF_VERB ? CW_ZLOADING : CW_LOADING);
-	curr_player = 0;
-	while (curr_player < vm->nb_players)
+	curr_player = -1;
+	while (++curr_player < vm->nb_players)
 	{
 		p_data = vm->players + vm->p_indexes[curr_player];
 		head = &p_data->header;
 		pos = (MEM_SIZE / vm->nb_players) * curr_player;
 		ft_memcpy(vm->arena + pos, p_data->binary, head->psize);
-		ft_memset(vm->a_flags + pos, CWCF_PNO(p_data->player_no), head->psize);
+		ft_u16set(vm->a_flags + pos, CWCF_PNO(p_data->player_no), head->psize);
 		if (!dup_process(&vm->cpu, p_data, NULL, pos))
 			return (FAILURE);
 		ft_printf((vm->ctrl.flags & CWF_VERB ? CW_ZPLAYER : CW_PLAYER),
 			p_data->player_no, head->psize, head->pname, head->comment);
-		++curr_player;
 	}
 	return (SUCCESS);
 }
