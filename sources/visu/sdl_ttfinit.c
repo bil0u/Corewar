@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:31:03 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 14:00:13 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 15:23:34 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,38 +38,38 @@ void		init_ttf_color(t_sdl *sdlinfo)
 	sdlinfo->white.r = 215;
 	sdlinfo->white.g = 215;
 	sdlinfo->white.b = 215;
-	sdlinfo->red.r = 255;
-	sdlinfo->red.g = 80;
-	sdlinfo->red.b = 80;
-	sdlinfo->blue.r = 0;
-	sdlinfo->blue.g = 204;
-	sdlinfo->blue.b = 255;
-	sdlinfo->green.r = 0;
-	sdlinfo->green.g = 255;
-	sdlinfo->green.b = 0;
-	sdlinfo->yellow.r = 255;
-	sdlinfo->yellow.g = 255;
-	sdlinfo->yellow.b = 153;
+	sdlinfo->red.r = 193;
+	sdlinfo->red.g = 46;
+	sdlinfo->red.b = 46;
+	sdlinfo->blue.r = 56;
+	sdlinfo->blue.g = 86;
+	sdlinfo->blue.b = 209;
+	sdlinfo->green.r = 93;
+	sdlinfo->green.g = 188;
+	sdlinfo->green.b = 41;
+	sdlinfo->yellow.r = 216;
+	sdlinfo->yellow.g = 170;
+	sdlinfo->yellow.b = 32;
 	sdlinfo->grey.r = 165;
 	sdlinfo->grey.g = 165;
 	sdlinfo->grey.b = 192;
-	sdlinfo->bg_grey.r = 65;
-	sdlinfo->bg_grey.g = 65;
-	sdlinfo->bg_grey.b = 65;
+	sdlinfo->bg_grey.r = 42;
+	sdlinfo->bg_grey.g = 42;
+	sdlinfo->bg_grey.b = 42;
 }
 
 void		init_ttf_pc_color(t_sdl *sdlinfo)
 {
-	sdlinfo->pc_red.r = 204;
-	sdlinfo->pc_red.g = 0;
-	sdlinfo->pc_red.b = 0;
-	sdlinfo->pc_blue.r = 51;
-	sdlinfo->pc_blue.g = 102;
+	sdlinfo->pc_red.r = 255;
+	sdlinfo->pc_red.g = 50;
+	sdlinfo->pc_red.b = 50;
+	sdlinfo->pc_blue.r = 91;
+	sdlinfo->pc_blue.g = 159;
 	sdlinfo->pc_blue.b = 255;
-	sdlinfo->pc_green.r = 0;
-	sdlinfo->pc_green.g = 204;
+	sdlinfo->pc_green.r = 89;
+	sdlinfo->pc_green.g = 255;
 	sdlinfo->pc_green.b = 0;
 	sdlinfo->pc_yellow.r = 255;
-	sdlinfo->pc_yellow.g = 255;
-	sdlinfo->pc_yellow.b = 0;
+	sdlinfo->pc_yellow.g = 224;
+	sdlinfo->pc_yellow.b = 86;
 }

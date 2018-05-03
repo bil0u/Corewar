@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sdl_mainscreen.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/03 06:50:27 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 12:21:57 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 15:26:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ static int		event_handler(t_sdl *sdlinfo, t_vmctrl *c)
 				c->key = '\n';
 			return (SUCCESS);
 		}
-		else if (EVENT_TYPE == SDL_QUIT || EVENT_KEY == SDLK_ESCAPE)
+		else if (EVENT_TYPE == SDL_QUIT)
 		{
 			sdlinfo->save = 0;
 			c->stop = TRUE;

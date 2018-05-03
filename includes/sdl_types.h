@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 14:10:49 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 15:09:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 # define PIX_X 				20
 # define PIX_Y				18
 # define WINDOW_W 			800
-# define WINDOW_BIGW 		1278
+# define WINDOW_BIGW 		1276
 # define WINDOW_H 			800
-# define WINDOW_BIGH 		1150
+# define WINDOW_BIGH 		1149
 # define BPP 				32
 # define DATA 				sdlinfo->data
 # define GAMEMODE 			sdlinfo->game_mode
