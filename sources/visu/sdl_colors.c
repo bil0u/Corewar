@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:34:10 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 12:45:39 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 14:08:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,16 @@
 #include "vm_types.h"
 #include "vm.h"
 
-void	set_flags(t_sdl *info, uint8_t ar, uint16_t af)
+static void		set_basics(t_sdl *info)
+{
+	info->bg_color = info->bg_grey;
+	if (info->pc_no == 0)
+		info->txt_color = info->white;
+	else
+		info->txt_color = info->black;
+}
+
+void			set_flags(t_sdl *info, uint8_t ar, uint16_t af)
 {
 	info->rwrite = af & 1;
 	info->player_no = get_pno(((af >> NB_CFLAGS) & 0xF));
@@ -24,7 +33,7 @@ void	set_flags(t_sdl *info, uint8_t ar, uint16_t af)
 	ft_sprintf(info->data, "%.2hhx", ar);
 }
 
-void	get_block_color(t_sdl *info)
+void			get_block_color(t_sdl *info)
 {
 	if (info->pc_no == 0)
 		if (info->rwrite == 1)
@@ -51,10 +60,9 @@ void	get_block_color(t_sdl *info)
 	}
 }
 
-void	get_txt_color(t_sdl *info)
+void			get_txt_color(t_sdl *info)
 {
-	info->bg_color = info->bg_grey;
-	info->txt_color = info->white;
+	set_basics(info);
 	if (info->pc_no == 0)
 		if (info->rwrite == 1)
 		{

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+         #
+#    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/05/03 13:03:44 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/03 14:03:13 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -94,7 +94,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 # -- RULES --
 
 all: $(LIBFT_DEP)
-	@echo $(HOMEBREW_REPOSITORY)
 	@$(MAKE) -j $(NAME)
 
 $(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)

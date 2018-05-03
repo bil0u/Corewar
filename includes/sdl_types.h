@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 13:33:02 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 14:10:49 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,12 @@
 # include "SDL_image.h"
 # include "SDL_ttf.h"
 
-# define VISU_SDL			(c->flags & CWF_VISU)
-
 # define PIX_X 				20
 # define PIX_Y				18
 # define WINDOW_W 			800
-# define WINDOW_BIGW 		1280
+# define WINDOW_BIGW 		1278
 # define WINDOW_H 			800
-# define WINDOW_BIGH 		1152
+# define WINDOW_BIGH 		1150
 # define BPP 				32
 # define DATA 				sdlinfo->data
 # define GAMEMODE 			sdlinfo->game_mode
@@ -89,49 +87,57 @@ typedef struct		s_sdl
 	int				save;
 }					t_sdl;
 
-# define CW_TBG		"./resources/Title_background.jpg"
-# define CW_SBG		"./resources/Start_background.jpg"
-# define CW_LOGO	"./resources/Corewar_logo.png"
-# define CW_SELECT	"./resources/Select.png"
-# define CW_ICON	"./resources/Corewar_icon.png"
+# define VISU_SDL			(c->flags & CWF_VISU)
+
+# define CW_TBG				"./resources/Title_background.jpg"
+# define CW_SBG				"./resources/Start_background.jpg"
+# define CW_LOGO			"./resources/Corewar_logo.png"
+# define CW_SELECT			"./resources/Select.png"
+# define CW_ICON			"./resources/Corewar_icon.png"
+
+# define FONT_SZGM			14
+# define FONT_SZSC			20
+# define FONT_GAME			"resources/CodeNewRomanb.otf"
+# define FONT_SCRN			"resources/Digitalix.ttf"
 
 /*
 ** -- INIT FUNCTIONS
 */
 
-int			init_sdl(t_sdl *sdlinfo);
-int			quit_sdl(t_sdl *sdlinfo);
+int					init_sdl(t_sdl *sdlinfo);
+int					quit_sdl(t_sdl *sdlinfo);
 
 /*
 ** -- TTF INIT FUNCTIONS
 */
 
-int			ttf_init(t_sdl *sdlinfo);
-void		init_ttf_color(t_sdl *sdlinfo);
-void		init_ttf_pc_color(t_sdl *sdlinfo);
+int					ttf_init(t_sdl *sdlinfo);
+void				init_ttf_color(t_sdl *sdlinfo);
+void				init_ttf_pc_color(t_sdl *sdlinfo);
 
 /*
 ** -- SDL MAIN FUNCTIONS
 */
 
-int			start_screen(t_sdl *sdlinfo);
-int			title_screen(t_sdl *sdlinfo);
-int			main_screen(t_sdl *sdlinfo, uint8_t *ar, uint16_t *af, t_vmctrl *c);
+int					start_screen(t_sdl *sdlinfo);
+int					title_screen(t_sdl *sdlinfo);
+int					main_screen(t_sdl *sdlinfo, uint8_t *ar,
+									uint16_t *af, t_vmctrl *c);
 
 /*
 ** -- SDL FREE AND RESIZE FUNCTIONS
 */
 
-int			sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
-					SDL_Surface *tofree3);
-int			sdl_clean(t_sdl *sdlinfo, int resize, int surface_free);
+int					sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
+									SDL_Surface *tofree3);
+int					sdl_clean(t_sdl *sdlinfo, int resize, int surface_free);
 
 /*
 ** -- SDL COLORS TOOLS
 */
 
-void		get_block_color(t_sdl *sdlinfo);
-void		get_txt_color(t_sdl *sdlinfo);
-void		set_flags(t_sdl *sdlinfo, uint8_t ar, uint16_t af);
+void				get_block_color(t_sdl *sdlinfo);
+void				get_txt_color(t_sdl *sdlinfo);
+void				set_flags(t_sdl *sdlinfo, uint8_t ar, uint16_t af);
 
 #endif

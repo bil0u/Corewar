@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:31:03 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 12:43:42 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 14:00:13 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,8 @@ int			ttf_init(t_sdl *sdlinfo)
 	sdlinfo->police_start_screen = NULL;
 	if (TTF_Init() == FAILURE)
 		return (FAILURE);
-	sdlinfo->police_game = TTF_OpenFont("resources/vcrmono.ttf", 14);
-	sdlinfo->police_start_screen = TTF_OpenFont("resources/digitalix.ttf", 20);
+	sdlinfo->police_game = TTF_OpenFont(FONT_GAME, FONT_SZGM);
+	sdlinfo->police_start_screen = TTF_OpenFont(FONT_SCRN, FONT_SZSC);
 	if (sdlinfo->police_game == NULL || sdlinfo->police_start_screen == NULL)
 		return (FAILURE);
 	init_ttf_color(sdlinfo);

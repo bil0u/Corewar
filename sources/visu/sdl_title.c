@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/02 19:45:46 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 11:56:10 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 14:09:34 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,7 @@ static int	title_event_handler(t_sdl *sdlinfo)
 	return (FAILURE);
 }
 
-int		title_screen(t_sdl *sdlinfo)
+int			title_screen(t_sdl *sdlinfo)
 {
 	TITLES_POS.y = 100;
 	PRESS_POS.x = 293;
