@@ -6,7 +6,7 @@
 #    By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/05/03 08:22:13 by susivagn         ###   ########.fr        #
+#    Updated: 2018/05/03 13:03:44 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME =			corewar
 CC =			gcc
 CFLAGS =		-Wall -Werror -Wextra -g
-CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I/Users/susivagn/homebrew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I$(HOME)/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
@@ -27,7 +27,7 @@ NORM =			norminette
 # -- LIBRARIES --
 
 LDLIBS =		-lft -lSDLmain -lSDL -lSDL_image -lSDL_ttf -Wl,-framework,Cocoa
-LDFLAGS =		-Llibft -L/Users/susivagn/homebrew/lib
+LDFLAGS =		-Llibft -L$(HOME)/.brew/lib
 
 LIBFT_DIR =		libft
 LIBFT_DEP =		$(LIBFT_DIR)/libft.a
@@ -94,6 +94,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c Makefile
 # -- RULES --
 
 all: $(LIBFT_DEP)
+	@echo $(HOMEBREW_REPOSITORY)
 	@$(MAKE) -j $(NAME)
 
 $(NAME): $(LIBFT_DEP) $(OBJ_DIR) $(OBJECTS)

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 01:49:22 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 13:30:09 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,9 +124,6 @@
 
 # define CWU_L25		CAT("VISUALIZER")
 # define CWU_L26		OPT_TXT("-V", "SDL output mode")
-# define CWU_L27P1		"Hides the real contents of the memory"
-# define CWU_L27		OPTA_TXT("--stealth", CWU_L27P1)
-# define CWU_L28		OPTA_TXT("--mute", "   Disable sounds")
 
 # define CWU_LEND1		COLR("jrobin, ") COLY("glictevo, ") COLG("upopee, ")
 # define CWU_LEND2		COLB("susivagn") COLM(" © 2018 @ 42 Paris")
@@ -135,7 +132,7 @@
 # define CW_USAGE1		CWU_L1 CWU_L2 CWU_L3 CWU_L4 CWU_L5 CWU_L6 CWU_L7 CWU_L8
 # define CW_USAGE2		CWU_L9 CWU_L10 CWU_L11 CWU_L12 CWU_L13 CWU_L14 CWU_L15
 # define CW_USAGE3		CWU_L16 CWU_L17 CWU_L18 CWU_L19 CWU_L20 CWU_L21 CWU_L22
-# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_L27 CWU_L28 CWU_LEND
+# define CW_USAGE4		CWU_L23 CWU_L24 CWU_L25 CWU_L26 CWU_LEND
 # define CW_USAGE		CW_USAGE1 CW_USAGE2 CW_USAGE3 CW_USAGE4
 
 /*

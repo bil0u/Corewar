@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 12:42:49 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 13:33:02 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include "SDL.h"
 # include "SDL_image.h"
 # include "SDL_ttf.h"
+
+# define VISU_SDL			(c->flags & CWF_VISU)
 
 # define PIX_X 				20
 # define PIX_Y				18
@@ -91,6 +93,7 @@ typedef struct		s_sdl
 # define CW_SBG		"./resources/Start_background.jpg"
 # define CW_LOGO	"./resources/Corewar_logo.png"
 # define CW_SELECT	"./resources/Select.png"
+# define CW_ICON	"./resources/Corewar_icon.png"
 
 /*
 ** -- INIT FUNCTIONS

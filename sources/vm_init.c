@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
+/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 11:06:05 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 13:47:42 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,14 @@ int				init_data(t_cwvm *vm)
 	g->players = vm->players;
 	g->to_die = CYCLE_TO_DIE;
 	g->winner = g->p_indexes[g->nb_players - 1] + 1;
-	init_parameters(vm, c, j, &c->verbose);
-	if (c->flags & CWF_VISU)
+	if (VISU_SDL)
 	{
+		c->paused = TRUE;
+		BUNSET(c->d_level, CWDL_MEM);
 		if (init_sdl(&vm->visu) == FAILURE
 		|| main_screen(&vm->visu, vm->arena, vm->a_flags, c) == FAILURE)
 			return (FAILURE);
 	}
+	init_parameters(vm, c, j, &c->verbose);
 	return (SUCCESS);
 }

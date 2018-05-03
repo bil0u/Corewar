@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:31:03 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 12:04:09 by susivagn         ###   ########.fr       */
+/*   Updated: 2018/05/03 13:16:53 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@
 
 static int	init_sdldata(t_sdl *sdlinfo)
 {
+	SDL_Surface	*icon;
+
 	BKGROUND_SCREEN = NULL;
 	TITLE_SCREEN = NULL;
 	MAINSCREEN = NULL;
@@ -26,11 +28,12 @@ static int	init_sdldata(t_sdl *sdlinfo)
 	CUR_Y = MEM_SIZE;
 	if (SDL_Init(SDL_INIT_EVERYTHING) == FAILURE)
 		return (FAILURE);
+	icon = IMG_Load(CW_ICON);
+	SDL_WM_SetIcon(icon, NULL);
+	SDL_FreeSurface(icon);
 	MAINSCREEN = SDL_SetVideoMode(WINDOW_W, WINDOW_H, BPP,
 		SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF);
-	if (MAINSCREEN == NULL)
-		return (FAILURE);
-	if (ttf_init(sdlinfo) == FAILURE)
+	if (MAINSCREEN == NULL || ttf_init(sdlinfo) == FAILURE)
 		return (FAILURE);
 	return (SUCCESS);
 }
