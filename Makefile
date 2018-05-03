@@ -6,7 +6,7 @@
 #    By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/02 19:54:31 by glictevo          #+#    #+#              #
-#    Updated: 2018/05/03 21:13:01 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/03 23:08:55 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,11 @@ fclean: clean
 	@$(MAKE) $(LIB) fclean
 	@$(MAKE) $(VM) fclean
 	@$(MAKE) $(ASM) fclean
+
+norm:
+	@$(MAKE) $(LIB) norm
+	@$(MAKE) $(VM) norm
+	@$(MAKE) $(ASM) norm
 
 re: fclean all
 
