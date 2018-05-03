@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_types.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 06:26:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 11:10:48 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,8 @@ typedef struct		s_vmctrl
 	uint8_t				v_level;
 	uint8_t				next_pno;
 	volatile uint8_t	paused;
+	volatile uint8_t	stop;
+	char				key;
 	t_vmverb			verbose;
 	struct termios		t_info;
 	struct termios		t_save;

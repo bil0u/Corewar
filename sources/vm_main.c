@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_main.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 07:22:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 11:27:22 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 	}
 	PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
 	MEM_DEB && cpu->b_read > 0 ? debug_memory(MDA, MEM_WIN) : 0;
-	vm->ctrl.flags & CWF_VISU && cpu->b_read > 0 ? main_screen(&vm->visu) : 0;
+	// vm->ctrl.flags & CWF_VISU && cpu->b_read > 0 ? main_screen(&vm->visu,
+		// vm->arena, vm->a_flags, c) : 0;
 }
 
 /*
@@ -92,15 +93,15 @@ static int		run_cpu(t_cwvm *vm, t_vcpu *cpu, t_gamectrl *g, t_jobctrl *j)
 {
 	uint32_t	breakpoint;
 	t_vmctrl	*c;
-	char		key_input;
 
 	c = &vm->ctrl;
 	breakpoint = vm->ctrl.dump_cycles;
-	while (j->nb_processes > 0)
+	while (j->nb_processes > 0 && c->stop == FALSE)
 	{
-		if (read(STDIN_FILENO, &key_input, 1) > 0 && key_input == ' ')
+		c->flags & CWF_VISU ? main_screen(&vm->visu, vm->arena, vm->a_flags, c) : 0;
+		if (read(STDIN_FILENO, &c->key, 1) > 0 && c->key == ' ')
 			c->paused = !(c->paused);
-		if ((c->paused == FALSE || key_input == '\n') && (key_input = 0) == 0)
+		if ((c->paused == FALSE || c->key == '\n') && (c->key = 0) == 0)
 		{
 			++cpu->tick;
 			CYCL_VERB ? ft_printf(V_CYCLE, cpu->tick) : 0;

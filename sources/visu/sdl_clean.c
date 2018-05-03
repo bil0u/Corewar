@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   sdl_clean.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/03 06:36:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 06:37:18 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 12:05:16 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,15 @@ int		sdl_clean(t_sdl *sdlinfo, int resize, int surface_free)
 	if (resize == 1)
 		SDL_FreeSurface(MAINSCREEN);
 	if (resize == 1 && (MAINSCREEN = SDL_SetVideoMode(WINDOW_BIGW,
-		WINDOW_BIGH, BPP, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL)
-		printf("Impossible de changer MAINSCREEN : |%s|\n", SDL_GetError());
-	SDL_FillRect(MAINSCREEN, NULL, SDL_MapRGB(MAINSCREEN->format, 0, 0, 0));
+		WINDOW_BIGH, BPP, SDL_HWSURFACE | SDL_DOUBLEBUF)) == NULL
+		&& ft_printf("Cannot init main screen : '%s'\n", SDL_GetError()))
+		return (FAILURE);
+	SDL_FillRect(MAINSCREEN, NULL,
+		SDL_MapRGB(MAINSCREEN->format, 65, 65, 65));
 	SDL_Flip(MAINSCREEN);
 	if (surface_free == 1)
 		sdl_free(BKGROUND_SCREEN, TITLE_SCREEN, MEM_ZONE);
-	return (1);
+	return (SUCCESS);
 }
 
 int		sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
@@ -41,5 +43,5 @@ int		sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
 	tofree1 = NULL;
 	tofree2 = NULL;
 	tofree3 = NULL;
-	return (1);
+	return (SUCCESS);
 }

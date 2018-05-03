@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:31:03 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 07:11:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 12:04:09 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,18 +21,18 @@ static int	init_sdldata(t_sdl *sdlinfo)
 	TITLE_SCREEN = NULL;
 	MAINSCREEN = NULL;
 	NAVI = NULL;
-	sdlinfo->save = 0;
+	sdlinfo->save = FALSE;
 	CUR_X = 0;
 	CUR_Y = MEM_SIZE;
 	if (SDL_Init(SDL_INIT_EVERYTHING) == FAILURE)
 		return (FAILURE);
 	MAINSCREEN = SDL_SetVideoMode(WINDOW_W, WINDOW_H, BPP,
-		SDL_HWSURFACE | SDL_RESIZABLE);
+		SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF);
 	if (MAINSCREEN == NULL)
 		return (FAILURE);
 	if (ttf_init(sdlinfo) == FAILURE)
 		return (FAILURE);
-	return (1);
+	return (SUCCESS);
 }
 
 int			init_sdl(t_sdl *sdlinfo)
@@ -41,9 +41,12 @@ int			init_sdl(t_sdl *sdlinfo)
 		return (FAILURE);
 	if (start_screen(sdlinfo) == FAILURE)
 		return (FAILURE);
-	if (sdlinfo->save == 1 && sdl_clean(sdlinfo, 0, 1))
+	if (sdlinfo->save == TRUE)
+	{
+		sdl_clean(sdlinfo, 0, 1);
 		title_screen(sdlinfo);
-	if (sdlinfo->save == 0)
+	}
+	if (sdlinfo->save == FALSE)
 		return (FAILURE);
 	return (SUCCESS);
 }
@@ -51,9 +54,9 @@ int			init_sdl(t_sdl *sdlinfo)
 int			quit_sdl(t_sdl *sdlinfo)
 {
 	SDL_FreeSurface(sdlinfo->screen);
-	SDL_Quit();
 	TTF_CloseFont(sdlinfo->police_game);
 	TTF_CloseFont(sdlinfo->police_start_screen);
 	TTF_Quit();
+	SDL_Quit();
 	return (SUCCESS);
 }

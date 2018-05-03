@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
+#    By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/05/03 06:55:30 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/03 08:22:13 by susivagn         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME =			corewar
 CC =			gcc
 CFLAGS =		-Wall -Werror -Wextra -g
-CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I/Users/upopee/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I/Users/susivagn/homebrew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
@@ -27,7 +27,7 @@ NORM =			norminette
 # -- LIBRARIES --
 
 LDLIBS =		-lft -lSDLmain -lSDL -lSDL_image -lSDL_ttf -Wl,-framework,Cocoa
-LDFLAGS =		-Llibft -L/Users/upopee/.brew/lib
+LDFLAGS =		-Llibft -L/Users/susivagn/homebrew/lib
 
 LIBFT_DIR =		libft
 LIBFT_DEP =		$(LIBFT_DIR)/libft.a

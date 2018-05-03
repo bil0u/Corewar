@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   vm_init.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
+/*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 07:26:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 11:06:05 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,8 @@ int				init_data(t_cwvm *vm)
 	init_parameters(vm, c, j, &c->verbose);
 	if (c->flags & CWF_VISU)
 	{
-		c->paused = TRUE;
-		if (init_sdl(&vm->visu) == FAILURE || main_screen(&vm->visu) == FAILURE)
+		if (init_sdl(&vm->visu) == FAILURE
+		|| main_screen(&vm->visu, vm->arena, vm->a_flags, c) == FAILURE)
 			return (FAILURE);
 	}
 	return (SUCCESS);

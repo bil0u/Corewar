@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 07:24:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 12:42:49 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,9 @@
 # define WINDOW_H 			800
 # define WINDOW_BIGH 		1152
 # define BPP 				32
-# define FPC 				sdlinfo->pc
-# define F_WRITE 			sdlinfo->write
-# define FNONE 				sdlinfo->none
 # define DATA 				sdlinfo->data
 # define GAMEMODE 			sdlinfo->game_mode
-# define PLAYER 			sdlinfo->player
+# define PLAYER 			sdlinfo->player_no
 # define MAINSCREEN 		sdlinfo->screen
 # define MEM_ZONE 			sdlinfo->mem_zone
 # define EVENT_TYPE 		sdlinfo->event.type
@@ -50,18 +47,15 @@
 # define CUR_X 				sdlinfo->x
 # define CUR_Y 				sdlinfo->y
 
-// BIS_SET(vm->a_flags[i], CWCF_PCNO(player_1))
-
 typedef struct		s_sdl
 {
 	uint8_t			game_mode;
-	uint8_t			none;
-	uint8_t			player;
-	uint8_t			pc;
-	uint8_t			write;
+	uint8_t			pc_no;
+	uint8_t			player_no;
+	uint8_t			rwrite;
 	int				y;
 	int				x;
-	uint8_t			*data;
+	char			data[3];
 	SDL_Surface		*screen;
 	SDL_Surface		*background;
 	SDL_Surface		*title;
@@ -89,48 +83,52 @@ typedef struct		s_sdl
 	SDL_Color		yellow;
 	SDL_Color		pc_yellow;
 	SDL_Color		grey;
+	SDL_Color		bg_grey;
 	int				save;
 }					t_sdl;
+
+# define CW_TBG		"./resources/Title_background.jpg"
+# define CW_SBG		"./resources/Start_background.jpg"
+# define CW_LOGO	"./resources/Corewar_logo.png"
+# define CW_SELECT	"./resources/Select.png"
 
 /*
 ** -- INIT FUNCTIONS
 */
 
-int					init_sdl(t_sdl *sdlinfo);
-int					quit_sdl(t_sdl *sdlinfo);
+int			init_sdl(t_sdl *sdlinfo);
+int			quit_sdl(t_sdl *sdlinfo);
 
 /*
 ** -- TTF INIT FUNCTIONS
 */
 
-int					ttf_init(t_sdl *sdlinfo);
-void				init_ttf_color(t_sdl *sdlinfo);
-void				init_ttf_pc_color(t_sdl *sdlinfo);
+int			ttf_init(t_sdl *sdlinfo);
+void		init_ttf_color(t_sdl *sdlinfo);
+void		init_ttf_pc_color(t_sdl *sdlinfo);
 
 /*
 ** -- SDL MAIN FUNCTIONS
 */
 
-int					main_screen(t_sdl *sdlinfo);
-int					start_screen(t_sdl *sdlinfo);
-int					start_screen_set(t_sdl *sdlinfo);
-int					title_screen(t_sdl *sdlinfo);
-int					title_screen_set(t_sdl *sdlinfo);
-int					title_screen_set_sup(t_sdl *sdlinfo);
-int					main_screen_update(t_sdl *sdlinfo);
-int					sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
+int			start_screen(t_sdl *sdlinfo);
+int			title_screen(t_sdl *sdlinfo);
+int			main_screen(t_sdl *sdlinfo, uint8_t *ar, uint16_t *af, t_vmctrl *c);
+
+/*
+** -- SDL FREE AND RESIZE FUNCTIONS
+*/
+
+int			sdl_free(SDL_Surface *tofree1, SDL_Surface *tofree2,
 					SDL_Surface *tofree3);
+int			sdl_clean(t_sdl *sdlinfo, int resize, int surface_free);
 
-int					sdl_clean(t_sdl *sdlinfo, int resize, int surface_free);
+/*
+** -- SDL COLORS TOOLS
+*/
 
-int					event_handler(t_sdl *sdlinfo);
-int					title_event_handler(t_sdl *sdlinfo);
-void				navigation_key_handler(t_sdl *sdlinfo);
-
-void				get_block_color(t_sdl *sdlinfo);
-void				get_txt_color(t_sdl *sdlinfo);
-void				test_pc_player(t_sdl *sdlinfo, int y);
-void				get_wrt_txt_color(t_sdl *sdlinfo);
-int					set_flags(t_sdl *sdlinfo);
+void		get_block_color(t_sdl *sdlinfo);
+void		get_txt_color(t_sdl *sdlinfo);
+void		set_flags(t_sdl *sdlinfo, uint8_t ar, uint16_t af);
 
 #endif

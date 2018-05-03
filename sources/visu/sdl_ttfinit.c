@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/29 18:31:03 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 06:33:21 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 12:43:42 by susivagn         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,15 +19,15 @@ int			ttf_init(t_sdl *sdlinfo)
 {
 	sdlinfo->police_game = NULL;
 	sdlinfo->police_start_screen = NULL;
-	if (TTF_Init() == -1)
-		return (-1);
+	if (TTF_Init() == FAILURE)
+		return (FAILURE);
 	sdlinfo->police_game = TTF_OpenFont("resources/vcrmono.ttf", 14);
 	sdlinfo->police_start_screen = TTF_OpenFont("resources/digitalix.ttf", 20);
 	if (sdlinfo->police_game == NULL || sdlinfo->police_start_screen == NULL)
-		return (-1);
+		return (FAILURE);
 	init_ttf_color(sdlinfo);
 	init_ttf_pc_color(sdlinfo);
-	return (1);
+	return (SUCCESS);
 }
 
 void		init_ttf_color(t_sdl *sdlinfo)
@@ -35,9 +35,9 @@ void		init_ttf_color(t_sdl *sdlinfo)
 	sdlinfo->black.r = 0;
 	sdlinfo->black.g = 0;
 	sdlinfo->black.b = 0;
-	sdlinfo->white.r = 255;
-	sdlinfo->white.g = 255;
-	sdlinfo->white.b = 255;
+	sdlinfo->white.r = 215;
+	sdlinfo->white.g = 215;
+	sdlinfo->white.b = 215;
 	sdlinfo->red.r = 255;
 	sdlinfo->red.g = 80;
 	sdlinfo->red.b = 80;
@@ -53,6 +53,9 @@ void		init_ttf_color(t_sdl *sdlinfo)
 	sdlinfo->grey.r = 165;
 	sdlinfo->grey.g = 165;
 	sdlinfo->grey.b = 192;
+	sdlinfo->bg_grey.r = 65;
+	sdlinfo->bg_grey.g = 65;
+	sdlinfo->bg_grey.b = 65;
 }
 
 void		init_ttf_pc_color(t_sdl *sdlinfo)
