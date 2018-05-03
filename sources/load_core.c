@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 04:15:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 01:47:17 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,8 @@ int			check_argv(int ac, char **av, t_cwvm *vm)
 		return (log_this(NULL, LF_ERR, CWE_BADDL, vm->ctrl.d_level, CWDL_MAX));
 	if (vm->nb_players == 0)
 		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
+	if (vm->nb_players > MAX_PLAYERS)
+		return (log_this(NULL, LF_ERR, CWE_MAXPLAYER));
 	return (SUCCESS);
 }
 

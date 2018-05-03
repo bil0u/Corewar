@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 17:48:45 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 01:49:22 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,6 +156,7 @@
 # define CWE_PNOUSED	CWE_BADPNO1 " Player number already used\n"
 # define CWE_BADOPT		"Option '" COLY("%s") "' is invalid\n"
 # define CWE_NOPLAYERS	"No .cor files given\n"
+# define CWE_MAXPLAYER	"Please provide " COLY("4") " players at most\n"
 # define CWE_BADVL		COLY("%hu") " > invalid verbose level, maximum is %u\n"
 # define CWE_BADDL		COLY("%hu") " > invalid debug level, maximum is %u\n"
 # define CWE_MALLOC		"Can't malloc anymore, check your system\n"

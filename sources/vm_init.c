@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 00:04:15 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 02:32:40 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ static void		init_parameters(t_cwvm *vm, t_vmctrl *c,
 	c->d_level & CWDL_PROC ? debug_processes(vm, j->p_stack, j) : 0;
 	c->d_level & CWDL_MEM ? debug_memory(vm->arena, vm->a_flags, MEM_WIN) : 0;
 	c->d_level & CWDL_REG ? debug_registers(v, j->p_stack) : 0;
-	c->d_level & CWDL_REG ? debug_registers(v, j->p_stack) : 0;
 	c->d_level & CWDL_INF ? debug_infos(vm, &vm->cpu, &vm->game, v) : 0;
 }
 
@@ -88,6 +87,5 @@ void			init_data(t_cwvm *vm)
 	g->players = vm->players;
 	g->to_die = CYCLE_TO_DIE;
 	g->winner = g->p_indexes[g->nb_players - 1] + 1;
-	j->nb_processes = j->next_pid;
 	init_parameters(vm, c, j, &c->verbose);
 }

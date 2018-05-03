@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/02 03:29:37 by upopee            #+#    #+#             */
-/*   Updated: 2018/04/30 22:29:14 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 02:52:47 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int		aff_instr(t_vcpu *cpu, t_process *p, t_player *pl);
 
 /*
 ** > OP NAME    FCT_PTR    TIME
-**                              NO  NBA OCP INDEX ARG(S)_TYPE
+**                              NO  NBA OCP SHORT_DIRECTS ARG(S)_TYPE
 */
 
 t_op	g_op_set[NB_OPS] =
