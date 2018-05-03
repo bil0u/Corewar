@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/03 17:06:07 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/04 00:19:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,16 +89,16 @@ typedef struct		s_sdl
 
 # define VISU_SDL			(c->flags & CWF_VISU)
 
-# define CW_TBG				"./vm/resources/Title_background.jpg"
-# define CW_SBG				"./vm/resources/Start_background.jpg"
-# define CW_LOGO			"./vm/resources/Corewar_logo.png"
-# define CW_SELECT			"./vm/resources/Select.png"
-# define CW_ICON			"./vm/resources/Corewar_icon.png"
+# define CW_TBG				"./resources/Title_background.jpg"
+# define CW_SBG				"./resources/Start_background.jpg"
+# define CW_LOGO			"./resources/Corewar_logo.png"
+# define CW_SELECT			"./resources/Select.png"
+# define CW_ICON			"./resources/Corewar_icon.png"
 
 # define FONT_SZGM			14
 # define FONT_SZSC			20
-# define FONT_GAME			"./vm/resources/CodeNewRomanb.otf"
-# define FONT_SCRN			"./vm/resources/Digitalix.ttf"
+# define FONT_GAME			"./resources/CodeNewRomanb.otf"
+# define FONT_SCRN			"./resources/Digitalix.ttf"
 
 /*
 ** -- INIT FUNCTIONS

@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/03 11:04:39 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 20:38:58 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 23:01:35 by glictevo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,15 @@ int		parse_name_comment(t_lexer *lexer, t_infos *infos)
 	|| parse_comment(lexer, infos) == 0
 	|| eat(lexer, ENDLINE) == 0)
 		return (0);
+	while (check(lexer, ENDLINE))
+		if (!eat(lexer, ENDLINE))
+			return (0);
+	if (check(lexer, END))
+	{
+		ft_printf("%s : Error : no instruction in the champion file\n",
+			FILENAME);
+		return (0);
+	}
 	return (1);
 }
 

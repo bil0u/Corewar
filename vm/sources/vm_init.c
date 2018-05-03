@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 16:55:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/04 00:23:51 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,8 @@ int				init_data(t_cwvm *vm)
 	{
 		c->paused = TRUE;
 		BUNSET(c->d_level, CWDL_MEM);
+		BUNSET(c->d_level, CWF_DUMP | CWF_SDMP);
+		c->dump_cycles = 0;
 		if (init_sdl(&vm->visu) == FAILURE
 		|| main_screen(&vm->visu, vm->arena, vm->a_flags, c) == FAILURE)
 			return (FAILURE);
