@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 14:40:39 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:46:33 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 20:42:12 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	write_direct_label(char *buf, int *index, t_list *lst, int arg)
 	uint16_t	inttmp;
 	uint32_t	longtmp;
 
-	if (LST_I->infos->ind_address == 1)
+	if (LST_I->infos->short_directs == 1)
 	{
 		inttmp = SWAP_UINT16((uint16_t)LST_I->params[arg].value.i);
 		ft_memcpy(buf + *index, &inttmp, 2);
@@ -36,7 +36,7 @@ void	write_direct_label(char *buf, int *index, t_list *lst, int arg)
 		longtmp = SWAP_UINT32((uint32_t)LST_I->params[arg].value.i);
 		ft_memcpy(buf + *index, &longtmp, 4);
 	}
-	*index += LST_I->infos->ind_address == 1 ? 2 : 4;
+	*index += LST_I->infos->short_directs == 1 ? 2 : 4;
 }
 
 void	write_indirect_label(char *buf, int *index, t_list *lst, int arg)
@@ -66,22 +66,22 @@ int		find_address_label(char *str, t_infos *infos)
 
 char	get_codage(t_instruction *instruction)
 {
-	char	codage;
+	char	ocp;
 	int		arg;
-	int		decalage;
+	int		shift;
 
-	codage = 0;
-	decalage = 6;
+	ocp = 0;
+	shift = 6;
 	arg = -1;
 	while (++arg < instruction->infos->nb_args)
 	{
 		if (instruction->params[arg].type & 0x1)
-			codage = codage | (REG_CODE << decalage);
+			ocp = ocp | (ARG_REG << shift);
 		if (instruction->params[arg].type & 0x2)
-			codage = codage | (DIR_CODE << decalage);
+			ocp = ocp | (ARG_DIR << shift);
 		if (instruction->params[arg].type & 0x4)
-			codage = codage | (IND_CODE << decalage);
-		decalage -= 2;
+			ocp = ocp | (ARG_IND << shift);
+		shift -= 2;
 	}
-	return (codage);
+	return (ocp);
 }

@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 14:43:29 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:45:59 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 21:27:23 by glictevo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,7 @@ int		free_on_parse_error(t_infos *infos, t_lexer *lexer)
 				free(LST_I->params[arg].value.s);
 		lst = lst->next;
 	}
-	while (TOKEN->type != END)
-		call_gnl(lexer);
+	call_gnl(lexer, 1);
 	free_all(lexer, infos);
 	return (0);
 }

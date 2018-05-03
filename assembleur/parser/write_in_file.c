@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/15 17:41:11 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:46:29 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 20:39:14 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int		write_in_file(t_infos *infos)
 	tmp = SWAP_UINT32((long)COREWAR_EXEC_MAGIC);
 	ft_memcpy(buf, &tmp, 4);
 	index += sizeof(unsigned int);
-	ft_memcpy(buf + index, infos->header.prog_name, PROG_NAME_LENGTH);
+	ft_memcpy(buf + index, infos->header.pname, PROG_NAME_LENGTH);
 	index += PROG_NAME_LENGTH;
 	ft_memcpy(buf + index, "\0\0\0\0", 4);
 	index += 4;

@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/18 18:37:00 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:46:55 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 21:27:36 by glictevo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 
 # include <stdlib.h>
 # include <stdint.h>
-# include "op.h"
 # include "../../libft/libft.h"
+# include "../../vm/includes/cpu_types.h"
+# include "../../vm/includes/sdl_types.h"
+# include "../../vm/includes/vm_types.h"
 # include <fcntl.h>
 
 # define FILENAME lexer->filename
@@ -35,10 +37,15 @@
 # define LST_L ((t_label *)lst->content)
 # define LST_I ((t_instruction *)lst->content)
 
-# define SWAP_UINT16(x)			(((x) >> 8) | ((x) << 8))
-# define SWAP_UINT32LEFT(x)		(((x) >> 24) | (((x) & 0x00FF0000) >> 8))
-# define SWAP_UINT32RIGHT(x)	((((x) & 0x0000FF00) << 8) | ((x) << 24))
-# define SWAP_UINT32(x)			(SWAP_UINT32LEFT(x) | SWAP_UINT32RIGHT(x))
+# define COMMENT_CHAR			'#'
+# define LABEL_CHAR				':'
+# define DIRECT_CHAR			'%'
+# define SEPARATOR_CHAR			','
+
+# define LABEL_CHARS			"abcdefghijklmnopqrstuvwxyz_0123456789"
+
+# define NAME_CMD_STRING		".name"
+# define COMMENT_CMD_STRING		".comment"
 
 typedef enum		e_token_type
 {
@@ -55,7 +62,8 @@ typedef enum		e_token_type
 	ERROR
 }					t_token_type;
 
-union				u_value {
+union				u_value
+{
 	char			*s;
 	int				i;
 };
@@ -80,7 +88,7 @@ typedef struct		s_lexer
 
 typedef struct		s_parameter
 {
-	t_arg_type		type;
+	t_argtypes		type;
 	union u_value	value;
 	char			valuetype;
 }					t_parameter;
@@ -113,7 +121,7 @@ int					initialize_lexer(t_lexer *lexer, int fd, char *filename);
 int					find_next_token(t_lexer *lexer);
 int					eat(t_lexer *lexer, t_token_type token);
 int					check(t_lexer *lexer, t_token_type token);
-int					call_gnl(t_lexer *lexer);
+int					call_gnl(t_lexer *lexer, int option);
 
 int					is_endline(t_lexer *lexer);
 int					is_separator(t_lexer *lexer);

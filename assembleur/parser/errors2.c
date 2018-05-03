@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 14:41:58 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:45:57 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 20:40:41 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,13 +33,13 @@ int		wrong_argument_error(t_lexer *lexer, t_instruction *instruction,
 arg number %d of instruction %s at pos [%d;%d]\n",
 		FILENAME, get_name_tokentype(lexer->current_token->type), arg + 1,
 		instruction->infos->name, LINE_NB, PREV_INDEX);
-	if (instruction->infos->args_type[arg] & 0x1)
+	if (instruction->infos->valid_types[arg] & 0x1)
 		ft_printf("\t- REGISTER\n");
-	if (instruction->infos->args_type[arg] & 0x2)
+	if (instruction->infos->valid_types[arg] & 0x2)
 		ft_printf("\t- DIRECT_LABEL\n");
-	if (instruction->infos->args_type[arg] & 0x4)
+	if (instruction->infos->valid_types[arg] & 0x4)
 		ft_printf("\t- INDIRECT_LABEL\n");
-	if (instruction->infos->args_type[arg] & 0x8)
+	if (instruction->infos->valid_types[arg] & 0x8)
 		ft_printf("\t- LABEL\n");
 	return (0);
 }

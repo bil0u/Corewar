@@ -6,19 +6,19 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 14:32:02 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:46:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 20:54:46 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/asm.h"
-#include "../includes/instructions.h"
+#include "../includes/cpu_instructions.h"
 
 t_op	*get_opinfos(char *name)
 {
 	int		index;
 
 	index = -1;
-	while (++index < NB_INSTRUCTIONS)
+	while (++index < NB_OPS)
 		if (!ft_strcmp(g_op_set[index].name, name))
 			return (&(g_op_set[index]));
 	return (NULL);
@@ -26,7 +26,7 @@ t_op	*get_opinfos(char *name)
 
 char	*get_name_opcode(int n)
 {
-	if (n < 0 || n > NB_INSTRUCTIONS)
+	if (n < 0 || n > NB_OPS)
 		return (NULL);
 	return (g_op_set[n].name);
 }

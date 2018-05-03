@@ -6,7 +6,7 @@
 /*   By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/19 13:53:53 by glictevo          #+#    #+#             */
-/*   Updated: 2018/05/03 14:46:05 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 20:38:15 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ int		parse_parameters(t_lexer *lexer, t_infos *infos, t_list *lst)
 
 int		parse_reg(t_lexer *lexer, t_list *lst, int arg)
 {
-	if (LST_I->infos->args_type[arg] & 0x1)
+	if (LST_I->infos->valid_types[arg] & 0x1)
 	{
 		if (check(lexer, REGISTER))
 		{
@@ -61,11 +61,11 @@ int		parse_reg(t_lexer *lexer, t_list *lst, int arg)
 
 int		parse_dir_label(t_lexer *lexer, t_list *lst, int arg)
 {
-	if (LST_I->infos->args_type[arg] & 0x2)
+	if (LST_I->infos->valid_types[arg] & 0x2)
 	{
 		if (check(lexer, DIRECT_LABEL))
 		{
-			if (LST_I->infos->ind_address == 1)
+			if (LST_I->infos->short_directs == 1)
 				LST_I->size += 2;
 			else
 				LST_I->size += 4;
@@ -82,7 +82,7 @@ int		parse_dir_label(t_lexer *lexer, t_list *lst, int arg)
 
 int		parse_indir_label(t_lexer *lexer, t_list *lst, int arg)
 {
-	if (LST_I->infos->args_type[arg] & 0x4)
+	if (LST_I->infos->valid_types[arg] & 0x4)
 	{
 		if (check(lexer, INDIRECT_LABEL))
 		{

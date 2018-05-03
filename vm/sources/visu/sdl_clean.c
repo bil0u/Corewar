@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/05/03 06:36:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 15:17:26 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 17:27:39 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int		sdl_clean(t_sdl *sdlinfo, int resize, int surface_free)
 {
 	if (resize == 1)
 		SDL_FreeSurface(MAINSCREEN);
-	if (resize == 1 && (MAINSCREEN = SDL_SetVideoMode(WINDOW_BIGW,
-		WINDOW_BIGH, BPP, SDL_HWSURFACE)) == NULL
+	if (resize == 1 && (MAINSCREEN = SDL_SetVideoMode(WINDOW_BIGW, WINDOW_BIGH,
+		BPP, SDL_HWSURFACE | SDL_RESIZABLE | SDL_DOUBLEBUF)) == NULL
 		&& ft_printf("Cannot init main screen : '%s'\n", SDL_GetError()))
 		return (FAILURE);
 	SDL_FillRect(MAINSCREEN, NULL,

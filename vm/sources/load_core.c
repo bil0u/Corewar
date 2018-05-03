@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/05 14:47:46 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 06:29:01 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 22:52:29 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,6 +90,8 @@ static int	parse_player(t_cwvm *v, int ac, char **av, int *i)
 		else if (is_valid_pno(&v->ctrl, ac, av, i) != TRUE)
 			return (FAILURE);
 	}
+	if (v->nb_players == MAX_PLAYERS)
+		return (log_this(NULL, LF_ERR, CWE_MAXPLAYER));
 	if ((fd = open(av[*i], O_RDONLY)) < 0)
 		return (log_this(NULL, LF_ERR, CWE_UNKNOWN, av[*i]));
 	p = (v->ctrl.next_pno != 0 ? v->ctrl.next_pno : get_nextpno(v->ctrl.flags));
@@ -131,8 +133,6 @@ int			check_argv(int ac, char **av, t_cwvm *vm)
 		return (log_this(NULL, LF_ERR, CWE_BADDL, vm->ctrl.d_level, CWDL_MAX));
 	if (vm->nb_players == 0)
 		return (log_this(NULL, LF_ERR, CWE_NOPLAYERS));
-	if (vm->nb_players > MAX_PLAYERS)
-		return (log_this(NULL, LF_ERR, CWE_MAXPLAYER));
 	return (SUCCESS);
 }
 
