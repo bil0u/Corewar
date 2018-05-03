@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/04/28 23:57:11 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/03 06:55:30 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME =			corewar
 CC =			gcc
 CFLAGS =		-Wall -Werror -Wextra -g
-CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR)
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I/Users/upopee/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
@@ -26,8 +26,8 @@ NORM =			norminette
 
 # -- LIBRARIES --
 
-LDLIBS =		-lft
-LDFLAGS =		-Llibft
+LDLIBS =		-lft -lSDLmain -lSDL -lSDL_image -lSDL_ttf -Wl,-framework,Cocoa
+LDFLAGS =		-Llibft -L/Users/upopee/.brew/lib
 
 LIBFT_DIR =		libft
 LIBFT_DEP =		$(LIBFT_DIR)/libft.a
@@ -36,6 +36,7 @@ LIBFT_DEP =		$(LIBFT_DIR)/libft.a
 
 SRC_DIR =		sources
 OP_DIR	=		cpu_instructions
+SDL_DIR	=		visu
 INC_DIR =		includes
 OBJ_DIR =		.objects
 
@@ -68,6 +69,13 @@ FILES =			vm_main \
 				$(OP_DIR)/op14_lldi \
 				$(OP_DIR)/op15_lfork \
 				$(OP_DIR)/op16_aff \
+				$(SDL_DIR)/sdl_init \
+				$(SDL_DIR)/sdl_ttfinit \
+				$(SDL_DIR)/sdl_clean \
+				$(SDL_DIR)/sdl_start \
+				$(SDL_DIR)/sdl_title \
+				$(SDL_DIR)/sdl_mainscreen \
+				$(SDL_DIR)/sdl_colors \
 
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(FILES:=.o))
 
@@ -98,6 +106,7 @@ $(LIBFT_DEP):
 $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)
 	@$(MKDIR) $(OBJ_DIR)/$(OP_DIR)
+	@$(MKDIR) $(OBJ_DIR)/$(SDL_DIR)
 
 clean: libclean
 	@if [ -e $(OBJ_DIR) ]; \

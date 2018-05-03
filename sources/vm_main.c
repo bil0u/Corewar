@@ -6,12 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 02:50:22 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 02:18:19 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 07:22:30 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "sdl_types.h"
 #include "vm_types.h"
 #include "cpu.h"
 #include "vm.h"
@@ -19,7 +20,19 @@
 #include "vm_debug.h"
 
 /*
-** -- FREE ALLOCATED ELEMENTS AND DECLARE WINNER
+** -- FREE ALLOCATED ELEMENTS
+*/
+
+static int		del_env(t_cwvm *v, t_vmctrl *c, t_jobctrl *j)
+{
+	ft_lstdel(&j->p_stack, &ft_delcontent);
+	c->flags & CWF_VISU ? quit_sdl(&v->visu) : 0;
+	tcsetattr(STDIN_FILENO, TCSANOW, &c->t_save);
+	return (SUCCESS);
+}
+
+/*
+** -- DECLARE WINNER
 */
 
 static void		end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
@@ -39,11 +52,10 @@ static void		end_game(t_cwvm *v, t_vmctrl *c, t_jobctrl *j, uint8_t dumped)
 			name = v->players[v->p_indexes[i]].header.pname;
 			break ;
 		}
-	ft_lstdel(&j->p_stack, &ft_delcontent);
 	if (dumped == FALSE)
 		ft_printf((c->flags & CWF_VERB ? CW_ZWINNER_IS : CW_WINNER_IS),
 			winner, name);
-	tcsetattr(STDIN_FILENO, TCSANOW, &v->ctrl.t_save);
+	del_env(v, c, j);
 }
 
 /*
@@ -69,6 +81,7 @@ static void		consume_cycle(t_cwvm *vm, t_vcpu *cpu,
 	}
 	PROC_DEB ? debug_processes(vm, j->p_stack, j) : 0;
 	MEM_DEB && cpu->b_read > 0 ? debug_memory(MDA, MEM_WIN) : 0;
+	vm->ctrl.flags & CWF_VISU && cpu->b_read > 0 ? main_screen(&vm->visu) : 0;
 }
 
 /*
@@ -122,7 +135,8 @@ int				main(int argc, char **argv)
 		ft_putstr_fd(CWE_MALLOC, STDERR_FILENO);
 		return (FAILURE);
 	}
-	init_data(&vm);
+	if (init_data(&vm) == FAILURE)
+		return (del_env(&vm, &vm.ctrl, &vm.jobs));
 	ret = run_cpu(&vm, &vm.cpu, &vm.game, &vm.jobs);
 	end_game(&vm, &vm.ctrl, &vm.jobs, ret);
 	return (SUCCESS);

@@ -6,12 +6,13 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 15:19:02 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/01 22:12:30 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 06:30:16 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "cpu_types.h"
+#include "sdl_types.h"
 #include "vm_types.h"
 #include "cpu.h"
 #include "vm.h"

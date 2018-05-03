@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/29 04:19:55 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 01:34:03 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 06:26:55 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,7 @@ typedef struct s_vcpu			t_vcpu;
 
 typedef struct		s_cwvm
 {
+	t_sdl			visu;
 	t_vmctrl		ctrl;
 	t_jobctrl		jobs;
 	t_gamectrl		game;

@@ -6,13 +6,14 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/27 19:25:19 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 02:32:40 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/03 07:26:45 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include "libft.h"
 #include "cpu_types.h"
+#include "sdl_types.h"
 #include "vm_types.h"
 #include "cpu.h"
 #include "vm.h"
@@ -73,7 +74,7 @@ static void		init_parameters(t_cwvm *vm, t_vmctrl *c,
 	c->d_level & CWDL_INF ? debug_infos(vm, &vm->cpu, &vm->game, v) : 0;
 }
 
-void			init_data(t_cwvm *vm)
+int				init_data(t_cwvm *vm)
 {
 	t_vmctrl	*c;
 	t_jobctrl	*j;
@@ -88,4 +89,11 @@ void			init_data(t_cwvm *vm)
 	g->to_die = CYCLE_TO_DIE;
 	g->winner = g->p_indexes[g->nb_players - 1] + 1;
 	init_parameters(vm, c, j, &c->verbose);
+	if (c->flags & CWF_VISU)
+	{
+		c->paused = TRUE;
+		if (init_sdl(&vm->visu) == FAILURE || main_screen(&vm->visu) == FAILURE)
+			return (FAILURE);
+	}
+	return (SUCCESS);
 }
