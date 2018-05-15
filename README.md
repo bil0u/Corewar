@@ -1,6 +1,6 @@
 # Corewar
- "Corewar is a very special programming game created by D. G. Jones and A. K. Dewdney in 1984."
- "It consists in gathering around a virtual machine one to four players."
+Corewar is a very special programming game created by D. G. Jones and A. K. Dewdney in 1984.  
+It consists in gathering around a virtual machine one to four players.  
 This players will load champions who will fight with processes, in order, among other things, to make sure that they are told they are alive.  
 
 Processes run sequentially within the same virtual machine, and from the same memory space.  
@@ -8,15 +8,14 @@ They can, for example, write to each other in order to corrupt others processes,
 
 The game ends when no more processes are alive. At this point, the winner is the last player to be reported as alive.  
 
-```
-This is an alternative version of the original game.
-> The virtual machine does not work the same way
-> The assembly language is a bit different of the original Redcode
-```
+
+**This is an alternative version of the original game.**  
+**The virtual machine does not work the same way**  
+**The assembly language is a bit different of the original Redcode**  
 
 Original Core War wiki [here](https://en.wikipedia.org/wiki/Core_War)  
 
-This code has only been tested on macOS 10.11+
+**This code has only been tested on macOS 10.11+**
 
 ## Setup
 
@@ -44,28 +43,28 @@ The main Makefile has several rules:
 * `all`  
    Calls `lib`, `asm` and `vm` rules
 * `lib`  
-   Compile only the `libft` submodule
+   Compile only the **libft** submodule
 * `asm`  
-   Compile the `libft` if needed and build the `asm` binary
+   Compile the **libft** if needed and build the **asm** binary
 * `vm`  
-   Compile the `libft` if needed and build the `corewar` binary
+   Compile the **libft** if needed and build the **corewar** binary
 * `champs`  
-   Build the `asm` if not existing and use it to compile all `.s` files in the `champs` directory
+   Build the **asm** if not existing and use it to compile all `.s` files in the **champs** directory
 * `tests`  
-   Build the `asm` if not existing and use it to compile all `.s` files in the `champs` directory
+   Build the **asm** if not existing and use it to compile all `.s` files in the **champs** directory
 * `clean`  
    Delete all `.o` & `.cor` files
 * `fclean`  
-   Calls the `clean` rule and delete `asm` & `corewar` binaries
+   Calls the `clean` rule and delete **asm** & **corewar** binaries
 * `re`  
    Calls `fclean` and `all` rules
 * `norm`  
-   Runs the `norminette` command on all the `sources` and `includes` subdirectories (Works only in 42 clusters)
+   Runs the `norminette` command on all the **sources** and **includes** subdirectories (Works only in 42 clusters)
 
 ## Modules
 
 ### Assembler
-This is the program that will compile your champions and translate them from text to a `bytecode`, namely a machine code that will be directly interpreted by the virtual machine.  
+This is the program that will **compile** your champions and translate them from text to a **bytecode**, namely a machine code that will be directly interpreted by the virtual machine.  
 
 Usage  
 ```
@@ -73,7 +72,7 @@ $ ./asm [file.s ...]
 ```
 
 ### Virtual machine
-This is the `arena` in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
+This is the **arena** in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
 
 Usage  
 ```
@@ -91,21 +90,21 @@ $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-
    Set the execution speed limit at N cycles/seconds  
 * `-v N`  
    Set the verbose level. You can add the values. `-v 19` will print the lives, cycles and PC movement informations.  
-   0   -  Show only essentials (default)  
-   1   -  Show lives  
-   2   -  Show cycles  
-   4   -  Show operations Args are NOT litteral  
-   8   -  Show deaths  
-   16  -  Show PC movements  
+   **0** > Show only essentials (default)  
+   **1** > Show lives  
+   **2** > Show cycles  
+   **4** > Show operations Args are NOT litteral  
+   **8** > Show deaths  
+   **16** > Show PC movements  
 * `-D N` (See lower important note)  
    This mode uses many system calls and slows the program a lot, use with care.  
    Set the verbose level. You can add the values. `-D 19` will print the game infos, the arena and the processes list.  
-   1   -  Show game informations  
-   2   -  Show the arena memory zone  
-   4   -  Show instructions history  
-   8   -  Show instructions details  
-   16  -  Show processes details  
-   32  -  Show processes registers  
+   **1** > Show game informations  
+   **2** > Show the arena memory zone  
+   **4** > Show instructions history  
+   **8** > Show instructions details  
+   **16** > Show processes details  
+   **32** > Show processes registers  
 * `-d N`  
    Dumps memory after N cycles then exits  
 * `-s N`  
@@ -172,7 +171,7 @@ Usage is
 ```sh
 $ ./vm_diff.sh [dump cycles] [nb_lines to cmp] [file.cor ...]
 ```
----
+
 ## Some screen captures
 
 * Visualizer start screen  
