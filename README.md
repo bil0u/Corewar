@@ -128,9 +128,9 @@ $ ./asm [file.s ...]
    Display on the screen the char corresponding to the value of the register passed in parameter, modulo 256. If this char is NUL, then the carry goes to 1, if not to 0.  
 
 **Legend**  
-`[REG]` - Registers  
-`[IND]` - Indirects  
-`[DIR]` - Directs  
+   [REG] - Registers  
+   [IND] - Indirects  
+   [DIR] - Directs  
 
 See [cpu_instructions.h](./vm/includes/cpu_instructions.h) for details  
 
@@ -140,11 +140,11 @@ See [cpu_instructions.h](./vm/includes/cpu_instructions.h) for details
 .name		"zork"
 .comment	"I'M ALIIIIVE"
 
-start:	sti r1, %:live, %1
-		and r1, %0, r1
+start:		sti r1, %:live, %1
+			and r1, %0, r1
 
-live:	live %1
-		zjmp %:live
+live:		live %1
+			zjmp %:live
 ```
 
 ### Virtual machine  
