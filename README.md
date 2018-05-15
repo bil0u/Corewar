@@ -141,10 +141,10 @@ See [cpu_instructions.h](./vm/includes/cpu_instructions.h) for details
 .comment	"I'M ALIIIIVE"
 
 start:		sti r1, %:live, %1
-			and r1, %0, r1
+		and r1, %0, r1
 
 live:		live %1
-			zjmp %:live
+		zjmp %:live
 ```
 
 ### Virtual machine  
