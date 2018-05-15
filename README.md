@@ -1,8 +1,6 @@
 # Corewar
-
-Corewar is a very special programming game created by D. G. Jones and A. K. Dewdney in 1984.  
-
-It consists in gathering around a virtual machine one to four players.  
+ "Corewar is a very special programming game created by D. G. Jones and A. K. Dewdney in 1984."
+ "It consists in gathering around a virtual machine one to four players."
 This players will load champions who will fight with processes, in order, among other things, to make sure that they are told they are alive.  
 
 Processes run sequentially within the same virtual machine, and from the same memory space.  
@@ -27,26 +25,19 @@ This code has only been tested on macOS 10.11+
 
 ## Screen captures
 
-![Game status](./demo/game_status.png)
-Debug level 1 : Game status  
+![Game status](./demo/game_status.png) "Debug level 1 : Game status"
 
-![Arena](./demo/arena.png)
-Debug level 2 : Arena content  
+![Arena](./demo/arena.png) "Debug level 2 : Arena content"
 
-![Intructions history](./demo/ops_history.png)
-Debug level 4 : Instructions history  
+![Intructions history](./demo/ops_history.png) "Debug level 4 : Instructions history"
 
-![Intructions details](./demo/ops_details.png)
-Debug level 8 : Intructions details  
+![Intructions details](./demo/ops_details.png) "Debug level 8 : Intructions details"
 
-![Processes](./demo/processes.png)
-Debug level 16 : Processes list & infos  
+![Processes](./demo/processes.png) "Debug level 16 : Processes list & infos"
 
-![Registers](./demo/registers.png)
-Debug level 36 : Processes registers  
+![Registers](./demo/registers.png) "Debug level 36 : Processes registers"
 
-![Visualizer](./demo/visualizer.png)
-Visualizer start screen
+![Visualizer](./demo/visualizer.png) "Visualizer start screen"
 
 ## Usage
 
