@@ -71,6 +71,81 @@ Usage
 $ ./asm [file.s ...]
 ```
 
+#### Syntax
+
+* **.name** - Name  
+   Your champion name. (Mandatory)  
+* **.comment** - Comment  
+   Your champion description. (Mandatory)  
+* **label:** - Labels  
+   Can be placed before any instruction, useful to mark some positions in your code.
+* **rX** - Registers  
+   Design a register to use. Strictly positive, from 1 to 16.  
+   `r1` refers to register 1  
+* **X / :label** - Indirects  
+   Refers to a 4 bytes integer in ram from the process actual PC value.  
+   `42` refers to the 4 bytes integer located at `PC + 42`.  
+   `:label` refers to the 4 bytes integer located where `label` points.  
+* **%X / %:label** - Directs  
+   Integer values.  
+   `%42` refers to the integer `42`.  
+   `%:label` refers to the number of bytes separating the actual PC from where `label` points.  
+
+#### Supported instructions
+
+* `live` - [DIR]  
+   TXT  
+* `ld` - [IND|DIR] [REG]  
+   TXT  
+* `st` - [REG] [IND|DIR]  
+   TXT  
+* `add` - [REG] [REG] [REG]  
+   TXT  
+* `sub` - [REG] [REG] [REG]  
+   TXT  
+* `and` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
+   TXT  
+* `or` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
+   TXT  
+* `xor` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
+   TXT  
+* `zjmp` - [DIR]  
+   TXT  
+* `ldi` - [REG|IND|DIR] [REG|DIR] [DIR]  
+   TXT  
+* `sti` - [REG] [REG|IND|DIR] [REG|DIR]  
+   TXT  
+* `fork` - [DIR]  
+   TXT  
+* `lld` - [IND|DIR] [REG]  
+   TXT  
+* `lldi` - [REG|IND|DIR] [REG|DIR] [DIR]  
+   TXT  
+* `lfork` - [DIR]  
+   TXT  
+* `aff` - [REG]  
+   TXT  
+
+**Legend**  
+`[REG]` - Registers  
+`[IND]` - Indirects  
+`[DIR]` - Directs  
+
+See [cpu_instructions.h](./vm/includes/cpu_instructions.h) for details  
+
+#### Basic champion example
+
+```asm
+.name		"zork"
+.comment	"I'M ALIIIIVE"
+
+start:	sti r1, %:live, %1
+		and r1, %0, r1
+
+live:	live %1
+		zjmp %:live
+```
+
 ### Virtual machine
 This is the **arena** in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
 
@@ -90,21 +165,21 @@ $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-
    Set the execution speed limit at N cycles/seconds  
 * `-v N`  
    Set the verbose level. You can add the values. `-v 19` will print the lives, cycles and PC movement informations.  
-   **0** > Show only essentials (default)  
-   **1** > Show lives  
-   **2** > Show cycles  
-   **4** > Show operations Args are NOT litteral  
-   **8** > Show deaths  
-   **16** > Show PC movements  
+   **0**  -  Show only essentials (default)  
+   **1**  -  Show lives  
+   **2**  -  Show cycles  
+   **4**  -  Show operations Args are NOT litteral  
+   **8**  -  Show deaths  
+   **16** -  Show PC movements  
 * `-D N` (See lower important note)  
    This mode uses many system calls and slows the program a lot, use with care.  
    Set the verbose level. You can add the values. `-D 19` will print the game infos, the arena and the processes list.  
-   **1** > Show game informations  
-   **2** > Show the arena memory zone  
-   **4** > Show instructions history  
-   **8** > Show instructions details  
-   **16** > Show processes details  
-   **32** > Show processes registers  
+   **1**  -  Show game informations  
+   **2**  -  Show the arena memory zone  
+   **4**  -  Show instructions history  
+   **8**  -  Show instructions details  
+   **16** -  Show processes details  
+   **32** -  Show processes registers  
 * `-d N`  
    Dumps memory after N cycles then exits  
 * `-s N`  
