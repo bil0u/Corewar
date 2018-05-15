@@ -6,50 +6,61 @@
 #    By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/02 19:54:31 by glictevo          #+#    #+#              #
-#    Updated: 2018/05/03 23:08:55 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/15 20:47:00 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-LIB =		libft
-LIBF =		libft/libft.a
-ASM =		assembleur
-ASMF =		asm
-VM =		vm
-VMF =		corewar
-TESTS =		tests
+LIB_DIR =	libft
+LIB =		$(LIB_DIR)/libft.a
+ASM_DIR =	assembler
+ASM =		asm
+VM_DIR =	vm
+VM =		corewar
+CHAMPS =	champs
+TESTS =		tests_ressources
 
 MAKE =		make -C
+RM =		rm -f
+LN =		ln -fs
 
-all: $(LIBF) $(VMF) $(ASMF)
+all: lib asm vm
 
-$(LIBF):
-	@$(MAKE) $(LIB)
+lib:
+	@$(MAKE) $(LIB_DIR)
 
-$(ASMF):
-	@$(MAKE) $(ASM)
+asm:
+	@$(MAKE) $(ASM_DIR)
+	@$(LN) $(ASM_DIR)/$(ASM) $(ASM)
 
-$(VMF):
-	@$(MAKE) $(VM)
+vm:
+	@$(MAKE) $(VM_DIR)
+	@$(LN) $(VM_DIR)/$(VM) $(VM)
 
-$(TESTS):
+champs:
+	@$(MAKE) $(CHAMPS)
+
+tests:
 	@$(MAKE) $(TESTS)
 
 clean:
-	@$(MAKE) $(LIB) clean
-	@$(MAKE) $(VM) clean
-	@$(MAKE) $(ASM) clean
+	@$(MAKE) $(LIB_DIR) clean
+	@$(MAKE) $(VM_DIR) clean
+	@$(MAKE) $(ASM_DIR) clean
 	@$(MAKE) $(TESTS) clean
+	@$(MAKE) $(CHAMPS) clean
 
 fclean: clean
-	@$(MAKE) $(LIB) fclean
-	@$(MAKE) $(VM) fclean
-	@$(MAKE) $(ASM) fclean
+	@$(MAKE) $(LIB_DIR) fclean
+	@$(RM) $(VM)
+	@$(MAKE) $(VM_DIR) fclean
+	@$(RM) $(ASM)
+	@$(MAKE) $(ASM_DIR) fclean
 
 norm:
-	@$(MAKE) $(LIB) norm
-	@$(MAKE) $(VM) norm
-	@$(MAKE) $(ASM) norm
+	@$(MAKE) $(LIB_DIR) norm
+	@$(MAKE) $(VM_DIR) norm
+	@$(MAKE) $(ASM_DIR) norm
 
 re: fclean all
 
-.PHONY: all clean fclean re $(LIB) $(ASM) $(VM) $(TESTS)
+.PHONY: all lib asm vm champs tests clean fclean norm re

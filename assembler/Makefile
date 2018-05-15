@@ -6,7 +6,7 @@
 #    By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2016/11/06 17:13:11 by glictevo          #+#    #+#              #
-#    Updated: 2018/05/03 22:53:28 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/15 20:15:28 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME =			asm
 CC =			gcc
 CFLAGS =		-Wall -Werror -Wextra
-CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I$(HOME)/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I$(HOME)/.brew/include/SDL -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
@@ -27,7 +27,7 @@ NORM =			norminette
 # -- LIBRARIES --
 
 LDLIBS =		-lft -lSDLmain -lSDL -lSDL_image -lSDL_ttf -Wl,-framework,Cocoa
-LDFLAGS =		-L$(LIBFT_DIR) -L$(HOME)/.brew/lib
+LDFLAGS =		-w -L$(LIBFT_DIR) -L$(HOME)/.brew/lib -L/usr/local/lib
 
 LIBFT_DIR =		../libft
 LIBFT_DEP =		$(LIBFT_DIR)/libft.a

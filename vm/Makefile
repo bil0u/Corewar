@@ -6,7 +6,7 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/01/15 11:05:28 by upopee            #+#    #+#              #
-#    Updated: 2018/05/03 22:53:23 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/15 20:10:39 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@
 NAME =			corewar
 CC =			gcc
 CFLAGS =		-Wall -Werror -Wextra
-CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I$(HOME)/.brew/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
+CPPFLAGS =		-I $(INC_DIR) -I $(LIBFT_DIR) -I$(HOME)/.brew/include/SDL -I/usr/local/include/SDL -D_GNU_SOURCE=1 -D_THREAD_SAFE
 DEPFLAGS =		-MMD
 
 SHELL =			/bin/bash
@@ -27,7 +27,7 @@ NORM =			norminette
 # -- LIBRARIES --
 
 LDLIBS =		-lft -lSDLmain -lSDL -lSDL_image -lSDL_ttf -Wl,-framework,Cocoa
-LDFLAGS =		-L$(LIBFT_DIR) -L$(HOME)/.brew/lib
+LDFLAGS =		-w -L$(LIBFT_DIR) -L$(HOME)/.brew/lib -L/usr/local/lib
 
 LIBFT_DIR =		../libft
 LIBFT_DEP =		$(LIBFT_DIR)/libft.a
