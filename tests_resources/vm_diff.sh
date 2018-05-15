@@ -8,7 +8,7 @@ verb="-v $v_level"
 champs="$3 $4 $5 $6"
 
 diff_cmd="diff -C 1 -b"
-our_corewar="../vm/corewar -z $verb $dump $champs"
+our_corewar="../corewar -z $verb $dump $champs"
 zaz_corewar="./corewar_zaz $verb $dump $champs"
 
 if (($# < 3))

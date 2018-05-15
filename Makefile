@@ -6,7 +6,7 @@
 #    By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/02 19:54:31 by glictevo          #+#    #+#              #
-#    Updated: 2018/05/15 22:48:57 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/16 00:28:21 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ ASM =		asm
 VM_DIR =	vm
 VM =		corewar
 CHAMPS =	champs
-TESTS =		tests_ressources
+TESTS =		tests_resources
 
 MAKE =		make -C
 RM =		rm -f

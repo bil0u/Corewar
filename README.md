@@ -65,7 +65,6 @@ The main Makefile has several rules:
 ## Modules
 
 ### Assembler
-
 This is the program that will compile your champions and translate them from text to a `bytecode`, namely a machine code that will be directly interpreted by the virtual machine.  
 
 Usage  
@@ -74,7 +73,6 @@ $ ./asm [file.s ...]
 ```
 
 ### Virtual machine
-
 This is the `arena` in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
 
 Usage  
@@ -83,7 +81,6 @@ $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-
 ```
 
 #### Options
-
 * `-a`  
    Prints output of `aff` instruction (hidden by default)  
 * `-z`  
@@ -157,7 +154,7 @@ $ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
    Keep the log_server running even if the parent program is terminated  
    This allow you to use the same debug windows for your game sessions, and not to have to resize them each time you launch the game  
 
-To close a window properly, you must press `Ctrl + C` in it.  
+To close a window properly, you must quit the log_server by pressing `Ctrl + C` first.  
 If you kill the program by any other way, the log server will not suppress the used fifo, and you will encouter problems for launching a new session. (Your programm will stuck do nothing)  
 
 If this happens, you can reset the logging fifos by typing  
@@ -165,7 +162,17 @@ If this happens, you can reset the logging fifos by typing
 $ rm -f /tmp/libft_log.*
 ```
 ---
+### Tests resources
+The references binaries are present as `asm_zaz` & `corewar_zaz`.  
+Theses were the given resources to imitate.  
 
+There's also a script called `vm_diff.sh` that performs a diff with the maximum verbose level beetween the reference binary and the freshly compiled one.
+
+Usage is  
+```sh
+$ ./vm_diff.sh [dump cycles] [nb_lines to cmp] [file.cor ...]
+```
+---
 ## Some screen captures
 
 * Visualizer start screen  
