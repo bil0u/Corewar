@@ -17,13 +17,61 @@ Original Core War wiki here : [Original Core War wiki page](https://en.wikipedia
 This code has only been tested on macOS 10.11+
 ```
 
+## Setting up and Usage
+
+### Requirements
+
+This project use `sdl`, `sdl_image` and `sdl_ttf` libraries.  
+
+In order to get the program compile properly you have to install them.  
+You can use [homebrew](https://brew.sh) to simply do this with :  
+```sh
+$ brew install sdl sdl_image sdl_ttf
+```
+
+### Compiling
+
+First, clone and pull the submodules
+```sh
+$ git clone https://github.com/bil0u/corewar.git
+...
+$ git submodule update --init
+```
+
+The main Makefile has several rules:  
+
+* `all`  
+   Calls `lib`, `asm` and `vm` rules
+* `lib`  
+   Compile only the `libft` submodule
+* `asm`  
+   Compile the `libft` if needed and build the `asm` binary
+* `vm`  
+   Compile the `libft` if needed and build the `corewar` binary
+* `champs`  
+   Build the `asm` if not existing and use it to compile all `.s` files in the `champs` directory
+* `tests`  
+   Build the `asm` if not existing and use it to compile all `.s` files in the `champs` directory
+* `clean`  
+   Delete all `.o` & `.cor` files
+* `fclean`  
+   Calls the `clean` rule and delete `asm` & `corewar` binaries
+* `re`  
+   Calls `fclean` and `all` rules
+* `norm`  
+   Runs the `norminette` command on all the `sources` and `includes` subdirectories (Works only in 42 clusters)
+
 ## Modules
 
 ### Assembler
 
 ### Virtual machine
 
-## Screen captures
+## Some screen captures
+
+* Visualizer start screen  
+   ![Visualizer](./demo/visualizer.png)  
+
 * Debug level 1 : Game status  
    ![Game status](./demo/game_status.png)  
 
@@ -41,22 +89,6 @@ This code has only been tested on macOS 10.11+
 
 * Debug level 36 : Processes registers  
    ![Registers](./demo/registers.png)  
-
-* Visualizer start screen  
-   ![Visualizer](./demo/visualizer.png)  
-
-## Usage
-
-First, clone
-```sh
-$ git clone https://github.com/bil0u/corewar.git
-```
-
-A Makefile is provided, just run in your shell
-```sh
-$ make
-```
-or call it from a parent one with the rule `make -C <corewar_path>`
 
 ## License
 
