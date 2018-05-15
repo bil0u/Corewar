@@ -6,19 +6,27 @@
 #    By: upopee <upopee@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/02 07:03:08 by upopee            #+#    #+#              #
-#    Updated: 2018/05/15 20:33:27 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/15 20:55:35 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 ASM =		../asm
+ASM_ZAZ =	./asm_zaz
 
 FILES =		$(shell find . -name '*.s')
 BINARIES =	$(FILES:.s=.cor)
 
-%.cor: %.s
-	@$(ASM) $<
+RM =		rm -f
 
-all: $(BINARIES)
+%.cor: %.s
+	@$(ASM_ZAZ) $<
+
+all: mine
+
+mine:
+	@$(ASM) $(FILES)
+
+zaz: $(BINARIES)
 
 clean:
-	@rm -f $(BINARIES)
+	@$(RM) $(BINARIES)

@@ -6,7 +6,7 @@
 #    By: glictevo <glictevo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2018/05/02 19:54:31 by glictevo          #+#    #+#              #
-#    Updated: 2018/05/15 20:47:00 by upopee           ###   ########.fr        #
+#    Updated: 2018/05/15 21:03:42 by upopee           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,10 +36,10 @@ vm:
 	@$(MAKE) $(VM_DIR)
 	@$(LN) $(VM_DIR)/$(VM) $(VM)
 
-champs:
+champs: $(ASM)
 	@$(MAKE) $(CHAMPS)
 
-tests:
+tests: $(ASM)
 	@$(MAKE) $(TESTS)
 
 clean:
