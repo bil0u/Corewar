@@ -140,6 +140,7 @@ $ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
 * `<main_directory>`  
    This is the path where you cloned this project  
 * `<window_name>`  
+
    | Name to type | Debug level |
    | ------------ | ----------- |
    | `inf`        | 1           |
