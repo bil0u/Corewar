@@ -140,8 +140,8 @@ $ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
 * `<main_directory>`  
    This is the path where you cloned this project  
 * `<window_name>`  
-   Name to type `inf` | `mem` | `ins` | `arg` | `job` | `reg`  
-   Debug level    1      2       4       8       16      32  
+   Name to type |`inf` | `mem` | `ins` | `arg` | `job` | `reg` |  
+   Debug level  |  1   |  2    |  4    |  8    |  16   |  32   |  
 * `-s`  
    Save all printed output in a log file, in the `<main_directory>/libft/log_files` directory  
 * `-c`  
