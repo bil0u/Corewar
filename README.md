@@ -105,7 +105,7 @@ $ ./asm [file.s ...]
 * `sub` - [REG]  [REG]  [REG]  
    Same as `add` but with substraction.  
 * `and` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
-   Performs a logical AND between the first two paramametres and stores the result in the third parameter. If the resulting value equals to zero, then the carry goes to one, otherwise to zero.    
+   Performs a logical AND between the first two parameters and stores the result in the third parameter. If the resulting value equals to zero, then the carry goes to one, otherwise to zero.    
 * `or` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
    Same as `and` but with logical OR.  
 * `xor` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
@@ -113,7 +113,7 @@ $ ./asm [file.s ...]
 * `zjmp` - [DIR]  
    Jump to the address passed in parameter if the carry equals one. If the carry equals zero, nothing happens and the flow continues normally until the next instruction  
 * `ldi` - [REG/IND/DIR]  [REG/DIR]  [DIR]  
-   Load the value at the resulting address of the addition of the first two paramametres, in the register passed in third parameter. If this value is zero, then the carry goes to one, otherwise to zero.    
+   Load the value at the resulting address of the addition of the first two parameters, in the register passed in third parameter. If this value is zero, then the carry goes to one, otherwise to zero.    
 * `sti` - [REG]  [REG/IND/DIR]  [REG/DIR]  
    Load the value contained in the register passed first parameter to the resulting address of the addition of the last two paramametres. If this value is zero, then the carry goes to one, otherwise to zero.    
 * `fork` - [DIR]  
