@@ -94,7 +94,6 @@ $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-
    Set the execution speed limit at N cycles/seconds  
 * `-v N`  
    Set the verbose level. You can add the values. `-v 19` will print the lives, cycles and PC movement informations.  
-   -  
    0   -  Show only essentials (default)  
    1   -  Show lives  
    2   -  Show cycles  
@@ -104,13 +103,12 @@ $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-
 * `-D N` (See lower important note)  
    This mode uses many system calls and slows the program a lot, use with care.  
    Set the verbose level. You can add the values. `-D 19` will print the game infos, the arena and the processes list.  
-   -  
-   1   Show game informations  
-   2   Show the arena memory zone  
-   4   Show instructions history  
-   8   Show instructions details  
-   16  Show processes details  
-   32  Show processes registers  
+   1   -  Show game informations  
+   2   -  Show the arena memory zone  
+   4   -  Show instructions history  
+   8   -  Show instructions details  
+   16  -  Show processes details  
+   32  -  Show processes registers  
 * `-d N`  
    Dumps memory after N cycles then exits  
 * `-s N`  
@@ -129,6 +127,7 @@ In order to be catched, keyboard input for controls needs to be done with focus 
 
 If launched in debug or visualizer mode, the game is paused by default.
 
+---
 `IMPORTANT NOTE`  
 
 Debug mode only works on macOS 10.11+ if app `iTerm` (Free) is installed.
@@ -136,19 +135,29 @@ This is because of the script used to create new windows and launch the logging 
 
 You can manually launch a log session in a newly opened terminal window by typing the following
 ```sh
-$ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-vscl]
+$ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
 ```
-Where:  
-   <main_directory> : This is the path where you cloned this project
-   <window_name> : Respectively `inf`, `mem`, ``
+* `<main_directory>`  
+   This is the path where you cloned this project  
+* `<window_name>`  
+   Name to type `inf`  `mem`  `ins`  `arg`  `job`  `reg`
+   Debug level   1      2      4      8      16     32  
+* `-s`  
+   Save all printed output in a log file, in the `<main_directory>/libft/log_files` directory  
+* `-c`  
+   Close the terminal window when the log_server stops  
+* `-l`  
+   Keep the log_server running even if the parent program is terminated  
+   This allow you to use the same debug windows for your game sessions, and not to have to resize them each time you launch the game  
 
 To close a window properly, you must press `Ctrl + C` in it.  
 If you kill the program by any other way, the log server will not suppress the used fifo, and you will encouter problems for launching a new session. (Your programm will stuck do nothing)  
 
-If this happens, you can reset the logging fifo by typing
+If this happens, you can reset the logging fifo by typing  
 ```
 $ rm -f /tmp/libft_log.*
 ```
+---
 
 ## Some screen captures
 

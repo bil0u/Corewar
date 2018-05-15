@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/23 02:10:18 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/02 23:19:24 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/15 23:52:57 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@
 */
 
 # define PROC			process
-# define PROC_WIN		"proc"
+# define PROC_WIN		"job"
 # define PROC_DEB		(c->d_level & CWDL_PROC)
 # define PWA			PROC_WIN, 0
 # define PIA1			verb->color_buff[0], PROC->player_no, PROC->pid,
