@@ -24,20 +24,26 @@ This code has only been tested on macOS 10.11+
 ### Virtual machine
 
 ## Screen captures
+"Debug level 1 : Game status"  
+![Game status](./demo/game_status.png)
 
-![Game status](./demo/game_status.png "Debug level 1 : Game status")
+"Debug level 2 : Arena content"  
+![Arena](./demo/arena.png)
 
-![Arena](./demo/arena.png "Debug level 2 : Arena content")
+"Debug level 4 : Instructions history"  
+![Intructions history](./demo/ops_history.png)
 
-![Intructions history](./demo/ops_history.png "Debug level 4 : Instructions history")
+"Debug level 8 : Intructions details"  
+![Intructions details](./demo/ops_details.png)
 
-![Intructions details](./demo/ops_details.png "Debug level 8 : Intructions details")
+"Debug level 16 : Processes list & infos"  
+![Processes](./demo/processes.png)
 
-![Processes](./demo/processes.png "Debug level 16 : Processes list & infos")
+"Debug level 36 : Processes registers"  
+![Registers](./demo/registers.png)
 
-![Registers](./demo/registers.png "Debug level 36 : Processes registers")
-
-![Visualizer](./demo/visualizer.png "Visualizer start screen")
+"Visualizer start screen"  
+![Visualizer](./demo/visualizer.png)
 
 ## Usage
 
