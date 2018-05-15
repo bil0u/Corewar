@@ -63,10 +63,11 @@ The main Makefile has several rules:
 
 ## Modules
 
-### Assembler
+### Assembler  
+
 This is the program that will **compile** your champions and translate them from text to a **bytecode**, namely a machine code that will be directly interpreted by the virtual machine.  
 
-Usage  
+#### Usage  
 ```
 $ ./asm [file.s ...]
 ```
@@ -94,37 +95,37 @@ $ ./asm [file.s ...]
 #### Supported instructions
 
 * `live` - [DIR]  
-   TXT  
-* `ld` - [IND|DIR] [REG]  
-   TXT  
-* `st` - [REG] [IND|DIR]  
-   TXT  
-* `add` - [REG] [REG] [REG]  
-   TXT  
-* `sub` - [REG] [REG] [REG]  
-   TXT  
-* `and` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
-   TXT  
-* `or` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
-   TXT  
-* `xor` - [REG|IND|DIR] [REG|IND|DIR] [DIR]  
-   TXT  
+   Report the player designated by the first parameter as alive. A player lives only as long as at least one process performs live with his player number.    
+* `ld` - [IND/DIR]  [REG]  
+   Load the first parameter in the register passed as the second parameter. If the value of the first parameter equals to zero, then the carry goes to one, otherwise to zero.  
+* `st` - [REG]  [IND/DIR]  
+   Load the contents of the register passed as the first parameter in the second parameter. If the value of the first parameter equals to zero, then the carry goes to one, otherwise to zero.    
+* `add` - [REG]  [REG]  [REG]  
+   Adds the second parameter to the first parameter, and stores the result in the third parameter. If the resulting value equals to zero, then the carry goes to one, otherwise to zero.    
+* `sub` - [REG]  [REG]  [REG]  
+   Same as `add` but with substraction.  
+* `and` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
+   Performs a logical AND between the first two paramametres and stores the result in the third parameter. If the resulting value equals to zero, then the carry goes to one, otherwise to zero.    
+* `or` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
+   Same as `and` but with logical OR.  
+* `xor` - [REG/IND/DIR]  [REG/IND/DIR]  [DIR]  
+   Same as `xor` but with logical XOR.  
 * `zjmp` - [DIR]  
-   TXT  
-* `ldi` - [REG|IND|DIR] [REG|DIR] [DIR]  
-   TXT  
-* `sti` - [REG] [REG|IND|DIR] [REG|DIR]  
-   TXT  
+   Jump to the address passed in parameter if the carry equals one. If the carry equals zero, nothing happens and the flow continues normally until the next instruction  
+* `ldi` - [REG/IND/DIR]  [REG/DIR]  [DIR]  
+   Load the value at the resulting address of the addition of the first two paramametres, in the register passed in third parameter. If this value is zero, then the carry goes to one, otherwise to zero.    
+* `sti` - [REG]  [REG/IND/DIR]  [REG/DIR]  
+   Load the value contained in the register passed first parameter to the resulting address of the addition of the last two paramametres. If this value is zero, then the carry goes to one, otherwise to zero.    
 * `fork` - [DIR]  
-   TXT  
-* `lld` - [IND|DIR] [REG]  
-   TXT  
-* `lldi` - [REG|IND|DIR] [REG|DIR] [DIR]  
-   TXT  
+   Generate a new process to the address passed in parameter by copy of the calling process. The new process thus keeps of all the registers and the carry, only the PC differs (except in the case of a fork% 0).    
+* `lld` - [IND/DIR]  [REG]  
+   Same as `ld` but without restriction of addressing.  
+* `lldi` - [REG/IND/DIR]  [REG/DIR]  [DIR]  
+   Same as `ldi` but without restriction of addressing.  
 * `lfork` - [DIR]  
-   TXT  
+   Same as `fork` but without restriction of addressing.  
 * `aff` - [REG]  
-   TXT  
+   Display on the screen the char corresponding to the value of the register passed in parameter, modulo 256. If this char is NUL, then the carry goes to 1, if not to 0.  
 
 **Legend**  
 `[REG]` - Registers  
@@ -146,10 +147,11 @@ live:	live %1
 		zjmp %:live
 ```
 
-### Virtual machine
+### Virtual machine  
+
 This is the **arena** in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
 
-Usage  
+#### Usage  
 ```
 $ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-n N] file.cor ...]
 ```
