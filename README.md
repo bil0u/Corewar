@@ -19,7 +19,7 @@ Original Core War wiki [here](https://en.wikipedia.org/wiki/Core_War)
 
 ## Setup
 
-### Requirements
+### 1 - Requirements
 
 This project use `sdl`, `sdl_image` and `sdl_ttf` libraries.  
 
@@ -29,7 +29,7 @@ You can use [homebrew](https://brew.sh) to simply do this by typing the followin
 $ brew install sdl sdl_image sdl_ttf
 ```
 
-### Compiling
+### 2 - Compiling
 
 First, clone and pull the submodules
 ```sh
@@ -61,9 +61,9 @@ The main Makefile has several rules:
 * `norm`  
    Runs the `norminette` command on all the **sources** and **includes** subdirectories (Works only in 42 clusters)
 
-## Modules
+## Parts
 
-### Assembler  
+### 1 - Assembler  
 
 This is the program that will **compile** your champions and translate them from text to a **bytecode**, namely a machine code that will be directly interpreted by the virtual machine.  
 
@@ -134,11 +134,11 @@ $ ./asm [file.s ...]
 
 See [cpu_instructions.h](./vm/includes/cpu_instructions.h) for details  
 
-#### Basic champion example
+#### Basic living program example
 
 ```asm
-.name		"zork"
-.comment	"I'M ALIIIIVE"
+.name		"Example"
+.comment	"I'm a really basic program"
 
 start:		sti r1, %:live, %1
 		and r1, %0, r1
@@ -147,7 +147,7 @@ live:		live %1
 		zjmp %:live
 ```
 
-### Virtual machine  
+### 2 - Virtual machine  
 
 This is the **arena** in which the champions will fight. It offers many features, all of them are useful in the battle. It goes without saying that it makes it possible to execute several processes simultaneously.  
 
@@ -238,7 +238,7 @@ If this happens, you can reset the logging fifos by typing
 $ rm -f /tmp/libft_log.*
 ```
 ---
-### Tests resources
+### 3 - Tests resources
 The references binaries are present as `asm_zaz` & `corewar_zaz`.  
 Theses were the given resources to imitate.  
 
@@ -249,7 +249,7 @@ Usage is
 $ ./vm_diff.sh [dump cycles] [nb_lines to cmp] [file.cor ...]
 ```
 
-## Some screen captures
+## Some screenshots
 
 * Visualizer start screen  
    ![Visualizer](./demo/visualizer.png)  
