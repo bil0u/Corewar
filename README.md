@@ -140,8 +140,8 @@ $ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
 * `<main_directory>`  
    This is the path where you cloned this project  
 * `<window_name>`  
-   Name to type `inf`  `mem`  `ins`  `arg`  `job`  `reg`
-   Debug level   1      2      4      8      16     32  
+   Name to type `inf` | `mem` | `ins` | `arg` | `job` | `reg`  
+   Debug level    1      2       4       8       16      32  
 * `-s`  
    Save all printed output in a log file, in the `<main_directory>/libft/log_files` directory  
 * `-c`  
@@ -153,7 +153,7 @@ $ <main_directory>/libft/log_server /tmp/libft_log.<window_name> [-scl]
 To close a window properly, you must press `Ctrl + C` in it.  
 If you kill the program by any other way, the log server will not suppress the used fifo, and you will encouter problems for launching a new session. (Your programm will stuck do nothing)  
 
-If this happens, you can reset the logging fifo by typing  
+If this happens, you can reset the logging fifos by typing  
 ```
 $ rm -f /tmp/libft_log.*
 ```
