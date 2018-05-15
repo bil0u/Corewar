@@ -6,7 +6,7 @@
 /*   By: susivagn <susivagn@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/04/19 17:10:59 by susivagn          #+#    #+#             */
-/*   Updated: 2018/05/04 00:19:12 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/15 21:10:20 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,31 +21,36 @@
 # include "SDL_image.h"
 # include "SDL_ttf.h"
 
-# define PIX_X 				20
-# define PIX_Y				18
+/*
+** -- SIZES AND RESSOURCES PATH
+*/
+
 # define WINDOW_W 			800
 # define WINDOW_BIGW 		1276
 # define WINDOW_H 			800
 # define WINDOW_BIGH 		1149
+
+# define R_PATH				"./vm/resources/"
+
+# define CW_TBG				R_PATH "Title_background.jpg"
+# define CW_SBG				R_PATH "Start_background.jpg"
+# define CW_LOGO			R_PATH "Corewar_logo.png"
+# define CW_SELECT			R_PATH "Select.png"
+# define CW_ICON			R_PATH "Corewar_icon.png"
+
+# define FONT_GAME			R_PATH "CodeNewRomanb.otf"
+# define FONT_SCRN			R_PATH "Digitalix.ttf"
+# define FONT_SZGM			14
+# define FONT_SZSC			20
+
+# define PIX_X 				20
+# define PIX_Y				18
 # define BPP 				32
-# define DATA 				sdlinfo->data
-# define GAMEMODE 			sdlinfo->game_mode
-# define PLAYER 			sdlinfo->player_no
-# define MAINSCREEN 		sdlinfo->screen
-# define MEM_ZONE 			sdlinfo->mem_zone
-# define EVENT_TYPE 		sdlinfo->event.type
-# define EVENT_KEY 			sdlinfo->event.key.keysym.sym
-# define BKGROUND_POS 		sdlinfo->background_pos
-# define TITLES_POS 		sdlinfo->title_pos
-# define PRESS_POS 			sdlinfo->press_pos
-# define CREDIT_POS 		sdlinfo->credit_pos
-# define MAIN_POS 			sdlinfo->main_pos
-# define NAVI_POS 			sdlinfo->navi_pos
-# define BKGROUND_SCREEN 	sdlinfo->background
-# define TITLE_SCREEN 		sdlinfo->title
-# define NAVI 				sdlinfo->navi
-# define CUR_X 				sdlinfo->x
-# define CUR_Y 				sdlinfo->y
+
+/*
+** -- SDL DATA STRUCTURE
+*/
+
 
 typedef struct		s_sdl
 {
@@ -89,16 +94,24 @@ typedef struct		s_sdl
 
 # define VISU_SDL			(c->flags & CWF_VISU)
 
-# define CW_TBG				"./resources/Title_background.jpg"
-# define CW_SBG				"./resources/Start_background.jpg"
-# define CW_LOGO			"./resources/Corewar_logo.png"
-# define CW_SELECT			"./resources/Select.png"
-# define CW_ICON			"./resources/Corewar_icon.png"
-
-# define FONT_SZGM			14
-# define FONT_SZSC			20
-# define FONT_GAME			"./resources/CodeNewRomanb.otf"
-# define FONT_SCRN			"./resources/Digitalix.ttf"
+# define DATA 				sdlinfo->data
+# define GAMEMODE 			sdlinfo->game_mode
+# define PLAYER 			sdlinfo->player_no
+# define MAINSCREEN 		sdlinfo->screen
+# define MEM_ZONE 			sdlinfo->mem_zone
+# define EVENT_TYPE 		sdlinfo->event.type
+# define EVENT_KEY 			sdlinfo->event.key.keysym.sym
+# define BKGROUND_POS 		sdlinfo->background_pos
+# define TITLES_POS 		sdlinfo->title_pos
+# define PRESS_POS 			sdlinfo->press_pos
+# define CREDIT_POS 		sdlinfo->credit_pos
+# define MAIN_POS 			sdlinfo->main_pos
+# define NAVI_POS 			sdlinfo->navi_pos
+# define BKGROUND_SCREEN 	sdlinfo->background
+# define TITLE_SCREEN 		sdlinfo->title
+# define NAVI 				sdlinfo->navi
+# define CUR_X 				sdlinfo->x
+# define CUR_Y 				sdlinfo->y
 
 /*
 ** -- INIT FUNCTIONS
