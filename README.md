@@ -153,7 +153,7 @@ This is the **arena** in which the champions will fight. It offers many features
 
 #### Usage  
 ```
-$ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth --mute] [[-n N] file.cor ...]
+$ ./corewar [-a] [-z] [-S N] [-v N] [-D N] [-d N -s N | -V --stealth] [[-n N] file.cor ...]
 ```
 
 #### Options

@@ -6,7 +6,7 @@
 /*   By: upopee <upopee@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/03/30 18:02:43 by upopee            #+#    #+#             */
-/*   Updated: 2018/05/03 13:30:09 by upopee           ###   ########.fr       */
+/*   Updated: 2018/05/16 01:49:56 by upopee           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,9 +89,8 @@
 # define CWU_L1P1		COLY("Usage:") "\t./corewar  [" OPT("-a") "] ["
 # define CWU_L1P2		OPT("-z") "] [" OPT_N("-S") "] [" OPT_N("-v") "] ["
 # define CWU_L1P3		OPT_N("-D") "]   [" OPT_N("-d") " " OPT_N("-s") " | "
-# define CWU_L1P4		OPT_A("-V", "--stealth --mute")
-# define CWU_L1P5		 "]   " OPT_P("file.cor ...")
-# define CWU_L1			CWU_L1P1 CWU_L1P2 CWU_L1P3 CWU_L1P4 CWU_L1P5 "\n"
+# define CWU_L1P4		OPT("-V") "]   " OPT_P("file.cor ...")
+# define CWU_L1			CWU_L1P1 CWU_L1P2 CWU_L1P3 CWU_L1P4 "\n"
 
 # define CWU_L2			CAT("GENERAL OPTIONS")
 
