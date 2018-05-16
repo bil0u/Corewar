@@ -51,7 +51,7 @@ The main Makefile has several rules:
 * `champs`  
    Build the **asm** if not existing and use it to compile all `.s` files in the **champs** directory
 * `tests`  
-   Build the **asm** if not existing and use it to compile all `.s` files in the **champs** directory
+   Build the **asm** if not existing and use it to compile all `.s` files in the **tests_resources** directory
 * `clean`  
    Delete all `.o` & `.cor` files
 * `fclean`  
