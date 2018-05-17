@@ -68,7 +68,7 @@ The main Makefile has several rules:
 This is the program that will **compile** your champions and translate them from text to a **bytecode**, namely a machine code that will be directly interpreted by the virtual machine.  
 
 #### Usage  
-```
+```sh
 $ ./asm [file.s ...]
 ```
 
